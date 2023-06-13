@@ -6,7 +6,9 @@ open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
 open import CommMonoid using (CMStructure; CMon; module Build)
 
 -------------------------------------------------------------------------------------
--- 1-combinators
+-- Basic terms for the Pi language, extended with 2 items:
+-- 1. square-roots of scalars
+-- 2. sqaure-root of the swap+ gate
 
 private
   variable
@@ -36,6 +38,11 @@ data _⟷_ : U → U → Set where
   _◎_       : (t₁ ⟷ t₂) → (t₂ ⟷ t₃) → (t₁ ⟷ t₃)
   _⊕_       : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ +ᵤ t₂ ⟷ t₃ +ᵤ t₄)
   _⊗_       : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
+  -- Extensions
+  -- ω
+  ω         : (I ⟷ I)
+  -- square root swap₊ = √ NOT is here called V
+  V         : (I +ᵤ I) ⟷ (I +ᵤ I)
 
 pattern unite⋆l = mult M×.unite⋆
 pattern uniti⋆l = mult M×.uniti⋆
@@ -50,7 +57,7 @@ pattern assocl₊ = add M+.assocl⋆
 pattern assocr₊ = add M+.assocr⋆
 
 -------------------------------------------------------------------------------------
--- Inverse
+-- Inverse; might need to be internalized
 !⟷ : t₁ ⟷  t₂ → t₂ ⟷  t₁
 !⟷ unite₊l = uniti₊l
 !⟷ uniti₊l = unite₊l
@@ -70,6 +77,8 @@ pattern assocr₊ = add M+.assocr⋆
 !⟷ (c₁ ◎ c₂) = !⟷ c₂ ◎ !⟷ c₁
 !⟷ (c₁ ⊕ c₂) = !⟷ c₁ ⊕ !⟷ c₂
 !⟷ (c₁ ⊗ c₂) = !⟷ c₁ ⊗ !⟷ c₂
+!⟷ ω = ω
+!⟷ V = swap₊ ◎ V
 
 -------------------------------------------------------------------------------------
 -- Definitional extension of the language; these are often terms in the language.
