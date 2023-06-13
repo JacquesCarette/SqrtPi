@@ -76,22 +76,22 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
           (swap₊ ◎ (c₁ ⊕ c₂)) ⟷₂ ((c₂ ⊕ c₁) ◎ swap₊)
   swapr₊⟷₂ : {t₁ t₂ t₃ t₄ : U} {c₁ : t₁ ⟷ t₂} {c₂ : t₃ ⟷ t₄} →
           ((c₂ ⊕ c₁) ◎ swap₊) ⟷₂ (swap₊ ◎ (c₁ ⊕ c₂))
-  unitel⋆⟷₂l : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (unite⋆l ◎ c₂) ⟷₂ ((c₁ ⊗ c₂) ◎ unite⋆l)
-  uniter⋆⟷₂l : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          ((c₁ ⊗ c₂) ◎ unite⋆l) ⟷₂ (unite⋆l ◎ c₂)
-  unitil⋆⟷₂l : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (uniti⋆l ◎ (c₁ ⊗ c₂)) ⟷₂ (c₂ ◎ uniti⋆l)
-  unitir⋆⟷₂l : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (c₂ ◎ uniti⋆l) ⟷₂ (uniti⋆l ◎ (c₁ ⊗ c₂))
-  unitel⋆⟷₂r : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (unite⋆r ◎ c₂) ⟷₂ ((c₂ ⊗ c₁) ◎ unite⋆r)
-  uniter⋆⟷₂r : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          ((c₂ ⊗ c₁) ◎ unite⋆r) ⟷₂ (unite⋆r ◎ c₂)
-  unitil⋆⟷₂r : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (uniti⋆r ◎ (c₂ ⊗ c₁)) ⟷₂ (c₂ ◎ uniti⋆r)
-  unitir⋆⟷₂r : {t₁ t₂ : U} {c₁ : I ⟷ I} {c₂ : t₁ ⟷ t₂} →
-          (c₂ ◎ uniti⋆r) ⟷₂ (uniti⋆r ◎ (c₂ ⊗ c₁))
+  unitel⋆⟷₂l : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (unite⋆l ◎ c) ⟷₂ ((id⟷ ⊗ c) ◎ unite⋆l)
+  uniter⋆⟷₂l : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          ((id⟷ ⊗ c) ◎ unite⋆l) ⟷₂ (unite⋆l ◎ c)
+  unitil⋆⟷₂l : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (uniti⋆l ◎ (id⟷ ⊗ c)) ⟷₂ (c ◎ uniti⋆l)
+  unitir⋆⟷₂l : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (c ◎ uniti⋆l) ⟷₂ (uniti⋆l ◎ (id⟷ ⊗ c))
+  unitel⋆⟷₂r : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (unite⋆r ◎ c) ⟷₂ ((c ⊗ id⟷) ◎ unite⋆r)
+  uniter⋆⟷₂r : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          ((c ⊗ id⟷) ◎ unite⋆r) ⟷₂ (unite⋆r ◎ c)
+  unitil⋆⟷₂r : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (uniti⋆r ◎ (c ⊗ id⟷)) ⟷₂ (c ◎ uniti⋆r)
+  unitir⋆⟷₂r : {t₁ t₂ : U} {c : t₁ ⟷ t₂} →
+          (c ◎ uniti⋆r) ⟷₂ (uniti⋆r ◎ (c ⊗ id⟷))
   swapl⋆⟷₂ : {t₁ t₂ t₃ t₄ : U} {c₁ : t₁ ⟷ t₂} {c₂ : t₃ ⟷ t₄} →
           (swap⋆ ◎ (c₁ ⊗ c₂)) ⟷₂ ((c₂ ⊗ c₁) ◎ swap⋆)
   swapr⋆⟷₂ : {t₁ t₂ t₃ t₄ : U} {c₁ : t₁ ⟷ t₂} {c₂ : t₃ ⟷ t₄} →
@@ -203,7 +203,18 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   assocl₊-dist-dist⟷₂r : {t₁ t₂ t₃ t₄ : U} →
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
-
+  -----
+  -- added equivalences
+  ----
+  -- first for √ of scalars
+  ω⁸l : ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω ⟷₂ id⟷
+  ω⁸r : id⟷ ⟷₂ ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω ◎ ω
+  -- and for √ NOT aka V
+  V²l : V ◎ V ⟷₂ swap₊
+  V²r : swap₊ ⟷₂ V ◎ V
+  -- and E3, in its "fully expanded form"
+  -- (will go here)
+  
 -------------------------------------------------------------------------------------
 -- This is invertible too
 !⟷₂ : {t₁ t₂ : U} {c₁ c₂ : t₁ ⟷ t₂} → c₁ ⟷₂ c₂ → c₂ ⟷₂ c₁
@@ -288,7 +299,10 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
 !⟷₂ factorzr⟷₂r = factorzr⟷₂l
 !⟷₂ assocl₊-dist-dist⟷₂l = assocl₊-dist-dist⟷₂r
 !⟷₂ assocl₊-dist-dist⟷₂r = assocl₊-dist-dist⟷₂l
-
+!⟷₂ ω⁸l = ω⁸r
+!⟷₂ ω⁸r = ω⁸l
+!⟷₂ V²l = V²r
+!⟷₂ V²r = V²l
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
