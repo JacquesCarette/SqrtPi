@@ -11,19 +11,22 @@ open import Pi.Language
 open import Pi.Equivalences
 open import Pi.TermReasoning
 
+Scalar : Set
+Scalar = I ⟷ I
+
 -- To make things shorter, define an abbreviation for 1
-𝟙 : I ⟷ I
+𝟙 : Scalar
 𝟙 = id⟷
 
 -- We need an operator for powering of scalars
 infixr 30 _^_
-_^_ : (I ⟷ I) → ℕ → (I ⟷ I)
+_^_ : Scalar → ℕ → Scalar
 s ^ zero = 𝟙
 s ^ (suc zero) = s -- special case to make reasoning less painful
 s ^ suc (suc n) = s ◎ s ^ (suc n)
 
 -- Define some of our constants.
-i -i -𝟙 : I ⟷ I
+i -i -𝟙 : Scalar
 i  = ω ^ 2
 -𝟙 = i ^ 2
 -i = ω ^ 6
@@ -38,7 +41,7 @@ i  = ω ^ 2
 
 -- Scalar multiplication (Definition 4.1)
 infixr 45 _●_
-_●_ : {t₁ t₂ : U} → (I ⟷ I) → (t₁ ⟷ t₂) → t₁ ⟷ t₂
+_●_ : {t₁ t₂ : U} → Scalar → (t₁ ⟷ t₂) → t₁ ⟷ t₂
 s ● c = uniti⋆l ◎ (s ⊗ c) ◎ unite⋆l
 {-
 -- Before we can even get started, we need some postulates, as the
