@@ -9,6 +9,7 @@ open import Level using (_⊔_)
 open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
+open import Categories.Category.Monoidal.Utilities using (module Shorthands)
 open import Categories.Category.RigCategory
 
 -- A bit of useful kit
@@ -22,8 +23,11 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     module M× = Monoidal M×
     module S⊎ = Symmetric S⊎
     module S× = Symmetric S×
-    
-  open M⊎ renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_)
+
+  open M× using (_⊗₀_; _⊗₁_) public
+  open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
+  open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐) public
+  
   σ⊕ : ∀ {X Y} → X ⊕₀ Y ⇒ Y ⊕₀ X
   σ⊕ {X} {Y} = S⊎.braiding.⇒.η (X , Y)
   
@@ -51,18 +55,14 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   -- Scalar multiplication (Definition 4.1)
   infixr 45 _●_
   _●_ : {t₁ t₂ : Obj} → Scalar → C [ t₁ , t₂ ] → C [ t₁ , t₂ ]
-  s ● c = M×.unitorˡ.from ∘ (s M×.⊗₁ c) ∘ M×.unitorˡ.to
+  s ● c = λ⇒ ∘ (s ⊗₁ c) ∘ λ⇐
 
 -- Definition 4.2
 record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) : Set (ℓ ⊔ e) where
   open Kit R
   open Category C
-  private
-    module M⊎ = Monoidal M⊎
     
-  open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_)
-  
   field
     ω : Scalar
     V : C [ 2C , 2C ]
