@@ -2,10 +2,12 @@
 
 module Pi.Examples where
 
+open import Data.Nat using (ℕ)
+
 open import Pi.Types using (U; I; 𝟚; _+ᵤ_; _×ᵤ_)
 open import Pi.Language
-  using (_⟷_; id⟷; swap₊; swap⋆; dist; _◎_; _⊕_; ω; V;
-         unite⋆l; assocl₊; assocr₊)
+  using (_⟷_; id⟷; swap₊; swap⋆; dist; _◎_; _⊕_; _⊗_; ω; V;
+         unite⋆l; assocl₊; assocr₊; assocl⋆; assocr⋆)
 open import Pi.Terms using (ctrl; x; cx; ccx)
 open import Pi.Scalars using (-𝟙; i; _^_; _●_)
 open import Pi.Equivalences 
@@ -58,7 +60,31 @@ mat = dist ◎ unite⋆l ⊕ unite⋆l
 SS≡Z : S ◎ S ⟷₂ Z 
 SS≡Z = trans⟷₂ hom◎⊕⟷₂ (resp⊕⟷₂ idl◎l id⟷₂) 
 
+-- Bell circuit
 
+bell : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
+bell = (H ⊗ id⟷) ◎ CX
+
+-- QFT on 3 qubits
+
+-- control qubit is the second one
+ctrl' : (t ⟷ t) → (t ×ᵤ 𝟚 ⟷ t ×ᵤ 𝟚)
+ctrl' g = swap⋆ ◎ ctrl g ◎ swap⋆ 
+
+R : ℕ → (𝟚 ⟷ 𝟚)
+R n = φ (ω ^ n)
+
+qft1 : 𝟚 ⟷ 𝟚
+qft1 = H
+
+qft2 : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
+qft2 = (H ⊗ id⟷) ◎ ctrl' (R 2) ◎ (id⟷ ⊗ qft1)
+
+qft3 : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+qft3 = (H ⊗ id⟷) ◎
+       (assocl⋆ ◎ (ctrl' (R 2) ⊗ id⟷) ◎ assocr⋆) ◎ 
+       ((id⟷ ⊗ swap⋆) ◎ (assocl⋆ ◎ (ctrl' (R 3) ⊗ id⟷) ◎ assocr⋆) ◎ id⟷ ⊗ swap⋆) ◎ 
+       id⟷ ⊗ qft2 
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
