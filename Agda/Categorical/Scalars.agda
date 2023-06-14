@@ -11,7 +11,7 @@ open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
 open import Categories.Category.Monoidal.Properties using (module Kelly's)
 open import Categories.Category.RigCategory
-
+import Categories.Morphism.Reasoning as MR
 open import Categorical.SqrtRig
 
 -- Everything is over a SqrtRig
@@ -20,6 +20,7 @@ module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmet
 
   open Category C -- all of it
   open HomReasoning
+  open MR C
   open SqrtRig SR
   open Kit R
   
@@ -28,8 +29,6 @@ module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmet
     module M× = Monoidal M×
     module S⊎ = Symmetric S⊎
     module S× = Symmetric S×
-    open M⊎ renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_)
-    open M×
 
   -- Define some of our constants.
   i -i -𝟙 : Scalar
@@ -46,15 +45,9 @@ module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmet
     i ^ 2 ∘ ω ^ 2 ∎
 
   -- short-names for important lemmas
-  {-
-  -- Before we can even get started, we need some postulates, as the
-  -- proofs are quite a lot of pain
-  postulate
-    uniti₊-coherence : add (M+.uniti⋆ {O}) ⟷₂ add (M+.uniti⋆ {O})
-    unite₊-coherence : add (M+.uniti⋆ {O}) ⟷₂ add (M+.uniti⋆ {O})
-    uniti⋆-coherence : mult (M×.uniti⋆ {I}) ⟷₂ mult (M×.uniti⋆ {I})
-    unite⋆-coherence : mult (M×.uniti⋆ {I}) ⟷₂ mult (M×.uniti⋆ {I})
-  -}
+  -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)
+  -- 2. infrastructure for 'commutative cubes'
+  
   -- Proposition 4.3
   -- (i)
   scalar-comm : {s t : Scalar} → s ∘ t ≈ t ∘ s
@@ -62,7 +55,35 @@ module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmet
     s ∘ t ≈⟨ {!!} ⟩
     t ∘ s ∎
 
-  {-
+  {- as this isn't used much, skip it for now.
   scalar-inverse : {s t : Scalar} → (s ∘ s ≈ t) → !⟷ s ⟷₂ !⟷ t ◎ s
   scalar-inverse {s} {t} p = {!!}
   -}
+
+  -- Proposition 4.3 (iv)
+  𝟙●f≈f : {A B : Obj} (f : A ⇒ B ) → 𝟙 ● f ≈ f
+  𝟙●f≈f f = begin
+    λ⇒ ∘ 𝟙 ⊗₁ f ∘ λ⇐ ≈⟨ pullˡ M×.unitorˡ-commute-from ⟩
+    (f ∘ λ⇒) ∘ λ⇐    ≈⟨ cancelʳ M×.unitorˡ.isoʳ ⟩
+    f               ∎
+
+  -- Proposition 4.3 (v)
+  s●t≈s∘t : {s t : Scalar} → s ● t ≈ s ∘ t
+  s●t≈s∘t {s} {t} = begin
+    λ⇒ ∘ s ⊗₁ t ∘ λ⇐ ≡⟨ {!!} ⟩
+    s ∘ t            ∎
+
+  -- Proposition 4.3 (vi)
+  ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
+    s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
+  ●-distrib-⊕ {s = s} {f} {g} = {!!}
+
+  -- Proposition 4.3 (vii)
+  ●-assocˡ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
+    s ● (g ∘ f) ≈ (s ● g) ∘ f
+  ●-assocˡ {s = s} {f} {g} = {!!}
+
+  -- Proposition 4.3 (viii)
+  ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
+     s ● (g ∘ f) ≈ g ∘ (s ● f)
+  ●-over-∘ {s = s} {f} {g} = {!!}
