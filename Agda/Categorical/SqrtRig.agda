@@ -10,6 +10,7 @@ open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
 open import Categories.Category.Monoidal.Utilities using (module Shorthands)
+import Categories.Morphism as Mor
 open import Categories.Category.RigCategory
 
 -- A bit of useful kit
@@ -18,6 +19,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
 
   open Category C
   open HomReasoning
+  open Mor C using (_≅_)
   private
     module C = Category C
     module M⊎ = Monoidal M⊎
@@ -28,9 +30,20 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open M× using (_⊗₀_; _⊗₁_) public
   open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐) public
-  
+  open RigCategory R using (distribᵣ)
+
+  private
+    module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
+    
   σ⊕ : ∀ {X Y} → X ⊕₀ Y ⇒ Y ⊕₀ X
   σ⊕ {X} {Y} = S⊎.braiding.⇒.η (X , Y)
+  σ⊗ : ∀ {X Y} → X ⊗₀ Y ⇒ Y ⊗₀ X
+  σ⊗ {X} {Y} = S×.braiding.⇒.η (X , Y)
+
+  δᵣ⇒ : ∀ {X Y Z} → (X ⊕₀ Y) ⊗₀ Z ⇒ (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z)
+  δᵣ⇒ = dr.from
+  δᵣ⇐ : ∀ {X Y Z} → (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z) ⇒ (X ⊕₀ Y) ⊗₀ Z
+  δᵣ⇐ = dr.to
   
   0C 1C 2C : Obj
   0C = M⊎.unit
