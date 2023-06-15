@@ -41,6 +41,8 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   Scalar = C [ 1C , 1C ]
   Endo : {Obj} → Set ℓ
   Endo {a} = C [ a , a ]
+  2×2 : Set ℓ
+  2×2 = C [ 2C , 2C ]
     
   -- To make things shorter, define an abbreviation for 1
   𝟙 : Scalar
@@ -94,7 +96,7 @@ record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : 
     V : C [ 2C , 2C ]
     E1 : ω ^ 8 ≈ id
     E2 : V ∘ V ≈ σ⊕
-    
+
   S : C [ 2C , 2C ]
   S = id ⊕₁ (ω ^ 2)
   

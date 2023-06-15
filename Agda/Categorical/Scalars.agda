@@ -1,23 +1,20 @@
-{-# OPTIONS --without-K --exact-split #-}
--- not --safe right now, as we use postulates because some of the proofs
--- are rather larger, and will be back-filled.
-
-module Categorical.Scalars where
-
-
-open import Level using (Level)
+{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
+-- not --safe right now as we have holes
 
 open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
-open import Categories.Category.Monoidal.Properties using (module Kelly's)
 open import Categories.Category.RigCategory
-import Categories.Morphism.Reasoning as MR
-open import Categorical.SqrtRig
+open import Categorical.SqrtRig using (SqrtRig; module Kit)
 
 -- Everything is over a SqrtRig
-module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
+module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
+
+  open import Level using (Level)
+
+  open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  import Categories.Morphism.Reasoning as MR
 
   open Category C -- all of it
   open HomReasoning
