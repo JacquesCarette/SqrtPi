@@ -4,7 +4,8 @@
 
 module Categorical.Scalars where
 
-open import Data.Nat using (ℕ; zero; suc)
+
+open import Level using (Level)
 
 open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
@@ -33,16 +34,23 @@ module _ {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmet
   -- Define some of our constants.
   i -i -𝟙 : Scalar
   i  = ω ^ 2
-  -𝟙 = i ^ 2
+  -𝟙 = ω ^ 4
   -i = ω ^ 6
 
   -- coherence of definitions (by associativity of ∘ )
+  -𝟙²≡𝟙 : -𝟙 ^ 2 ≈ 𝟙
+  -𝟙²≡𝟙 = begin
+    (ω ^ 4) ∘ ω ^ 4                       ≈⟨ pullʳ (pullʳ assoc) ⟩
+    ω ^ 8                                 ≈⟨ E1 ⟩
+    𝟙                                     ∎
+
+  i²≡-𝟙 : i ^ 2 ≈ -𝟙
+  i²≡-𝟙 = assoc
+  
   -i≡-𝟙◎i : -i ≈ -𝟙 ∘ i
   -i≡-𝟙◎i = begin
-    ω ^ 6         ≈⟨ sym-assoc ⟩
-    i ∘ ω ^ 4     ≈⟨ (refl⟩∘⟨ sym-assoc) ⟩
-    i ∘ i ∘ ω ^ 2 ≈⟨ sym-assoc ⟩
-    i ^ 2 ∘ ω ^ 2 ∎
+    ω ^ 6             ≈⟨ pushʳ (pushʳ sym-assoc) ⟩
+    ω ^ 4 ∘ ω ^ 2 ∎
 
   -- short-names for important lemmas
   -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)

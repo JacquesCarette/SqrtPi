@@ -2,7 +2,7 @@
 
 module Categorical.SqrtRig where
 
-open import Data.Nat using (ℕ; zero; suc)
+open import Data.Nat using (ℕ; zero; suc; _+_)
 open import Data.Product using (_,_)
 open import Level using (_⊔_)
 
@@ -17,6 +17,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) where
 
   open Category C
+  open HomReasoning
   private
     module C = Category C
     module M⊎ = Monoidal M⊎
@@ -52,6 +53,31 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   s ^ (suc zero) = s -- special case to make reasoning less painful
   s ^ suc (suc n) = s ∘ s ^ (suc n)
 
+  -- really, we might as well prove stuff about powering
+  -- proving things directly about _^_ is annoying because of the
+  -- optimized definition. So take the roundabout route.
+  pow : Scalar → ℕ → Scalar
+  pow s zero = id
+  pow s (suc n) = s ∘ pow s n
+
+  -- note how these are NOT equal on-the-nose, which is the whole
+  -- point of having _^_
+  ^≈pow : (s : Scalar) (n : ℕ) → s ^ n ≈ pow s n
+  ^≈pow s zero = Equiv.refl
+  ^≈pow s (suc zero) = Equiv.sym identityʳ
+  ^≈pow s (suc (suc n)) = refl⟩∘⟨ ^≈pow s (suc n) 
+
+  pow-add : (s : Scalar) (a b : ℕ) → pow s a ∘ pow s b ≈ pow s (a + b)
+  pow-add s zero b = identityˡ
+  pow-add s (suc a) b = Equiv.trans assoc (∘-resp-≈ʳ (pow-add s a b))
+  
+  ^-add : (s : Scalar) (a b : ℕ) → s ^ a ∘ s ^ b ≈ s ^ (a + b)
+  ^-add s a b = begin
+    s ^ a ∘ s ^ b     ≈⟨ (^≈pow s a ⟩∘⟨ ^≈pow s b) ⟩
+    pow s a ∘ pow s b ≈⟨ pow-add s a b ⟩
+    pow s (a + b)     ≈˘⟨ ^≈pow s (a + b) ⟩
+    s ^ (a + b)   ∎
+  
   -- Scalar multiplication (Definition 4.1)
   infixr 45 _●_
   _●_ : {t₁ t₂ : Obj} → Scalar → C [ t₁ , t₂ ] → C [ t₁ , t₂ ]
