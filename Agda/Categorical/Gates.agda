@@ -40,7 +40,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -- Note: S was already defined in SqrtRig
   Z T H : 2×2
   Z = P -𝟙
-  T = P i
+  T = P ω
   H = ω ● X ∘ S ∘ V ∘ S ∘ X
 
   -- note that this isn't quite what's in the paper, but it is equivalent
@@ -116,3 +116,4 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -- (xi)
   XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
   XPs s = {!!}
+
