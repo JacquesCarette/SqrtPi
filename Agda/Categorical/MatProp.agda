@@ -58,3 +58,19 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- (5)
   SWAP-CP-SWAP : SWAP ∘ Ctrl (P s) ∘ SWAP ≈ Ctrl (P s)
   SWAP-CP-SWAP = {!!}
+
+  -- (6)
+  CP-comm : Ctrl (P s) ∘ Ctrl (P t) ≈ Ctrl (P t) ∘ Ctrl (P s)
+  CP-comm = {!!}
+
+  -- (7)
+  CP-P-right : Ctrl (P s) ∘ (id ⊗₁ P s) ≈ (id ⊗₁ P s) ∘ Ctrl (P s)
+  CP-P-right = {!!}
+  
+  -- (8)
+  Mat-X-left : Mat ∘ (X ⊗₁ id {2C}) ≈ σ⊕ ∘ Mat
+  Mat-X-left = {!!}
+  
+  -- (9) (for some reason, Agda won't infer which object Mat is over)
+  Mat-P-left : {D : Obj} → Mat {D} ∘ (P s ⊗₁ id) ≈ (id ⊕₁ (s ● id)) ∘ Mat
+  Mat-P-left = {!!}
