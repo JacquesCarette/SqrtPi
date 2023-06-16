@@ -74,3 +74,11 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- (9) (for some reason, Agda won't infer which object Mat is over)
   Mat-P-left : {D : Obj} → Mat {D} ∘ (P s ⊗₁ id) ≈ (id ⊕₁ (s ● id)) ∘ Mat
   Mat-P-left = {!!}
+
+  ----------------------------------------------------------------
+  -- Lemma 4.6
+  HXH≡Z : H ∘ X ∘ H ≈ Z
+  HXH≡Z = {!!}
+
+  HZH≡X : H ∘ Z ∘ H ≈ X
+  HZH≡X = {!!}
