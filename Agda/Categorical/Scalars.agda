@@ -35,6 +35,7 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   -i = ω ^ 6
 
   -- coherence of definitions (by associativity of ∘ )
+  -- Lemma 4.4 (i)
   -𝟙²≡𝟙 : -𝟙 ^ 2 ≈ 𝟙
   -𝟙²≡𝟙 = begin
     (ω ^ 4) ∘ ω ^ 4                       ≈⟨ pullʳ (pullʳ assoc) ⟩
