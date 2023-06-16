@@ -61,11 +61,15 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
     s ∘ t ≈⟨ {!!} ⟩
     t ∘ s ∎
 
-  {- as this isn't used much, skip it for now.
-  scalar-inverse : {s t : Scalar} → (s ∘ s ≈ t) → !⟷ s ⟷₂ !⟷ t ◎ s
+  -- Proposition 4.3 (ii)
+  scalar-inverse : {s t : Scalar} → (s ∘ s ≈ t) → inv s ≈ inv t ∘ s
   scalar-inverse {s} {t} p = {!!}
-  -}
 
+  -- Proposition 4.3 (iii) (used in C1)
+  -- we don't define a right-handed ● so expand out its definition here
+  left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
+  left-right-● = {!!}
+  
   -- Proposition 4.3 (iv)
   𝟙●f≈f : {A B : Obj} (f : A ⇒ B ) → 𝟙 ● f ≈ f
   𝟙●f≈f f = begin
