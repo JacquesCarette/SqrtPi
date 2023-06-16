@@ -107,12 +107,12 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   -- (ix)
   CZ²≡id : CZ ^ 2 ≈ id
-  CZ²≡id = ?
+  CZ²≡id = {!!}
 
   -- (x)
   CCX²≡id : CCX ^ 2 ≈ id
-  CCX²≡id = ?
+  CCX²≡id = {!!}
 
   -- (xi)
   XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
-  XPs s = ?
+  XPs s = {!!}
