@@ -17,13 +17,20 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open import Level using (Level)
 
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
+  import Categories.Category.Monoidal.Reasoning as MonR
+  
+  private
+    module S⊎ = Symmetric S⊎
 
   open import Categorical.Scalars SR
 
   open Category C -- all of it
+  open HomReasoning
   open SqrtRig SR
   open Kit R
-
+  -- open MonR M× using (_⟩⊗⟨refl)
+  open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
+  
   X : 2×2
   X = σ⊕
 
@@ -56,3 +63,28 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   CCX :  2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
   CCX = Ctrl CX
+
+  ------------------------------------------------------------------------
+  -- Properties of Gates (split?)
+
+  -- Lemma 4.4
+  -- (ii)
+  X²≡id : X ^ 2 ≈ id
+  X²≡id = S⊎.commutative
+
+  -- (iii)
+  P² : (s : Scalar) → (P s) ^ 2 ≈ P (s ^ 2)
+  P² s = begin
+    (id ⊕₁ s) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
+    (id ∘ id) ⊕₁ (s ∘ s)  ≈⟨ identity² ⟩⊕⟨refl ⟩
+    id ⊕₁ s ^ 2           ∎
+
+  -- (iv) Split into two parts. Show P is invertible instead of assuming
+  P-invˡ : (s : Scalar) → P (inv s) ∘ P s ≈ id
+  P-invˡ s = {!!}
+  P-invʳ : (s : Scalar) → P s ∘ P (inv s) ≈ id
+  P-invʳ s = {!!}
+
+  -- (v)
+  P-comm : (s t : Scalar) → P s ∘ P t ≈ P t ∘ P s
+  P-comm s t = {!!}
