@@ -115,3 +115,10 @@ record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : 
   
   field
     E3 : V ∘ S ∘ V ≈ (ω ^ 2) ● S ∘ V ∘ S
+
+  -- the paper actually works in a Rig Groupoid in some places. Let's start
+  -- small to actually express what is in the lemmas
+  field
+    inv : Scalar → Scalar
+    invˡ : (s : Scalar) → inv s ∘ s ≈ 𝟙
+    invʳ : (s : Scalar) → s ∘ inv s ≈ 𝟙
