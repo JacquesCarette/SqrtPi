@@ -88,3 +88,31 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -- (v)
   P-comm : (s t : Scalar) → P s ∘ P t ≈ P t ∘ P s
   P-comm s t = {!!}
+
+  -- (vi)
+  PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
+  PXP s = {!!}
+
+  -- (vii)
+  XV-comm : X ∘ V ≈ V ∘ X
+  XV-comm = begin
+    X ∘ V   ≈˘⟨ E2 ⟩∘⟨refl ⟩
+    (V ∘ V) ∘ V ≈⟨ assoc ⟩
+    V ∘ (V ∘ V) ≈⟨ refl⟩∘⟨ E2 ⟩
+    V ∘ X       ∎
+
+  -- (viii)
+  CX²≡id : CX ^ 2 ≈ id
+  CX²≡id = {!!}
+
+  -- (ix)
+  CZ²≡id : CZ ^ 2 ≈ id
+  CZ²≡id = ?
+
+  -- (x)
+  CCX²≡id : CCX ^ 2 ≈ id
+  CCX²≡id = ?
+
+  -- (xi)
+  XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
+  XPs s = ?
