@@ -16,6 +16,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   open import Level using (Level)
 
+  -- open import Categories.Functor.Bifunctor using (module Bifunctor)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
   import Categories.Category.Monoidal.Reasoning as MonR
   
@@ -117,3 +118,13 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
   XPs s = {!!}
 
+  -----------------------------------------------------------------------------
+  -- Corrolaries that are used in the proofs "inline"
+  cong-P : {s t : Scalar} → (s ≈ t) → P s ≈ P t
+  cong-P = MonR.⊗-resp-≈ʳ M⊎
+  
+  S²≡Z : S ∘ S ≈ Z
+  S²≡Z = begin
+    P i ∘ P i ≈⟨ P² i ⟩
+    P (i ^ 2) ≈⟨ cong-P i²≡-𝟙 ⟩
+    P -𝟙      ∎

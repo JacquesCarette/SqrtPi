@@ -15,9 +15,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   open import Level using (Level)
 
-  -- open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
   import Categories.Category.Monoidal.Reasoning as MonR
-  
+  open import Categories.Morphism.Reasoning C
   private
     module S⊎ = Symmetric S⊎
 
@@ -82,3 +81,11 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   HZH≡X : H ∘ Z ∘ H ≈ X
   HZH≡X = {!!}
+
+  -----------------------------------------------------------------
+  -- useful corrolaries
+  HSSH≡X : H ∘ S ∘ S ∘ H ≈ X
+  HSSH≡X = begin
+    H ∘ S ∘ S ∘ H ≈⟨ pull-center S²≡Z ⟩
+    H ∘ Z ∘ H     ≈⟨ HZH≡X ⟩
+    X             ∎

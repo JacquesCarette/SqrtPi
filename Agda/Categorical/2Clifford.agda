@@ -19,9 +19,11 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
 
   -- open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
   import Categories.Category.Monoidal.Reasoning as MonR
+  open import Categories.Functor.Bifunctor.Properties using ([_]-commute)
   
   private
     module S⊎ = Symmetric S⊎
+    module S× = Symmetric S×
 
   open import Categorical.Scalars SR
   open import Categorical.Gates SR
@@ -36,7 +38,7 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   private
     variable
       A B : Obj
-      f : A ⇒ B
+      f g : A ⇒ B
       s t : Scalar
       
   ----------------------------------------------------------------
@@ -44,16 +46,8 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   C1 : s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
   C1 = left-right-●
   -- C2
-  C2HS : H ∘ S ≈ S ∘ H
-  C2HS = begin
-    H ∘ S                                   ≡⟨⟩
-    (ω ● X ∘ S ∘ V ∘ S ∘ X) ∘ id ⊕₁ (ω ^ 2) ≈⟨ {!!} ⟩
-    id ⊕₁ (ω ^ 2) ∘ (ω ● X ∘ S ∘ V ∘ S ∘ X) ≡⟨⟩
-    S ∘ H ∎
-  C2HT : H ∘ T ≈ T ∘ H
-  C2HT = {!!}
-  C2ST : S ∘ T ≈ T ∘ S
-  C2ST = P-comm i ω
+  C2 : (f ⊗₁ id) ∘ (id ⊗₁ g) ≈ (id ⊗₁ g) ∘ (f ⊗₁ id)
+  C2 = Equiv.sym [ S×.⊗ ]-commute
   -- C3
   C3 : ω ^ 8 ≈ id
   C3 = E1
@@ -70,8 +64,21 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   C7 : CZ ^ 2 ≈ id
   C7 = {!!}
   -- C8
+  C8 : Ctrl Z ∘ (S ⊗₁ id) ≈ (S ⊗₁ id) ∘ Ctrl Z
+  C8 = {!!}
   -- C9
+  C9 : Ctrl Z ∘ (id ⊗₁ S) ≈ (id ⊗₁ S) ∘ Ctrl Z
+  C9 = {!!}
   -- C10
+  C10 : Ctrl Z ∘ (X ⊗₁ id) ≈ (X ⊗₁ Z) ∘ Ctrl Z
+  C10 = ?
   -- C11
   -- C12
   -- C13
+  -- C14
+  -- C15
+  -- C16
+  -- C17
+  -- C18
+  -- C19
+  -- C20
