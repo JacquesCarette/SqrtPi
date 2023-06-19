@@ -42,7 +42,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   Z T H : 2×2
   Z = P -𝟙
   T = P ω
-  H = ω ● X ∘ S ∘ V ∘ S ∘ X
+  H = ω ● (X ∘ S ∘ V ∘ S ∘ X)
 
   -- note that this isn't quite what's in the paper, but it is equivalent
   Midswap : {A B C D : Obj} → (A ⊕₀ B) ⊕₀ (C ⊕₀ D) ⇒ (A ⊕₀ C) ⊕₀ (B ⊕₀ D)
@@ -65,6 +65,13 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   CCX :  2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
   CCX = Ctrl CX
 
+  -----------------------------------------------------------------------
+  -- Convenient further abbreviations that recur in circuits
+  T† : 2×2
+  T† = T ^ 7
+
+  THT† : 2×2
+  THT† = T ∘ H ∘ T†
   ------------------------------------------------------------------------
   -- Properties of Gates (split?)
 
