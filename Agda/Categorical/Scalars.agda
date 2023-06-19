@@ -14,13 +14,15 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   open import Level using (Level)
 
   open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
-
+  
   open Category C -- all of it
   open HomReasoning
   open MR C
   open SqrtRig SR
   open Kit R
+  open MonR M× using (refl⟩⊗⟨_)
   
   private
     module M⊎ = Monoidal M⊎
@@ -97,3 +99,9 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
      s ● (g ∘ f) ≈ g ∘ (s ● f)
   ●-over-∘ {s = s} {f} {g} = {!!}
+
+  -----------------------------
+  -- extra lemmas that are implicitly assumed currently
+  ●-cong : {A B : Obj} {s : Scalar} {f g : A ⇒ B} → f ≈ g →
+    s ● f ≈ s ● g
+  ●-cong eq = refl⟩∘⟨ refl⟩⊗⟨ eq ⟩∘⟨refl
