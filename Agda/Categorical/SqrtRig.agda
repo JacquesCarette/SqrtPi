@@ -94,7 +94,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     s ^ (a + b)   ∎
   
   -- Scalar multiplication (Definition 4.1)
-  infixr 45 _●_
+  infixr 25 _●_
   _●_ : {t₁ t₂ : Obj} → Scalar → C [ t₁ , t₂ ] → C [ t₁ , t₂ ]
   s ● c = λ⇒ ∘ (s ⊗₁ c) ∘ λ⇐
 
@@ -114,7 +114,7 @@ record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : 
   S = id ⊕₁ (ω ^ 2)
   
   field
-    E3 : V ∘ S ∘ V ≈ (ω ^ 2) ● S ∘ V ∘ S
+    E3 : V ∘ S ∘ V ≈ ω ^ 2 ● S ∘ V ∘ S
 
   -- the paper actually works in a Rig Groupoid in some places. Let's start
   -- small to actually express what is in the lemmas
