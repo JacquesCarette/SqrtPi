@@ -37,7 +37,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
       s t : Scalar
       
   ----------------------------------------------------------------
-  -- Lemma 4.5
+  -- Lemma lem:mat
   -- (1)
   Mat-f-right : Mat ∘ (id ⊗₁ f) ≈ (f ⊕₁ f) ∘ Mat
   Mat-f-right = {!!}
@@ -75,7 +75,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-P-left = {!!}
 
   ----------------------------------------------------------------
-  -- Lemma 4.6
+  -- Lemma lem:had
   HXH≡Z : H ∘ X ∘ H ≈ Z
   HXH≡Z = {!!}
 

@@ -56,46 +56,46 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)
   -- 2. infrastructure for 'commutative cubes'
   
-  -- Proposition 4.3
+  -- Proposition prop:scalars
   -- (i)
   scalar-comm : {s t : Scalar} → s ∘ t ≈ t ∘ s
   scalar-comm {s} {t} = begin
     s ∘ t ≈⟨ {!!} ⟩
     t ∘ s ∎
 
-  -- Proposition 4.3 (ii)
+  -- (ii)
   scalar-inverse : {s t : Scalar} → (s ∘ s ≈ t) → inv s ≈ inv t ∘ s
   scalar-inverse {s} {t} p = {!!}
 
-  -- Proposition 4.3 (iii) (used in C1)
+  -- (iii) (used in C1)
   -- we don't define a right-handed ● so expand out its definition here
   left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
   left-right-● = {!!}
   
-  -- Proposition 4.3 (iv)
+  -- (iv)
   𝟙●f≈f : {A B : Obj} (f : A ⇒ B ) → 𝟙 ● f ≈ f
   𝟙●f≈f f = begin
     λ⇒ ∘ 𝟙 ⊗₁ f ∘ λ⇐ ≈⟨ pullˡ M×.unitorˡ-commute-from ⟩
     (f ∘ λ⇒) ∘ λ⇐    ≈⟨ cancelʳ M×.unitorˡ.isoʳ ⟩
     f               ∎
 
-  -- Proposition 4.3 (v)
+  -- (v)
   s●t≈s∘t : {s t : Scalar} → s ● t ≈ s ∘ t
   s●t≈s∘t {s} {t} = begin
     λ⇒ ∘ s ⊗₁ t ∘ λ⇐ ≡⟨ {!!} ⟩
     s ∘ t            ∎
 
-  -- Proposition 4.3 (vi)
+  -- (vi)
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = {!!}
 
-  -- Proposition 4.3 (vii)
+  -- (vii)
   ●-assocˡ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
     s ● (g ∘ f) ≈ (s ● g) ∘ f
   ●-assocˡ {s = s} {f} {g} = {!!}
 
-  -- Proposition 4.3 (viii)
+  -- (viii)
   ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
      s ● (g ∘ f) ≈ g ∘ (s ● f)
   ●-over-∘ {s = s} {f} {g} = {!!}
