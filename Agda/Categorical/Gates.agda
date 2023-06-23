@@ -75,7 +75,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   ------------------------------------------------------------------------
   -- Properties of Gates (split?)
 
-  -- Lemma 4.4
+  -- Lemma lem:gates
   -- (ii)
   X²≡id : X ^ 2 ≈ id
   X²≡id = S⊎.commutative
