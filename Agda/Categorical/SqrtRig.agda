@@ -29,7 +29,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
 
   open M× using (_⊗₀_; _⊗₁_) public
   open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
-  open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐) public
+  open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
   open RigCategory R using (distribᵣ)
 
   private
