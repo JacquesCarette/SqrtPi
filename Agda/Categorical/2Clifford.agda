@@ -46,46 +46,51 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
       s t : Scalar
       
   ----------------------------------------------------------------
-  -- C1
-  C1 : s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
-  C1 = left-right-●
-  -- C2
-  C2 : (f ⊗₁ id) ∘ (id ⊗₁ g) ≈ (id ⊗₁ g) ∘ (f ⊗₁ id)
-  C2 = Equiv.sym [ S×.⊗ ]-commute
-  -- C3
-  C3 : ω ^ 8 ≈ id
-  C3 = E1
+  -- Full Abstraction for ≤ 2-qubit Clifford
+  --
+  -- First two already hold in any rig category
+  -- A1
+  A1 : s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
+  A1 = left-right-●
+  -- A2
+  A2 : (f ⊗₁ id) ∘ (id ⊗₁ g) ≈ (id ⊗₁ g) ∘ (f ⊗₁ id)
+  A2 = Equiv.sym [ S×.⊗ ]-commute
+  ------
+  -- Next ones (A3-A13) are the ones that involve square-roots
+  -- A3
+  A3 : ω ^ 8 ≈ id
+  A3 = E1
   -- C4
-  C4 : H ^ 2 ≈ id
-  C4 = begin
+  A4 : H ^ 2 ≈ id
+  A4 = begin
     H ∘ H ≡⟨⟩
     H ∘ (ω ● (X ∘ S ∘ V ∘ S ∘ X))                        ≈˘⟨ ●-over-∘ ⟩
     ω ● (ω ● (X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ {!!} ⟩
     ω ^ 2 ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ {!!} ⟩
     ω ^ 2 ● ((X ∘ S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X)            ≈⟨ {!!} ⟩
     id                            ∎
-  -- C5
-  C5 : S ^ 4 ≈ id
-  C5 = {!!}
-  -- C6
-  C6 : (S ∘ H) ^ 3 ≈ ω ● id
-  C6 = {!!}
-  -- C7
-  C7 : CZ ^ 2 ≈ id
-  C7 = {!!}
-  -- C8
-  C8 : Ctrl Z ∘ (S ⊗₁ id) ≈ (S ⊗₁ id) ∘ Ctrl Z
-  C8 = {!!}
-  -- C9
-  C9 : Ctrl Z ∘ (id ⊗₁ S) ≈ (id ⊗₁ S) ∘ Ctrl Z
-  C9 = {!!}
-  -- C10 (i.e. given S²≡Z and HSSH≡X this is what we need to prove
-  C10 : Ctrl Z ∘ (X ⊗₁ id) ≈ (X ⊗₁ Z) ∘ Ctrl Z
-  C10 = {!!}
-  -- C11 (Same comments as C10)
+  -- A5
+  A5 : S ^ 4 ≈ id
+  A5 = {!!}
+  -- A6
+  A6 : (S ∘ H) ^ 3 ≈ ω ● id
+  A6 = {!!}
+  -- A7
+  A7 : CZ ^ 2 ≈ id
+  A7 = {!!}
+  -- A8
+  A8 : Ctrl Z ∘ (S ⊗₁ id) ≈ (S ⊗₁ id) ∘ Ctrl Z
+  A8 = {!!}
+  -- A9
+  A9 : Ctrl Z ∘ (id ⊗₁ S) ≈ (id ⊗₁ S) ∘ Ctrl Z
+  A9 = {!!}
+  -- A10 (i.e. given S²≡Z and HSSH≡X this is what we need to prove
+  A10 : Ctrl Z ∘ (X ⊗₁ id) ≈ (X ⊗₁ Z) ∘ Ctrl Z
+  A10 = {!!}
+  -- A11 (Same comments as A10)
   -- Uses 4.5(5)
-  C11 : Ctrl Z ∘ (id ⊗₁ X) ≈ Z ⊗₁ X ∘ Ctrl Z
-  C11 = begin
+  A11 : Ctrl Z ∘ (id ⊗₁ X) ≈ Z ⊗₁ X ∘ Ctrl Z
+  A11 = begin
     Ctrl Z ∘ (id ⊗₁ X)                 ≈˘⟨ SWAP-CP-SWAP ⟩∘⟨refl ⟩
     (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (id ⊗₁ X) ≈⟨ assoc²' ⟩
     SWAP ∘ Ctrl Z ∘ SWAP ∘ (id ⊗₁ X)   ≈⟨ refl⟩∘⟨ refl⟩∘⟨ S×.braiding.⇒.commute (id , X) ⟩
@@ -93,12 +98,15 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     SWAP ∘ ((X ⊗₁ Z) ∘ Ctrl Z) ∘ SWAP  ≈⟨ {!!} ⟩
     (Z ⊗₁ X) ∘ SWAP ∘ Ctrl Z ∘ SWAP    ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
     (Z ⊗₁ X) ∘ Ctrl Z                  ∎
-  -- C12
-  C12 : inv ω ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
-  C12 = {!!}
-  -- C13
-  C13 : inv ω ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
-  C13 = {!!}
+  -- A12
+  A12 : inv ω ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
+  A12 = {!!}
+  -- A13
+  A13 : inv ω ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
+  A13 = {!!}
+
+  --------------------------------------------------------
+  -- These need to be moved elsewhere
   -- C14
   C14 : T ^ 2 ≈ S
   C14 = {!!}
