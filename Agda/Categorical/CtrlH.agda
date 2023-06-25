@@ -65,8 +65,8 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   CZ↝CX = {!!}
 
   sCZ↝bCX :  H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ≈ SWAP ∘ Ctrl X ∘ SWAP
-  sCZ↝bCX = ?
+  sCZ↝bCX = {!!}
 
   sCX↝HbCX : H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id ≈ id ⊗₁ H ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ id ⊗₁ H
-  sCX↝HbCX = ?
+  sCX↝HbCX = {!!}
   
