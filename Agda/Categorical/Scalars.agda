@@ -73,7 +73,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   -- we don't define a right-handed ● so expand out its definition here
   left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
   left-right-● {s = s} {f} = begin
-    λ⇒ ∘ s ⊗₁ f ∘ λ⇐ ≈⟨ {!!} ⟩    
+    λ⇒ ∘ s ⊗₁ f ∘ λ⇐ ≈⟨ {!M×.unitorˡ-commute-to!} ⟩    
     ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐ ∎
   
   -- (iv)
@@ -84,13 +84,13 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     f               ∎
 
   -- (v)
-  {- Guess: not needed
-  s●t≈s∘t : {s t : Scalar} → s ● t ≈ s ∘ t
-  s●t≈s∘t {s} {t} = begin
-    λ⇒ ∘ s ⊗₁ t ∘ λ⇐ ≡⟨ {!!} ⟩
-    s ∘ t            ∎
-  -}
-  -- (vi)
+  push-scalar-left : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
+    s ● (t ● f) ≈ (s ∘ t) ● f
+  push-scalar-left {s = s} {t} {f} = begin
+    λ⇒ ∘ s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ∘ λ⇐ ≈⟨ {!!} ⟩
+    λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐             ∎
+  
+  -- (vii)
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = begin
