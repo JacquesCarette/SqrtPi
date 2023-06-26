@@ -8,8 +8,8 @@ open import Categories.Category.RigCategory
 open import Categorical.SqrtRig using (SqrtRig; module Kit)
 
 -- Everything is over a SqrtRig
-module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
-  {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
+module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoidal 𝒞} {S⊎ : Symmetric M⊎}
+  {S× : Symmetric M×} {R : RigCategory 𝒞 S⊎ S×} (SR : SqrtRig R) where
 
   open import Level using (Level)
 
@@ -17,12 +17,12 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
   
-  open Category C -- all of it
+  open Category 𝒞 -- all of it
   open HomReasoning
-  open MR C
+  open MR 𝒞
   open SqrtRig SR
   open Kit R
-  open MonR M× using (refl⟩⊗⟨_)
+  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl)
   
   private
     module M⊎ = Monoidal M⊎
@@ -58,19 +58,23 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
   
   -- Proposition prop:scalars
   -- (i)
+  {- Guess: not needed
   scalar-comm : {s t : Scalar} → s ∘ t ≈ t ∘ s
   scalar-comm {s} {t} = begin
     s ∘ t ≈⟨ {!!} ⟩
     t ∘ s ∎
-
+  -}
   -- (ii)
+  {- guess: not needed
   scalar-inverse : {s t : Scalar} → (s ∘ s ≈ t) → inv s ≈ inv t ∘ s
   scalar-inverse {s} {t} p = {!!}
-
+  -}
   -- (iii) (used in C1)
   -- we don't define a right-handed ● so expand out its definition here
   left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
-  left-right-● = {!!}
+  left-right-● {s = s} {f} = begin
+    λ⇒ ∘ s ⊗₁ f ∘ λ⇐ ≈⟨ {!!} ⟩    
+    ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐ ∎
   
   -- (iv)
   𝟙●f≈f : {A B : Obj} (f : A ⇒ B ) → 𝟙 ● f ≈ f
@@ -80,20 +84,28 @@ module Categorical.Scalars {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal
     f               ∎
 
   -- (v)
+  {- Guess: not needed
   s●t≈s∘t : {s t : Scalar} → s ● t ≈ s ∘ t
   s●t≈s∘t {s} {t} = begin
     λ⇒ ∘ s ⊗₁ t ∘ λ⇐ ≡⟨ {!!} ⟩
     s ∘ t            ∎
-
+  -}
   -- (vi)
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
-  ●-distrib-⊕ {s = s} {f} {g} = {!!}
+  ●-distrib-⊕ {s = s} {f} {g} = begin
+    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                   ≈⟨ {!!} ⟩
+    (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐) ∎
 
   -- (vii)
   ●-assocˡ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
     s ● (g ∘ f) ≈ (s ● g) ∘ f
-  ●-assocˡ {s = s} {f} {g} = {!!}
+  ●-assocˡ {s = s} {f} {g} = begin
+     λ⇒ ∘ s ⊗₁ (g ∘ f) ∘ λ⇐           ≈˘⟨ refl⟩∘⟨ identityʳ ⟩⊗⟨refl ⟩∘⟨refl ⟩
+     λ⇒ ∘ ((s ∘ id) ⊗₁ (g ∘ f)) ∘ λ⇐  ≈⟨ refl⟩∘⟨ M×.⊗.homomorphism ⟩∘⟨refl ⟩
+     λ⇒ ∘ ((s ⊗₁ g) ∘ (id ⊗₁ f)) ∘ λ⇐ ≈⟨ refl⟩∘⟨ pullʳ (⟺ M×.unitorˡ-commute-to) ⟩
+     λ⇒ ∘ s ⊗₁ g ∘ λ⇐ ∘ f             ≈⟨ pushʳ sym-assoc ⟩
+     (λ⇒ ∘ s ⊗₁ g ∘ λ⇐) ∘ f            ∎
 
   -- (viii)
   ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
