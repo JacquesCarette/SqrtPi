@@ -11,24 +11,27 @@ open import Categorical.SqrtRig using (SqrtRig; module Kit)
 module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoidal 𝒞} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory 𝒞 S⊎ S×} (SR : SqrtRig R) where
 
+  open import Data.Product using (_,_)
   open import Level using (Level)
 
-  open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  -- open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  import Categories.Category.Monoidal.Braided.Properties as BraidProp
   import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
-  
-  open Category 𝒞 -- all of it
-  open HomReasoning
-  open MR 𝒞
-  open SqrtRig SR
-  open Kit R
-  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl)
   
   private
     module M⊎ = Monoidal M⊎
     module M× = Monoidal M×
     module S⊎ = Symmetric S⊎
     module S× = Symmetric S×
+    
+  open Category 𝒞 -- all of it
+  open HomReasoning
+  open MR 𝒞
+  open SqrtRig SR
+  open Kit R
+  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl)
+  open BraidProp S×.braided using (module Shorthands; braiding-coherence-inv; inv-braiding-coherence)
 
   -- Define some of our constants.
   i -i -𝟙 : Scalar
@@ -71,10 +74,18 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   -}
   -- (iii) (used in C1)
   -- we don't define a right-handed ● so expand out its definition here
+  -- depends crucially on braiding behind coherent.
+  -- TODO: clean up the proof by using more combinators
   left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
   left-right-● {s = s} {f} = begin
-    λ⇒ ∘ s ⊗₁ f ∘ λ⇐ ≈⟨ {!M×.unitorˡ-commute-to!} ⟩    
-    ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐ ∎
+    λ⇒ ∘ s ⊗₁ f ∘ λ⇐                ≈˘⟨ inv-braiding-coherence ⟩∘⟨ refl⟩∘⟨ ⟺ (switch-tofromˡ σ braiding-coherence-inv) ⟩
+    (ρ⇒ ∘ σ⇐) ∘ s ⊗₁ f ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ sym-assoc ○ assoc ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ σ⇐ ∘ s ⊗₁ f) ∘ (σ⇒ ∘ ρ⇐) ≈⟨ (refl⟩∘⟨ S×.braiding.⇐.commute (f , s)) ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ f ⊗₁ s ∘ σ⇐) ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ sym-assoc ○ assoc²' ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ f ⊗₁ s ∘ σ⇐ ∘ σ⇒) ∘ ρ⇐    ≈⟨ (refl⟩∘⟨ elimʳ (S×.braiding.iso.isoˡ _)) ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ f ⊗₁ s) ∘ ρ⇐               ≈⟨ assoc ⟩
+    ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐                 ∎
+    where open Shorthands
   
   -- (iv)
   𝟙●f≈f : {A B : Obj} (f : A ⇒ B ) → 𝟙 ● f ≈ f
