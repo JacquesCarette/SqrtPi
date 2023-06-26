@@ -57,6 +57,9 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   Ctrl : {A : Obj} (m : Endo {A}) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
   Ctrl m = Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat
 
+  nCtrl : {A : Obj} (m : Endo {A}) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
+  nCtrl m = Mat⁻¹ ∘ (m ⊕₁ id) ∘ Mat
+
   SWAP CX CZ : 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C
   SWAP = σ⊗
   CX = Ctrl X
