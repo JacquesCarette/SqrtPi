@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 -- add --safe when there are no more holes
 
--- Various lemmas about Hadamard and controlled gates
+-- Soundness and Completeness for ≤ n-qubit Clifford relations
 
 open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
@@ -11,7 +11,7 @@ open import Categories.Category.RigCategory
 open import Categorical.SqrtRig
 
 -- Everything is over a SqrtRig
-module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
+module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
   {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
 
@@ -46,35 +46,24 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
       s t : Scalar
       
   ----------------------------------------------------------------
-  -- lem:ctrlh
+  Zz zZ : C [ (2C ⊗₀ 2C) ⊗₀ 2C , (2C ⊗₀ 2C) ⊗₀ 2C ]
+  Zz = Ctrl Z ⊗₁ id ∘ α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒
+  zZ = α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∘ Ctrl Z ⊗₁ id
+  
+  B1 : zZ ≈ Zz
+  B1 = {!!}
+
   --
-  -- Here we use ↝ to mean "becomes under conjugation with id ⊗₁ H",
-  -- a prefix 'b' to mean bottom-controlled
-  -- a prefix 's' means conjugation with H ⊗₁ id (i.e. swapped H)
-  -- a prefix 'H' on the right means an additional conjugation with id ⊗₁ H
-  CX↝CZ : id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H ≈ Ctrl Z
-  CX↝CZ = {!!}
+  cc dd : C [ 2C ⊗₀ 2C , 2C ⊗₀ 2C ]
+  cc = Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z
+  dd = H ⊗₁ H ∘ Ctrl Z ∘ H ⊗₁ H
+  
+  B2 : cc ⊗₁ id ∘ id ⊗₁ dd ∘ cc ⊗₁ id ≈ id ⊗₁ cc ∘ dd ⊗₁ id ∘ id ⊗₁ cc
+  B2 = {!!}
 
-  -- Note how this could also have been written
-  -- SWAP ∘ id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H ∘ SWAP ≈ Ctrl Z
-  -- which shows how Ctrl Z is symmetric top-down
-  bCX↝CZ : H ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ H ⊗₁ id ≈ Ctrl Z
-  bCX↝CZ = {!!}
+  --
+  B3 : α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∘ dd ⊗₁ id ∘ Zz ∘ dd ⊗₁ id ∘ Zz ∘ dd ⊗₁ id ∘ Ctrl Z ⊗₁ id ≈ id
+  B3 = {!!}
 
-  CZ↝CX :  id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ≈ Ctrl X
-  CZ↝CX = {!!}
-
-  sCZ↝bCX :  H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ≈ SWAP ∘ Ctrl X ∘ SWAP
-  sCZ↝bCX = {!!}
-
-  sCX↝HbCX : H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id ≈ id ⊗₁ H ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ id ⊗₁ H
-  sCX↝HbCX = {!!}
-
-  ---------------------------------------------------------------
-  -- lem:nctrlh
-  -- How is negative control related to Ctrl ?
-  nCtrl~Ctrl : (f : Endo {A}) → nCtrl f ≈ X ⊗₁ id ∘ Ctrl f ∘ X ⊗₁ id
-  nCtrl~Ctrl f = {!!}
-
-  nCtrl+inv~Ctrl : (f : Endo {A}) → f ∘ f ≈ f → nCtrl f ≈ Ctrl f ∘ id ⊗₁ f
-  nCtrl+inv~Ctrl f invol = {!!}
+  --
+  -- B4 still needs done

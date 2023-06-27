@@ -13,12 +13,13 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
 
-
+  open import Data.Product using (_,_)
   open import Level using (Level)
 
   -- open import Categories.Functor.Bifunctor using (module Bifunctor)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
   import Categories.Category.Monoidal.Reasoning as MonR
+  import Categories.Morphism.Reasoning as MR
   
   private
     module S⊎ = Symmetric S⊎
@@ -29,8 +30,9 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
+  open MR C
   -- open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
+  open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
   
   X : 2×2
   X = σ⊕
@@ -68,13 +70,6 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   CCX :  2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
   CCX = Ctrl CX
 
-  -----------------------------------------------------------------------
-  -- Convenient further abbreviations that recur in circuits
-  T† : 2×2
-  T† = T ^ 7
-
-  THT† : 2×2
-  THT† = T ∘ H ∘ T†
   ------------------------------------------------------------------------
   -- Properties of Gates (split?)
 
@@ -92,17 +87,31 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   -- (iv) Split into two parts. Show P is invertible instead of assuming
   P-invˡ : (s : Scalar) → P (inv s) ∘ P s ≈ id
-  P-invˡ s = {!!}
+  P-invˡ s = begin
+    (id ⊕₁ inv s) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
+    (id ∘ id) ⊕₁ (inv s ∘ s)  ≈⟨ identity² ⟩⊕⟨ invˡ s ⟩
+    id ⊕₁ id                  ≈⟨ S⊎.⊗.identity ⟩
+    id                         ∎
   P-invʳ : (s : Scalar) → P s ∘ P (inv s) ≈ id
-  P-invʳ s = {!!}
+  P-invʳ s = begin
+    (id ⊕₁ s) ∘ (id ⊕₁ inv s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
+    (id ∘ id) ⊕₁ (s ∘ inv s)  ≈⟨ identity² ⟩⊕⟨ invʳ s ⟩
+    id ⊕₁ id                  ≈⟨ S⊎.⊗.identity ⟩
+    id                         ∎
 
   -- (v)
+  {- no needed
   P-comm : (s t : Scalar) → P s ∘ P t ≈ P t ∘ P s
   P-comm s t = {!!}
-
+  -}
   -- (vi)
   PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
-  PXP s = {!!}
+  PXP s = begin
+    (id ⊕₁ s) ∘ X ∘ (id ⊕₁ s) ≈⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , s) ⟩
+    (id ⊕₁ s) ∘ (s ⊕₁ id) ∘ X ≈⟨ pullˡ (Equiv.sym serialize₂₁)  ⟩
+    (s ⊕₁ s) ∘ X              ≈⟨ {!!} ⟩∘⟨refl ⟩
+    (s ● id ⊕₁ s ● id) ∘ X    ≈⟨ {!!} ⟩
+    λ⇒ ∘ (s ⊗₁ X) ∘ λ⇐        ∎
 
   -- (vii)
   XV-comm : X ∘ V ≈ V ∘ X
