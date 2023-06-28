@@ -107,11 +107,14 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -- (vi)
   PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
   PXP s = begin
-    (id ⊕₁ s) ∘ X ∘ (id ⊕₁ s) ≈⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , s) ⟩
-    (id ⊕₁ s) ∘ (s ⊕₁ id) ∘ X ≈⟨ pullˡ (Equiv.sym serialize₂₁)  ⟩
-    (s ⊕₁ s) ∘ X              ≈⟨ {!!} ⟩∘⟨refl ⟩
-    (s ● id ⊕₁ s ● id) ∘ X    ≈⟨ {!!} ⟩
-    λ⇒ ∘ (s ⊗₁ X) ∘ λ⇐        ∎
+    (id ⊕₁ s) ∘ X ∘ (id ⊕₁ s)  ≈⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , s) ⟩
+    (id ⊕₁ s) ∘ (s ⊕₁ id) ∘ X  ≈⟨ pullˡ (Equiv.sym serialize₂₁)  ⟩
+    (s ⊕₁ s) ∘ X               ≈˘⟨ identityʳ ⟩⊕⟨ identityʳ ⟩∘⟨refl ⟩
+    ((s ∘ id) ⊕₁ (s ∘ id)) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
+    (s ● id ⊕₁ s ● id) ∘ X     ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
+    (s ● (id ⊕₁ id)) ∘ X       ≈˘⟨ ●-assocˡ ⟩
+    s ● ((id ⊕₁ id) ∘ X)       ≈⟨ ●-congʳ (elimˡ S⊎.⊗.identity) ⟩
+    s ● X                      ∎
 
   -- (vii)
   XV-comm : X ∘ V ≈ V ∘ X
@@ -121,9 +124,20 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     V ∘ (V ∘ V) ≈⟨ refl⟩∘⟨ E2 ⟩
     V ∘ X       ∎
 
+  -- lemma that makes (viii) and (ix) the same
+  CA∘CB≡id : {A B : 2×2} → A ≈ B → Ctrl A ∘ Ctrl B ≈ id
+  CA∘CB≡id {A = A} {B} A≈B = begin
+    (Mat⁻¹ ∘ (id ⊕₁ A) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat ≈⟨ {!!} ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ A)) ∘ (id ⊕₁ B) ∘ Mat               ≈⟨ {!!} ⟩
+    Mat⁻¹ ∘ (id ∘ id) ⊕₁ (A ∘ B) ∘ Mat                  ≈⟨ {!!} ⟩
+    Mat⁻¹ ∘ id ⊕₁ id ∘ Mat                              ≈⟨ {!!} ⟩
+    Mat⁻¹ ∘ Mat                                         ≈⟨ {!!} ⟩
+    id                                                   ∎
+    
   -- (viii)
   CX²≡id : CX ^ 2 ≈ id
-  CX²≡id = {!!}
+  CX²≡id = {!begin
+    (Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat!}
 
   -- (ix)
   CZ²≡id : CZ ^ 2 ≈ id
