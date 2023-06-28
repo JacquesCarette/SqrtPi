@@ -30,7 +30,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open MR 𝒞
   open SqrtRig SR
   open Kit R
-  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl)
+  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_)
   open BraidProp S×.braided using (module Shorthands; braiding-coherence-inv; inv-braiding-coherence)
 
   -- Define some of our constants.
@@ -137,20 +137,23 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
 
   -----------------------------
   -- extra lemmas that are implicitly assumed currently
-  ●-cong : {A B : Obj} {s : Scalar} {f g : A ⇒ B} → f ≈ g →
+  ●-cong : {A B : Obj} {s t : Scalar} {f g : A ⇒ B} → s ≈ t → f ≈ g →
+    s ● f ≈ t ● g
+  ●-cong s≈t f≈g = refl⟩∘⟨ s≈t ⟩⊗⟨ f≈g ⟩∘⟨refl
+  
+  ●-congʳ : {A B : Obj} {s : Scalar} {f g : A ⇒ B} → f ≈ g →
     s ● f ≈ s ● g
-  ●-cong eq = refl⟩∘⟨ refl⟩⊗⟨ eq ⟩∘⟨refl
+  ●-congʳ f≈g = ●-cong Equiv.refl f≈g
 
+  ●-congˡ : {A B : Obj} {s t : Scalar} {f : A ⇒ B} → s ≈ t →
+    s ● f ≈ t ● f
+  ●-congˡ s≈t = ●-cong s≈t Equiv.refl
+  
   scalar-●≈∘ : {s t : Scalar} → s ● t ≈ s ∘ t
   scalar-●≈∘ {s = s} {t} = begin
     λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐ ≈⟨ {!!} ⟩
     λ⇒ ∘ (s ⊗₁ id) ∘ (id ⊗₁ t) ∘ λ⇐ ≈⟨ {!refl⟩∘⟨ refl⟩∘⟨ (Equiv.sym M×.unitorˡ-commute-to)!} ⟩
     λ⇒ ∘ (s ⊗₁ id) ∘ λ⇐ ∘ t ≈⟨ {!!} ⟩
-    (s ● id) ∘ t ≈⟨ ? ⟩
+    (s ● id) ∘ t ≈⟨ {!!} ⟩
     s ∘ t               ∎
   
-  s●id : {s : Scalar} → s ● id ≈ s
-  s●id {s = s} = begin
-    λ⇒ ∘ s ⊗₁ id ∘ λ⇐ ≈⟨ refl⟩∘⟨ {!Equiv.sym M×.unitorˡ-commute-to!} ⟩
-    λ⇒ ∘ λ⇐ ∘ s      ≈⟨ {!!} ⟩
-    s                  ∎
