@@ -66,4 +66,6 @@ module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
   B3 = {!!}
 
   --
-  -- B4 still needs done
+  B4 : Ctrl Z ⊗₁ id ∘ α⇐ ∘ id ⊗₁ dd ∘ α⇒ ∘ zZ ∘ α⇐ ∘ id ⊗₁ dd ∘ α⇒ ∘ zZ
+                          ∘ α⇐ ∘ id ⊗₁ dd ∘ id ⊗₁ Ctrl Z ∘ α⇒ ≈ id
+  B4 = {!!}
