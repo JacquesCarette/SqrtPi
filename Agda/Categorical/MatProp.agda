@@ -50,9 +50,19 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-SWAP : Mat ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = {!!}
 
+  --- useful lemma for (3) below
+  Midswap≡MSwapM⁻¹ : Midswap ≈ Mat ∘ SWAP ∘ Mat⁻¹
+  Midswap≡MSwapM⁻¹ = begin
+    Midswap                 ≈⟨ insertʳ Mat-invʳ ⟩
+    (Midswap ∘ Mat) ∘ Mat⁻¹ ≈⟨ pushˡ (Equiv.sym Mat-SWAP) ⟩
+    Mat ∘ SWAP ∘ Mat⁻¹      ∎
+    
   -- (3)
   SWAP-Mat⁻¹ : SWAP ∘ Mat⁻¹ ≈ Mat⁻¹ ∘ Midswap
-  SWAP-Mat⁻¹ = {!!}
+  SWAP-Mat⁻¹ = begin
+    SWAP ∘ Mat⁻¹                 ≈⟨ insertˡ Mat-invˡ ⟩
+    Mat⁻¹ ∘ (Mat ∘ SWAP ∘ Mat⁻¹) ≈˘⟨ refl⟩∘⟨ Midswap≡MSwapM⁻¹ ⟩
+    Mat⁻¹ ∘ Midswap ∎
 
   -- (4)
   Mat-f-left : Mat ∘ (f ⊗₁ id) ≈ Midswap ∘ (f ⊕₁ f) ∘ Midswap ∘ Mat
