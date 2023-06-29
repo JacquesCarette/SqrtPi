@@ -91,6 +91,11 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     pow s a ∘ pow s b ≈⟨ pow-add s a b ⟩
     pow s (a + b)     ≈˘⟨ ^≈pow s (a + b) ⟩
     s ^ (a + b)   ∎
+
+  ^-cong : {a : Obj} {x y : Endo {a}} → x ≈ y → (n : ℕ) → x ^ n ≈ y ^ n
+  ^-cong x≈y zero = Equiv.refl
+  ^-cong x≈y (suc zero) = x≈y
+  ^-cong x≈y (suc (suc n)) = ∘-resp-≈ x≈y (^-cong x≈y (suc n))
   
   -- Scalar multiplication (Definition 4.1)
   infixr 25 _●_
