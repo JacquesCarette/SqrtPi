@@ -17,8 +17,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Morphism.Reasoning C
-  private
-    module S⊎ = Symmetric S⊎
 
   open import Categorical.Scalars SR
   open import Categorical.Gates SR
@@ -27,8 +25,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
-  -- open MonR M× using (_⟩⊗⟨refl)
-  -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
+  open MonR M× using (_⟩⊗⟨refl)
+  open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
 
   private
     variable
@@ -40,7 +38,13 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- Lemma lem:mat
   -- (1)
   Mat-f-right : Mat ∘ (id ⊗₁ f) ≈ (f ⊕₁ f) ∘ Mat
-  Mat-f-right = {!!}
+  Mat-f-right {f = f} = begin
+    (λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒) ∘ (id ⊗₁ f)               ≈⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ Equiv.sym M⊎.⊗.identity ⟩⊗⟨refl ⟩
+    λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒ ∘ ((id ⊕₁ id) ⊗₁ f)        ≈⟨ refl⟩∘⟨ dr-commute ⟩ 
+    λ⇒ ⊕₁ λ⇒ ∘ (id ⊗₁ f) ⊕₁ (id ⊗₁ f) ∘ δᵣ⇒   ≈⟨ pullˡ (Equiv.sym M⊎.⊗.homomorphism) ⟩
+    (λ⇒ ∘ (id ⊗₁ f)) ⊕₁ (λ⇒ ∘ (id ⊗₁ f)) ∘ δᵣ⇒ ≈⟨ (M×.unitorˡ-commute-from ⟩⊕⟨ M×.unitorˡ-commute-from) ⟩∘⟨refl ⟩
+    (f ∘ λ⇒) ⊕₁ (f ∘ λ⇒) ∘ δᵣ⇒                 ≈⟨ pushˡ M⊎.⊗.homomorphism ⟩
+    f ⊕₁ f ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒                  ∎
 
   -- (2)
   Mat-SWAP : Mat ∘ SWAP ≈ Midswap ∘ Mat

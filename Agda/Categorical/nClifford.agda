@@ -23,11 +23,6 @@ module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Functor.Bifunctor.Properties using ([_]-commute)
   
-  private
-    module M× = Monoidal M×
-    module S⊎ = Symmetric S⊎
-    module S× = Symmetric S×
-
   open import Categorical.Scalars SR
   open import Categorical.Gates SR
   open import Categorical.MatProp SR

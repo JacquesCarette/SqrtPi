@@ -15,9 +15,6 @@ module Categorical.Examples {o ℓ e} {C : Category o ℓ e}
 open import Categorical.Scalars SR
 open import Categorical.Gates SR
 
-private
-  module S⊎ = Symmetric S⊎
-  
 open Category C
 open HomReasoning
 open SqrtRig SR

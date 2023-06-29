@@ -21,10 +21,6 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
   
-  private
-    module M× = Monoidal M×
-    module S⊎ = Symmetric S⊎
-
   open import Categorical.Scalars SR
 
   open Category C -- all of it

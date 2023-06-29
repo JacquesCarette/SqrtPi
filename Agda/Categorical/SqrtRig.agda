@@ -22,15 +22,11 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open Mor C using (_≅_)
   private
     module C = Category C
-    module M⊎ = Monoidal M⊎
-    module M× = Monoidal M×
-    module S⊎ = Symmetric S⊎
-    module S× = Symmetric S×
 
+  open RigCategory R public -- everything!
   open M× using (_⊗₀_; _⊗₁_) public
   open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
-  open RigCategory R using (distribᵣ)
 
   module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
     

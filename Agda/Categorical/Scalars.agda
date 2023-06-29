@@ -19,12 +19,6 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
   
-  private
-    module M⊎ = Monoidal M⊎
-    module M× = Monoidal M×
-    module S⊎ = Symmetric S⊎
-    module S× = Symmetric S×
-    
   open Category 𝒞 -- all of it
   open HomReasoning
   open MR 𝒞
