@@ -136,7 +136,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     (s ⊕₁ s) ∘ X               ≈˘⟨ identityʳ ⟩⊕⟨ identityʳ ⟩∘⟨refl ⟩
     ((s ∘ id) ⊕₁ (s ∘ id)) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
     (s ● id ⊕₁ s ● id) ∘ X     ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
-    (s ● (id ⊕₁ id)) ∘ X       ≈˘⟨ ●-assocˡ ⟩
+    (s ● (id ⊕₁ id)) ∘ X       ≈⟨ ●-assocʳ ⟩
     s ● ((id ⊕₁ id) ∘ X)       ≈⟨ ●-congʳ (elimˡ S⊎.⊗.identity) ⟩
     s ● X                      ∎
 
