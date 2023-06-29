@@ -105,22 +105,3 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   A13 : inv ω ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
   A13 = {!!}
 
-  --------------------------------------------------------
-  -- These need to be moved elsewhere
-  -- C14
-  C14 : T ^ 2 ≈ S
-  C14 = {!!}
-  -- C15
-  C15 : (T ∘ H ∘ S ∘ S ∘ H) ^ 2 ≈ ω ● id
-  C15 = {!!}
-  -- C16
-  C16 : Ctrl Z ∘ (T ⊗₁ id) ≈ (T ⊗₁ id) ∘ Ctrl Z
-  C16 = {!!}
-  -- C17
-  C17 : (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z ∘ (id ⊗₁ H) ≈
-        (H ⊗₁ id) ∘ Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ T)
-  C17 = {!!}
-  -- C18
-  -- C18 : id ⊗₁ THT† ∘ ? ∘ id ⊗₁ THT† ∘ ?
-  -- C19
-  -- C20
