@@ -22,6 +22,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   import Categories.Morphism.Reasoning as MR
   
   private
+    module M× = Monoidal M×
     module S⊎ = Symmetric S⊎
 
   open import Categorical.Scalars SR
@@ -32,7 +33,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open Kit R
   open MR C
   -- open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
+  open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)
   
   X : 2×2
   X = σ⊕
@@ -70,6 +71,27 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   CCX :  2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
   CCX = Ctrl CX
 
+  ------------------------------------------------------------------------
+  -- Some properties of the above that are implicitly used in the
+  -- proofs of the properties (below).
+  --
+  -- Mat⁻¹ is an inverse to Mat (i.e. was defined to be so.
+  Mat-invˡ : {A : Obj} → Mat⁻¹ {A} ∘ Mat ≈ id
+  Mat-invˡ = begin
+    (δᵣ⇐ ∘ λ⇐ ⊕₁ λ⇐) ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒ ≈⟨ center (Equiv.sym S⊎.⊗.homomorphism ○
+                                                     M×.unitorˡ.isoˡ ⟩⊕⟨ M×.unitorˡ.isoˡ)  ⟩
+    δᵣ⇐ ∘ id ⊕₁ id ∘ δᵣ⇒                 ≈⟨ refl⟩∘⟨ elimˡ S⊎.⊗.identity ⟩
+    δᵣ⇐ ∘ δᵣ⇒                             ≈⟨ dr.isoˡ ⟩
+    id                                     ∎
+
+  Mat-invʳ : {A : Obj} → Mat {A} ∘ Mat⁻¹ ≈ id
+  Mat-invʳ = begin
+    ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ δᵣ⇐ ∘ λ⇐ ⊕₁ λ⇐ ≈⟨ center dr.isoʳ ⟩
+    λ⇒ ⊕₁ λ⇒ ∘ id ∘ λ⇐ ⊕₁ λ⇐             ≈⟨ refl⟩∘⟨ identityˡ ⟩ 
+    λ⇒ ⊕₁ λ⇒ ∘ λ⇐ ⊕₁ λ⇐                  ≈˘⟨ S⊎.⊗.homomorphism ⟩
+    (λ⇒ ∘ λ⇐) ⊕₁ (λ⇒ ∘ λ⇐)               ≈⟨ (M×.unitorˡ.isoʳ ⟩⊕⟨ M×.unitorˡ.isoʳ) ○ S⊎.⊗.identity ⟩
+    id                                     ∎
+  
   ------------------------------------------------------------------------
   -- Properties of Gates (split?)
 
@@ -125,31 +147,44 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     V ∘ X       ∎
 
   -- lemma that makes (viii) and (ix) the same
-  CA∘CB≡id : {A B : 2×2} → A ≈ B → Ctrl A ∘ Ctrl B ≈ id
-  CA∘CB≡id {A = A} {B} A≈B = begin
-    (Mat⁻¹ ∘ (id ⊕₁ A) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat ≈⟨ {!!} ⟩
-    (Mat⁻¹ ∘ (id ⊕₁ A)) ∘ (id ⊕₁ B) ∘ Mat               ≈⟨ {!!} ⟩
-    Mat⁻¹ ∘ (id ∘ id) ⊕₁ (A ∘ B) ∘ Mat                  ≈⟨ {!!} ⟩
-    Mat⁻¹ ∘ id ⊕₁ id ∘ Mat                              ≈⟨ {!!} ⟩
-    Mat⁻¹ ∘ Mat                                         ≈⟨ {!!} ⟩
-    id                                                   ∎
+  CA∘CB≡id : {o : Obj} {A B : Endo {o}} → A ∘ B ≈ id → Ctrl A ∘ Ctrl B ≈ id
+  CA∘CB≡id {A = A} {B} AB≈id = begin
+    (Mat⁻¹ ∘ (id ⊕₁ A) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
+    ((Mat⁻¹ ∘ (id ⊕₁ A)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ A)) ∘ (id ⊕₁ B) ∘ Mat                 ≈⟨ center (Equiv.sym S⊎.⊗.homomorphism) ⟩
+    Mat⁻¹ ∘ (id ∘ id) ⊕₁ (A ∘ B) ∘ Mat                    ≈⟨ refl⟩∘⟨ identity² ⟩⊕⟨ AB≈id ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ id ⊕₁ id ∘ Mat                                ≈⟨ elim-center S⊎.⊗.identity ⟩
+    Mat⁻¹ ∘ Mat                                            ≈⟨ Mat-invˡ ⟩
+    id                                                     ∎
     
   -- (viii)
   CX²≡id : CX ^ 2 ≈ id
-  CX²≡id = {!begin
-    (Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat!}
+  CX²≡id = CA∘CB≡id X²≡id
 
+  -- First need that Z²≡id
+  Z²≡id : Z ^ 2 ≈ id
+  Z²≡id = begin
+    P (ω ^ 4) ∘ P (ω ^ 4) ≈⟨ P² (ω ^ 4) ⟩
+    P ((ω ^ 4) ^ 2)       ≈⟨ refl⟩⊕⟨ -𝟙²≡𝟙 ⟩
+    P 𝟙                   ≈⟨ S⊎.⊗.identity ⟩
+    id                    ∎
+  
   -- (ix)
   CZ²≡id : CZ ^ 2 ≈ id
-  CZ²≡id = {!!}
+  CZ²≡id = CA∘CB≡id Z²≡id
 
   -- (x)
   CCX²≡id : CCX ^ 2 ≈ id
-  CCX²≡id = {!!}
+  CCX²≡id = CA∘CB≡id CX²≡id
 
   -- (xi)
   XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
-  XPs s = {!!}
+  XPs s = begin
+    σ⊕ ∘ (id ⊕₁ s)             ≈⟨ S⊎.braiding.⇒.commute (id , s) ⟩
+    (s ⊕₁ id) ∘ X               ≈˘⟨ identityʳ ⟩⊕⟨ invʳ s ⟩∘⟨refl ⟩
+    (s ∘ id) ⊕₁ (s ∘ inv s) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
+    (s ● id) ⊕₁ (s ● inv s) ∘ X ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
+    s ● (id ⊕₁ inv s) ∘ X       ∎
 
   -----------------------------------------------------------------------------
   -- Corrolaries that are used in the proofs "inline"
