@@ -97,10 +97,12 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   -- Lemma lem:gates
   -- (ii)
+  -- used in CX²≡id proof
   X²≡id : X ^ 2 ≈ id
   X²≡id = S⊎.commutative
 
   -- (iii)
+  -- used in CZ²≡id proof
   P² : (s : Scalar) → (P s) ^ 2 ≈ P (s ^ 2)
   P² s = begin
     (id ⊕₁ s) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
@@ -141,7 +143,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -- (vii)
   XV-comm : X ∘ V ≈ V ∘ X
   XV-comm = begin
-    X ∘ V   ≈˘⟨ E2 ⟩∘⟨refl ⟩
+    X ∘ V       ≈˘⟨ E2 ⟩∘⟨refl ⟩
     (V ∘ V) ∘ V ≈⟨ assoc ⟩
     V ∘ (V ∘ V) ≈⟨ refl⟩∘⟨ E2 ⟩
     V ∘ X       ∎
@@ -158,10 +160,11 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     id                                                     ∎
     
   -- (viii)
+  -- useful on its own, but also in CCX²≡id
   CX²≡id : CX ^ 2 ≈ id
   CX²≡id = CA∘CB≡id X²≡id
 
-  -- First need that Z²≡id
+  -- First need that Z²≡id (for CZ²≡id)
   Z²≡id : Z ^ 2 ≈ id
   Z²≡id = begin
     P (ω ^ 4) ∘ P (ω ^ 4) ≈⟨ P² (ω ^ 4) ⟩

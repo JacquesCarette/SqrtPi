@@ -41,6 +41,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
 
   -- coherence of definitions (by associativity of ∘ )
   -- Lemma 4.4 (i)
+  -- used in CZ²≡id 
   -𝟙²≡𝟙 : -𝟙 ^ 2 ≈ 𝟙
   -𝟙²≡𝟙 = begin
     (ω ^ 4) ∘ ω ^ 4                       ≈⟨ pullʳ (pullʳ assoc) ⟩
@@ -102,6 +103,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐                                  ∎
   
   -- (vi)
+  -- used in PXP proof
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = begin
@@ -109,6 +111,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐) ∎
 
   -- (vii)
+  -- used in PXP proof
   ●-assocˡ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
     s ● (g ∘ f) ≈ (s ● g) ∘ f
   ●-assocˡ {s = s} {f} {g} = begin
@@ -134,7 +137,8 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   ●-cong : {A B : Obj} {s t : Scalar} {f g : A ⇒ B} → s ≈ t → f ≈ g →
     s ● f ≈ t ● g
   ●-cong s≈t f≈g = refl⟩∘⟨ s≈t ⟩⊗⟨ f≈g ⟩∘⟨refl
-  
+
+  -- used in PXP proof
   ●-congʳ : {A B : Obj} {s : Scalar} {f g : A ⇒ B} → f ≈ g →
     s ● f ≈ s ● g
   ●-congʳ f≈g = ●-cong Equiv.refl f≈g
@@ -142,7 +146,8 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   ●-congˡ : {A B : Obj} {s t : Scalar} {f : A ⇒ B} → s ≈ t →
     s ● f ≈ t ● f
   ●-congˡ s≈t = ●-cong s≈t Equiv.refl
-  
+
+  -- used in PXP proof
   scalar-●≈∘ : {s t : Scalar} → s ● t ≈ s ∘ t
   scalar-●≈∘ {s = s} {t} = begin
     λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐ ≈⟨ {!!} ⟩
