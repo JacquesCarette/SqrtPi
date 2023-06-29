@@ -32,8 +32,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
   open RigCategory R using (distribᵣ)
 
-  private
-    module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
+  module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
     
   σ⊕ : ∀ {X Y} → X ⊕₀ Y ⇒ Y ⊕₀ X
   σ⊕ {X} {Y} = S⊎.braiding.⇒.η (X , Y)
