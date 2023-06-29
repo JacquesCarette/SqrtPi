@@ -121,6 +121,11 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
      λ⇒ ∘ s ⊗₁ g ∘ λ⇐ ∘ f             ≈⟨ pushʳ sym-assoc ⟩
      (λ⇒ ∘ s ⊗₁ g ∘ λ⇐) ∘ f            ∎
 
+  -- often we want the symmetric version
+  ●-assocʳ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
+    (s ● g) ∘ f ≈ s ● (g ∘ f)
+  ●-assocʳ = Equiv.sym ●-assocˡ
+  
   -- (viii)
   ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
      s ● (g ∘ f) ≈ g ∘ (s ● f)
