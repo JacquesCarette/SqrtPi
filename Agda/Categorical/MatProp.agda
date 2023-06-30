@@ -13,6 +13,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
 
+  open import Data.Product using (_,_)
   open import Level using (Level)
 
   import Categories.Category.Monoidal.Reasoning as MonR
@@ -47,8 +48,17 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     f ⊕₁ f ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒                  ∎
 
   -- (2)
-  Mat-SWAP : Mat ∘ SWAP ≈ Midswap ∘ Mat
-  Mat-SWAP = {!!}
+  Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
+  Mat-SWAP = begin
+    ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ SWAP                                  ≈⟨ laplazaXXIII ⟩⊕⟨ laplazaXXIII ⟩∘⟨refl ⟩∘⟨refl ⟩
+    (((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒ ) ⊕₁ ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δᵣ⇒) ∘ SWAP  ≈⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩∘⟨refl ⟩
+    (((λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ ( δₗ⇒ ⊕₁ δₗ⇒)) ∘ δᵣ⇒) ∘ SWAP ≈⟨ {!!} ⟩
+    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ ( δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP     ≈⟨ {!!} ⟩
+    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ {!!} ⟩
+    Midswap ∘ (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ {!!} ⟩ -- reassoc
+    Midswap ∘ ((λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒)) ∘ δᵣ⇒ ≈˘⟨ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩
+    Midswap ∘ (((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ⊕₁ ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒)) ∘ δᵣ⇒ ≈˘⟨ refl⟩∘⟨ laplazaXXIII ⟩⊕⟨ laplazaXXIII ⟩∘⟨refl ⟩
+    Midswap ∘ λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒ ∎
 
   --- useful lemma for (3) below
   Midswap≡MSwapM⁻¹ : Midswap ≈ Mat ∘ SWAP ∘ Mat⁻¹
@@ -66,7 +76,13 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   -- (4)
   Mat-f-left : Mat ∘ (f ⊗₁ id) ≈ Midswap ∘ (f ⊕₁ f) ∘ Midswap ∘ Mat
-  Mat-f-left = {!!}
+  Mat-f-left {f = f} = begin
+    Mat ∘ (f ⊗₁ id)                    ≈⟨ insertʳ S×.commutative ⟩∘⟨refl ⟩
+    ((Mat ∘ SWAP) ∘ SWAP) ∘ (f ⊗₁ id)  ≈⟨ assoc ○ refl⟩∘⟨ S×.braiding.⇒.commute (f , id) ⟩
+    (Mat ∘ SWAP) ∘ (id ⊗₁ f) ∘ SWAP    ≈⟨ Mat-SWAP ⟩∘⟨refl ⟩
+    (Midswap ∘ Mat) ∘ (id ⊗₁ f) ∘ SWAP ≈⟨ assoc ○ refl⟩∘⟨ pullˡ Mat-f-right ⟩
+    Midswap ∘ ((f ⊕₁ f) ∘ Mat) ∘ SWAP  ≈⟨ refl⟩∘⟨ pullʳ Mat-SWAP ⟩
+    Midswap ∘ (f ⊕₁ f) ∘ Midswap ∘ Mat ∎
 
   -- (5)
   SWAP-CP-SWAP : SWAP ∘ Ctrl (P s) ∘ SWAP ≈ Ctrl (P s)
