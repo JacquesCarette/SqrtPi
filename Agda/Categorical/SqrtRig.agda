@@ -29,6 +29,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
 
   module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
+  module dl {X} {Y} {Z} = _≅_ (distribₗ {X} {Y} {Z})
     
   σ⊕ : ∀ {X Y} → X ⊕₀ Y ⇒ Y ⊕₀ X
   σ⊕ {X} {Y} = S⊎.braiding.⇒.η (X , Y)
@@ -39,6 +40,11 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   δᵣ⇒ = dr.from
   δᵣ⇐ : ∀ {X Y Z} → (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z) ⇒ (X ⊕₀ Y) ⊗₀ Z
   δᵣ⇐ = dr.to
+
+  δₗ⇒ : ∀ {X Y Z} → Z ⊗₀ (X ⊕₀ Y) ⇒ (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y)
+  δₗ⇒ = dl.from
+  δₗ⇐ : ∀ {X Y Z} → (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y) ⇒ Z ⊗₀ (X ⊕₀ Y)
+  δₗ⇐ = dl.to
   
   0C 1C 2C : Obj
   0C = M⊎.unit
