@@ -16,6 +16,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open import Data.Product using (_,_)
   open import Level using (Level)
 
+  open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
+  open import Categories.Category.Monoidal.Interchange.Symmetric S⊎
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Morphism.Reasoning C
 
@@ -86,7 +88,14 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   -- (5)
   SWAP-CP-SWAP : SWAP ∘ Ctrl (P s) ∘ SWAP ≈ Ctrl (P s)
-  SWAP-CP-SWAP = {!!}
+  SWAP-CP-SWAP {s = s} = begin
+    SWAP ∘ (Mat⁻¹ ∘ (id ⊕₁ P s) ∘ Mat) ∘ SWAP                       ≈⟨ refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ assoc ⟩
+    (SWAP ∘ Mat⁻¹) ∘ (id ⊕₁ P s) ∘ (Mat ∘ SWAP)                     ≈⟨ SWAP-Mat⁻¹ ⟩∘⟨ Equiv.refl ⟩∘⟨ Mat-SWAP ⟩
+    (Mat⁻¹ ∘ Midswap) ∘ (id ⊕₁ P s) ∘ (Midswap ∘ Mat)               ≈˘⟨ refl⟩∘⟨ M⊎.⊗.identity ⟩⊕⟨refl ⟩∘⟨refl ⟩
+    (Mat⁻¹ ∘ Midswap) ∘ ((id ⊕₁ id) ⊕₁ (id ⊕₁ s)) ∘ (Midswap ∘ Mat) ≈⟨ refl⟩∘⟨ pullˡ (⟺ swapInner-natural) ⟩
+    (Mat⁻¹ ∘ Midswap) ∘ (Midswap ∘ ((id ⊕₁ id) ⊕₁ (id ⊕₁ s))) ∘ Mat ≈⟨  pullˡ (cancelInner swapInner-commutative) ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ s)) ∘ Mat                         ≈⟨ pushˡ (refl⟩∘⟨ M⊎.⊗.identity ⟩⊕⟨refl) ⟩
+    Ctrl (P s)                                                       ∎
 
   -- (6)
   CP-comm : Ctrl (P s) ∘ Ctrl (P t) ≈ Ctrl (P t) ∘ Ctrl (P s)
