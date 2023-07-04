@@ -120,7 +120,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     id                         ∎
 
   -- (v)
-  {- no needed
+  {- not needed
   P-comm : (s t : Scalar) → P s ∘ P t ≈ P t ∘ P s
   P-comm s t = {!!}
   -}

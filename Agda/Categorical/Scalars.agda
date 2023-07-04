@@ -14,7 +14,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-  -- open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  open import Categories.Category.Monoidal.Properties using (module Kelly's)
   import Categories.Category.Monoidal.Braided.Properties as BraidProp
   import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
@@ -24,7 +24,8 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open MR 𝒞
   open SqrtRig SR
   open Kit R
-  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_)
+  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_; serialize₁₂)
+  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_)
   open BraidProp S×.braided using (module Shorthands; braiding-coherence-inv; inv-braiding-coherence)
 
   -- Define some of our constants.
@@ -89,20 +90,99 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     (f ∘ λ⇒) ∘ λ⇐    ≈⟨ cancelʳ M×.unitorˡ.isoʳ ⟩
     f               ∎
 
+  -- lemma for push-scalar-left
+  coherence₁' : {A B : Obj} → λ⇒ ⊗₁ id ∘ α⇐ ≈ λ⇒ {A ⊗₀ B}
+  coherence₁' = begin
+    λ⇒ ⊗₁ id ∘ α⇐ ≈˘⟨ Kelly's.coherence₁ M× ⟩∘⟨refl ⟩
+    (λ⇒ ∘ α⇒) ∘ α⇐ ≈⟨ cancelʳ M×.associator.isoʳ ⟩
+    λ⇒             ∎
+
+  coherence₁'' : {A B : Obj} → α⇒ {1C} {A} {B} ∘ λ⇐ ⊗₁ id ≈ λ⇐
+  coherence₁'' = begin
+    α⇒ ∘ λ⇐ ⊗₁ id  ≈˘⟨ refl⟩∘⟨ Kelly's.coherence-inv₁ M× ⟩
+    α⇒ ∘ (α⇐ ∘ λ⇐) ≈⟨ cancelˡ M×.associator.isoʳ ⟩
+    λ⇐             ∎
+    
   -- (v)
+  inner-● : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
+    s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ≈ λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐
+  inner-● {s = s} {t} {f} = begin
+    s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐)                             ≈⟨ {!!} ⟩
+    (λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐) ⊗₁ (id ∘ f ∘ id)               ≈⟨ {!!} ⟩
+    λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id                 ≈⟨ {!!} ⟩
+    λ⇒ ⊗₁ id ∘ (α⇐ ∘ s ⊗₁ (t ⊗₁ f) ∘ α⇒) ∘ λ⇐ ⊗₁ id    ≈⟨ ? ⟩
+    (λ⇒ ⊗₁ id ∘ α⇐) ∘ s ⊗₁ (t ⊗₁ f) ∘ (α⇒ ∘ λ⇐ ⊗₁ id)  ≈⟨ refl⟩∘⟨ refl⟩∘⟨ coherence₁'' ⟩
+    (λ⇒ ⊗₁ id ∘ α⇐) ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐                ≈⟨ coherence₁' ⟩∘⟨refl ⟩
+    λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐ ∎
+
+  conjugate : {A B : Obj} {s t : Scalar} {f : A ⇒ B} → s ⊗₁ (t ⊗₁ f) ≈ α⇒ ∘ (s ⊗₁ t) ⊗₁ f ∘ α⇐
+  conjugate {s = s} {t} {f} = begin
+    s ⊗₁ (t ⊗₁ f)             ≈⟨ insertʳ M×.associator.isoʳ ⟩
+    (s ⊗₁ (t ⊗₁ f) ∘ α⇒) ∘ α⇐ ≈⟨ pushˡ (Equiv.sym M×.assoc-commute-from) ⟩
+    α⇒ ∘ (s ⊗₁ t) ⊗₁ f ∘ α⇐   ∎
+
+  -- used in PXP proof and in push-scalar-left
+  scalar-●≈∘ : {s t : Scalar} → s ● t ≈ s ∘ t
+  scalar-●≈∘ {s = s} {t} = begin
+    λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐             ≈⟨ Kelly's.coherence₃ M× ⟩∘⟨refl ⟩
+    ρ⇒ ∘ (s ⊗₁ t) ∘ λ⇐             ≈⟨ refl⟩∘⟨ serialize₁₂ ⟩∘⟨refl ⟩
+    ρ⇒ ∘ (s ⊗₁ id ∘ id ⊗₁ t) ∘ λ⇐  ≈⟨ assoc²'' ⟩
+    (ρ⇒ ∘ s ⊗₁ id) ∘ id ⊗₁ t ∘ λ⇐  ≈⟨ M×.unitorʳ-commute-from ⟩∘⟨refl ⟩
+    (s ∘ ρ⇒) ∘ id ⊗₁ t ∘ λ⇐        ≈˘⟨ refl⟩∘⟨ M×.unitorˡ-commute-to ⟩
+    (s ∘ ρ⇒) ∘ λ⇐ ∘ t               ≈˘⟨ (refl⟩∘⟨ Kelly's.coherence₃ M×) ⟩∘⟨refl ⟩ 
+    (s ∘ λ⇒) ∘ λ⇐ ∘ t               ≈⟨ cancelInner M×.unitorˡ.isoʳ ⟩
+    s ∘ t                            ∎
+
+  hom⊗-3 : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
+   λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id ≈ (s ● t) ⊗₁ f
+  hom⊗-3 {s = s} {t} {f} = begin
+    λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id    ≈˘⟨ refl⟩∘⟨ M×.⊗.homomorphism ⟩
+    λ⇒ ⊗₁ id ∘ ((s ⊗₁ t) ∘ λ⇐) ⊗₁ (f ∘ id) ≈˘⟨ M×.⊗.homomorphism ⟩
+    (λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐) ⊗₁ (id ∘ f ∘ id)   ≈⟨ refl⟩⊗⟨ (identityˡ ○ identityʳ) ⟩
+    (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f                 ∎
+  
   push-scalar-left : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
     s ● (t ● f) ≈ (s ∘ t) ● f
   push-scalar-left {s = s} {t} {f} = begin
-    λ⇒ ∘ s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ∘ λ⇐                     ≈⟨ {!!} ⟩
-    λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐                                  ∎
-  
+    λ⇒ ∘ s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ∘ λ⇐                 ≈⟨ refl⟩∘⟨ inner-● ⟩∘⟨refl ⟩
+    λ⇒ ∘ (λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐) ∘ λ⇐               ≈⟨ refl⟩∘⟨ ((refl⟩∘⟨ conjugate ⟩∘⟨refl)) ⟩∘⟨refl ⟩
+    λ⇒ ∘ (λ⇒ ∘ (α⇒ ∘ (s ⊗₁ t) ⊗₁ f ∘ α⇐) ∘ λ⇐) ∘ λ⇐  ≈⟨ refl⟩∘⟨ (sym-assoc ⟩∘⟨refl ○ Equiv.sym assoc² ⟩∘⟨refl ⟩∘⟨refl ○ assoc ⟩∘⟨refl ○ assoc ⟩∘⟨refl ○ assoc²' {i = λ⇒ ∘ α⇒} {g = α⇐ ∘ λ⇐} {f = λ⇐} ) ⟩
+    λ⇒ ∘ (λ⇒ ∘ α⇒) ∘ (s ⊗₁ t) ⊗₁ f ∘ (α⇐ ∘ λ⇐) ∘ λ⇐  ≈⟨ refl⟩∘⟨ Kelly's.coherence₁ M× ⟩∘⟨ refl⟩∘⟨ Kelly's.coherence-inv₁ M× ⟩∘⟨refl ⟩
+    λ⇒ ∘ λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id ∘ λ⇐    ≈˘⟨ refl⟩∘⟨ assoc²' ⟩
+    λ⇒ ∘ (λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id) ∘ λ⇐  ≈⟨ refl⟩∘⟨ hom⊗-3 ⟩∘⟨refl ⟩
+    λ⇒ ∘ (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f ∘ λ⇐                 ≈⟨ Equiv.refl ⟩
+    λ⇒ ∘ (s ● t) ⊗₁ f ∘ λ⇐                             ≈⟨ refl⟩∘⟨ (scalar-●≈∘ ⟩⊗⟨refl) ⟩∘⟨refl ⟩
+    λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐                             ∎
+
+-- (a ∘ (b ∘ c)) ∘ d -> a ∘ b ∘ c ∘ d
+  -- useful lemmas to get to PXP
+  laplazaXXIII-rhs-inv : {A B : Obj} → (λ⇒ {X = A} ⊕₁ λ⇒ {X = B} ∘ δₗ⇒) ∘ δₗ⇐ ∘ λ⇐ ⊕₁ λ⇐ ≈ id
+  laplazaXXIII-rhs-inv = begin
+    (λ⇒ ⊕₁ λ⇒ ∘ δₗ⇒) ∘ δₗ⇐ ∘ λ⇐ ⊕₁ λ⇐ ≈⟨ cancelInner dl.isoʳ ⟩
+    -- the next bit is quite polymorphic so hard to abstract out; later
+    λ⇒ ⊕₁ λ⇒ ∘ λ⇐ ⊕₁ λ⇐     ≈˘⟨ M⊎.⊗.homomorphism ⟩
+    (λ⇒ ∘ λ⇐) ⊕₁ (λ⇒ ∘ λ⇐)  ≈⟨ M×.unitorˡ.isoʳ ⟩⊕⟨ M×.unitorˡ.isoʳ ⟩
+    id ⊕₁ id                 ≈⟨ M⊎.⊗.identity ⟩
+    id                       ∎
+
+  -- inverse laplazaXXIII
+  laplazaXXIII⁻¹ : {A B : Obj} → λ⇐ {X = A ⊕₀ B} ≈ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)
+  laplazaXXIII⁻¹ = begin
+    λ⇐                                          ≈⟨ insertʳ laplazaXXIII-rhs-inv ⟩
+    (λ⇐ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ (refl⟩∘⟨ Equiv.sym laplazaXXIII) ⟩∘⟨refl ⟩
+    (λ⇐ ∘ λ⇒) ∘  δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)               ≈⟨ elimˡ M×.unitorˡ.isoˡ ⟩
+    δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)                            ∎
+ 
   -- (vi)
-  -- used in PXP proof
+  -- used in PXP proof 
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = begin
-    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                   ≈⟨ {!!} ⟩
-    (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐) ∎
+    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                                        ≈⟨ laplazaXXIII ⟩∘⟨ refl⟩∘⟨ laplazaXXIII⁻¹ ⟩
+    ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘  s ⊗₁ (f ⊕₁ g) ∘ (δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐))      ≈⟨ center dl-commute ⟩
+    (λ⇒ ⊕₁ λ⇒) ∘  ((s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ refl⟩∘⟨ cancelInner dl.isoʳ ⟩
+    (λ⇒ ⊕₁ λ⇒) ∘ (s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ (λ⇐ ⊕₁ λ⇐)               ≈˘⟨ M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩
+    (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐)                      ∎
 
   -- (vii)
   -- used in PXP proof
@@ -146,12 +226,4 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     s ● f ≈ t ● f
   ●-congˡ s≈t = ●-cong s≈t Equiv.refl
 
-  -- used in PXP proof
-  scalar-●≈∘ : {s t : Scalar} → s ● t ≈ s ∘ t
-  scalar-●≈∘ {s = s} {t} = begin
-    λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐ ≈⟨ {!!} ⟩
-    λ⇒ ∘ (s ⊗₁ id) ∘ (id ⊗₁ t) ∘ λ⇐ ≈⟨ {!refl⟩∘⟨ refl⟩∘⟨ (Equiv.sym M×.unitorˡ-commute-to)!} ⟩
-    λ⇒ ∘ (s ⊗₁ id) ∘ λ⇐ ∘ t ≈⟨ {!!} ⟩
-    (s ● id) ∘ t ≈⟨ {!!} ⟩
-    s ∘ t               ∎
-  
+

@@ -29,7 +29,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
+  open MonR M⊎ using (parallel) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
 
   private
     variable
@@ -44,9 +44,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-f-right {f = f} = begin
     (λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒) ∘ (id ⊗₁ f)               ≈⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ Equiv.sym M⊎.⊗.identity ⟩⊗⟨refl ⟩
     λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒ ∘ ((id ⊕₁ id) ⊗₁ f)        ≈⟨ refl⟩∘⟨ dr-commute ⟩ 
-    λ⇒ ⊕₁ λ⇒ ∘ (id ⊗₁ f) ⊕₁ (id ⊗₁ f) ∘ δᵣ⇒   ≈⟨ pullˡ (Equiv.sym M⊎.⊗.homomorphism) ⟩
-    (λ⇒ ∘ (id ⊗₁ f)) ⊕₁ (λ⇒ ∘ (id ⊗₁ f)) ∘ δᵣ⇒ ≈⟨ (M×.unitorˡ-commute-from ⟩⊕⟨ M×.unitorˡ-commute-from) ⟩∘⟨refl ⟩
-    (f ∘ λ⇒) ⊕₁ (f ∘ λ⇒) ∘ δᵣ⇒                 ≈⟨ pushˡ M⊎.⊗.homomorphism ⟩
+    λ⇒ ⊕₁ λ⇒ ∘ (id ⊗₁ f) ⊕₁ (id ⊗₁ f) ∘ δᵣ⇒   ≈⟨ extendʳ (parallel M×.unitorˡ-commute-from M×.unitorˡ-commute-from) ⟩
     f ⊕₁ f ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒                  ∎
 
   -- (2)
