@@ -120,10 +120,14 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     id                         ∎
 
   -- (v)
-  {- not needed
-  P-comm : (s t : Scalar) → P s ∘ P t ≈ P t ∘ P s
-  P-comm s t = {!!}
-  -}
+  -- useful lemma for P-comm
+  ⊗ʳ-comm : ∀ {A B} {f g : A ⇒ A} → f ∘ g ≈ g ∘ f → id {B} ⊕₁ f ∘ id ⊕₁ g ≈ id ⊕₁ g ∘ id ⊕₁ f
+  ⊗ʳ-comm fg≡gf = ⟺ M⊎.⊗.homomorphism ○ refl⟩⊕⟨ fg≡gf ○ M⊎.⊗.homomorphism
+  
+  -- used in MatProp: Ctrl-comm (and thus CP-comm)
+  P-comm : (s t : Scalar) → s ∘ t ≈ t ∘ s → P s ∘ P t ≈ P t ∘ P s
+  P-comm s t st≡ts = ⊗ʳ-comm st≡ts
+
   -- (vi)
   PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
   PXP s = begin
