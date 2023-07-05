@@ -15,8 +15,10 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open import Level using (Level)
 
   open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  open import Categories.Category.Monoidal.Utilities using (unitor-coherenceˡ)
   import Categories.Category.Monoidal.Braided.Properties as BraidProp
   import Categories.Category.Monoidal.Reasoning as MonR
+  open import Categories.Functor.Bifunctor using (module Bifunctor)
   import Categories.Morphism.Reasoning as MR
   
   open Category 𝒞 -- all of it
@@ -104,17 +106,6 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     λ⇐             ∎
     
   -- (v)
-  inner-● : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
-    s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ≈ λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐
-  inner-● {s = s} {t} {f} = begin
-    s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐)                             ≈⟨ {!!} ⟩
-    (λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐) ⊗₁ (id ∘ f ∘ id)               ≈⟨ {!!} ⟩
-    λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id                 ≈⟨ {!!} ⟩
-    λ⇒ ⊗₁ id ∘ (α⇐ ∘ s ⊗₁ (t ⊗₁ f) ∘ α⇒) ∘ λ⇐ ⊗₁ id    ≈⟨ ? ⟩
-    (λ⇒ ⊗₁ id ∘ α⇐) ∘ s ⊗₁ (t ⊗₁ f) ∘ (α⇒ ∘ λ⇐ ⊗₁ id)  ≈⟨ refl⟩∘⟨ refl⟩∘⟨ coherence₁'' ⟩
-    (λ⇒ ⊗₁ id ∘ α⇐) ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐                ≈⟨ coherence₁' ⟩∘⟨refl ⟩
-    λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐ ∎
-
   conjugate : {A B : Obj} {s t : Scalar} {f : A ⇒ B} → s ⊗₁ (t ⊗₁ f) ≈ α⇒ ∘ (s ⊗₁ t) ⊗₁ f ∘ α⇐
   conjugate {s = s} {t} {f} = begin
     s ⊗₁ (t ⊗₁ f)             ≈⟨ insertʳ M×.associator.isoʳ ⟩
@@ -133,23 +124,36 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     (s ∘ λ⇒) ∘ λ⇐ ∘ t               ≈⟨ cancelInner M×.unitorˡ.isoʳ ⟩
     s ∘ t                            ∎
 
-  hom⊗-3 : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
-   λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id ≈ (s ● t) ⊗₁ f
-  hom⊗-3 {s = s} {t} {f} = begin
-    λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id    ≈˘⟨ refl⟩∘⟨ M×.⊗.homomorphism ⟩
-    λ⇒ ⊗₁ id ∘ ((s ⊗₁ t) ∘ λ⇐) ⊗₁ (f ∘ id) ≈˘⟨ M×.⊗.homomorphism ⟩
-    (λ⇒ ∘ (s ⊗₁ t) ∘ λ⇐) ⊗₁ (id ∘ f ∘ id)   ≈⟨ refl⟩⊗⟨ (identityˡ ○ identityʳ) ⟩
-    (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f                 ∎
+  hom∘²⊗³ : {A B C D E F G H I : Obj} {f₁ : A ⇒ B} {g₁ : D ⇒ E} {h₁ : G ⇒ H}
+    {f₂ : B ⇒ C} {g₂ : E ⇒ F} {h₂ : H ⇒ I} →
+     (h₂ ∘ h₁) ⊗₁ (g₂ ∘ g₁) ⊗₁ (f₂ ∘ f₁) ≈ (h₂ ⊗₁ g₂ ⊗₁ f₂) ∘ (h₁ ⊗₁ g₁ ⊗₁ f₁)
+  hom∘²⊗³ = refl⟩⊗⟨ M×.⊗.homomorphism ○ M×.⊗.homomorphism
+
+  hom∘³⊗² : {A B C D E F G H : Obj} {f₁ : A ⇒ B} {g₁ : B ⇒ C} {h₁ : C ⇒ D}
+    {f₂ : E ⇒ F} {g₂ : F ⇒ G} {h₂ : G ⇒ H} →
+     (h₂ ∘ g₂ ∘ f₂) ⊗₁ (h₁ ∘ g₁ ∘ f₁) ≈ (h₂ ⊗₁ h₁) ∘ (g₂ ⊗₁ g₁) ∘ (f₂ ⊗₁ f₁)
+  hom∘³⊗² = M×.⊗.homomorphism ○ refl⟩∘⟨ M×.⊗.homomorphism
+  
+  insert-mid⊗ˡ : {A B C D E F : Obj} {f₁ : A ⇒ B} {g₁ : B ⇒ C} {h₁ : C ⇒ D}
+    {g₂ : E ⇒ F} →
+    g₂ ⊗₁ (h₁ ∘ g₁ ∘ f₁) ≈ (id ⊗₁ h₁) ∘ (g₂ ⊗₁ g₁) ∘ (id ⊗₁ f₁)
+  insert-mid⊗ˡ = ⟺ (identityˡ ○ identityʳ) ⟩⊗⟨refl ○ hom∘³⊗²
+
+  insert-mid⊗ʳ : {A B C D E F : Obj} {f₁ : A ⇒ B} {g₁ : B ⇒ C} {h₁ : C ⇒ D}
+    {g₂ : E ⇒ F} →
+    (h₁ ∘ g₁ ∘ f₁) ⊗₁ g₂ ≈ (h₁ ⊗₁ id) ∘ (g₁ ⊗₁ g₂) ∘ (f₁ ⊗₁ id)
+  insert-mid⊗ʳ = refl⟩⊗⟨ ⟺ (identityˡ ○ identityʳ) ○ hom∘³⊗²
   
   push-scalar-left : {A B : Obj} {s t : Scalar} {f : A ⇒ B} →
     s ● (t ● f) ≈ (s ∘ t) ● f
   push-scalar-left {s = s} {t} {f} = begin
-    λ⇒ ∘ s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ∘ λ⇐                 ≈⟨ refl⟩∘⟨ inner-● ⟩∘⟨refl ⟩
+    λ⇒ ∘ s ⊗₁ (λ⇒ ∘ t ⊗₁ f ∘ λ⇐) ∘ λ⇐                 ≈⟨ refl⟩∘⟨ insert-mid⊗ˡ ⟩∘⟨refl ⟩
+    λ⇒ ∘ ((id ⊗₁ λ⇒) ∘ s ⊗₁ (t ⊗₁ f) ∘ (id ⊗₁ λ⇐)) ∘ λ⇐ ≈⟨ refl⟩∘⟨ (unitor-coherenceˡ M× ⟩∘⟨ Equiv.refl ⟩∘⟨ ⟺ (cancel-toʳ M×.unitorˡ M×.unitorˡ-commute-to)) ⟩∘⟨refl ⟩
     λ⇒ ∘ (λ⇒ ∘ s ⊗₁ (t ⊗₁ f) ∘ λ⇐) ∘ λ⇐               ≈⟨ refl⟩∘⟨ ((refl⟩∘⟨ conjugate ⟩∘⟨refl)) ⟩∘⟨refl ⟩
     λ⇒ ∘ (λ⇒ ∘ (α⇒ ∘ (s ⊗₁ t) ⊗₁ f ∘ α⇐) ∘ λ⇐) ∘ λ⇐  ≈⟨ refl⟩∘⟨ (sym-assoc ⟩∘⟨refl ○ Equiv.sym assoc² ⟩∘⟨refl ⟩∘⟨refl ○ assoc ⟩∘⟨refl ○ assoc ⟩∘⟨refl ○ assoc²' {i = λ⇒ ∘ α⇒} {g = α⇐ ∘ λ⇐} {f = λ⇐} ) ⟩
     λ⇒ ∘ (λ⇒ ∘ α⇒) ∘ (s ⊗₁ t) ⊗₁ f ∘ (α⇐ ∘ λ⇐) ∘ λ⇐  ≈⟨ refl⟩∘⟨ Kelly's.coherence₁ M× ⟩∘⟨ refl⟩∘⟨ Kelly's.coherence-inv₁ M× ⟩∘⟨refl ⟩
     λ⇒ ∘ λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id ∘ λ⇐    ≈˘⟨ refl⟩∘⟨ assoc²' ⟩
-    λ⇒ ∘ (λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id) ∘ λ⇐  ≈⟨ refl⟩∘⟨ hom⊗-3 ⟩∘⟨refl ⟩
+    λ⇒ ∘ (λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id) ∘ λ⇐  ≈˘⟨ refl⟩∘⟨ insert-mid⊗ʳ ⟩∘⟨refl ⟩
     λ⇒ ∘ (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f ∘ λ⇐                 ≈⟨ Equiv.refl ⟩
     λ⇒ ∘ (s ● t) ⊗₁ f ∘ λ⇐                             ≈⟨ refl⟩∘⟨ (scalar-●≈∘ ⟩⊗⟨refl) ⟩∘⟨refl ⟩
     λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐                             ∎
