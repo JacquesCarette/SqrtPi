@@ -34,7 +34,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   private
     variable
       A B : Obj
-      f : A ⇒ B
+      f g : A ⇒ B
       s t : Scalar
       
   ----------------------------------------------------------------
@@ -96,8 +96,18 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     Ctrl (P s)                                                       ∎
 
   -- (6)
-  CP-comm : Ctrl (P s) ∘ Ctrl (P t) ≈ Ctrl (P t) ∘ Ctrl (P s)
-  CP-comm = {!!}
+  Ctrl-comm : f ∘ g ≈ g ∘ f → Ctrl f ∘ Ctrl g ≈ Ctrl g ∘ Ctrl f
+  Ctrl-comm {f = f} {g} fg≡gf = begin
+    (Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
+    ((Mat⁻¹ ∘ (id ⊕₁ f)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩
+    (Mat⁻¹ ∘ id ⊕₁ f) ∘ (id ⊕₁ g) ∘ Mat                   ≈⟨ center (⊗ʳ-comm fg≡gf) ⟩
+    Mat⁻¹ ∘ (id ⊕₁ g ∘ id ⊕₁ f) ∘ Mat                     ≈⟨ assoc²'' ⟩
+    (Mat⁻¹ ∘ id ⊕₁ g) ∘ (id ⊕₁ f ∘ Mat)                   ≈˘⟨ cancelInner Mat-invʳ ⟩
+    ((Mat⁻¹ ∘ (id ⊕₁ g)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat ≈⟨ assoc ⟩∘⟨refl ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat   ∎
+  
+  CP-comm : s ∘ t ≈ t ∘ s → Ctrl (P s) ∘ Ctrl (P t) ≈ Ctrl (P t) ∘ Ctrl (P s)
+  CP-comm {s = s} {t} st≡ts = Ctrl-comm (P-comm s t st≡ts)
 
   -- (7)
   CP-P-right : Ctrl (P s) ∘ (id ⊗₁ P s) ≈ (id ⊗₁ P s) ∘ Ctrl (P s)
