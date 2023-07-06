@@ -29,7 +29,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using (parallel) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_)
+  open MonR M⊎ using (parallel)
+    renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
   private
     variable
@@ -42,11 +43,19 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- (1)
   Mat-f-right : Mat ∘ (id ⊗₁ f) ≈ (f ⊕₁ f) ∘ Mat
   Mat-f-right {f = f} = begin
-    (λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒) ∘ (id ⊗₁ f)               ≈⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ Equiv.sym M⊎.⊗.identity ⟩⊗⟨refl ⟩
+    (λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒) ∘ (id ⊗₁ f)               ≈⟨ pullʳ (refl⟩∘⟨ ⟺ M⊎.⊗.identity ⟩⊗⟨refl) ⟩
     λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒ ∘ ((id ⊕₁ id) ⊗₁ f)        ≈⟨ refl⟩∘⟨ dr-commute ⟩ 
     λ⇒ ⊕₁ λ⇒ ∘ (id ⊗₁ f) ⊕₁ (id ⊗₁ f) ∘ δᵣ⇒   ≈⟨ extendʳ (parallel M×.unitorˡ-commute-from M×.unitorˡ-commute-from) ⟩
     f ⊕₁ f ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒                  ∎
 
+  -- (1)' that is used in the proof of (7) but inlined there
+  Mat⁻¹-2f : Mat⁻¹ ∘ (f ⊕₁ f) ≈ (id ⊗₁ f) ∘ Mat⁻¹
+  Mat⁻¹-2f {f = f} = begin
+    Mat⁻¹ ∘ (f ⊕₁ f)                   ≈⟨ insertʳ Mat-invʳ ⟩
+    ((Mat⁻¹ ∘ (f ⊕₁ f)) ∘ Mat) ∘ Mat⁻¹ ≈⟨ pullʳ (⟺ Mat-f-right) ⟩∘⟨refl ⟩
+    (Mat⁻¹ ∘ Mat ∘ (id ⊗₁ f)) ∘ Mat⁻¹  ≈⟨ cancelˡ Mat-invˡ ⟩∘⟨refl ⟩
+    (id ⊗₁ f) ∘ Mat⁻¹                  ∎
+  
   -- (2)
   Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = begin
@@ -78,9 +87,9 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-f-left : Mat ∘ (f ⊗₁ id) ≈ Midswap ∘ (f ⊕₁ f) ∘ Midswap ∘ Mat
   Mat-f-left {f = f} = begin
     Mat ∘ (f ⊗₁ id)                    ≈⟨ insertʳ S×.commutative ⟩∘⟨refl ⟩
-    ((Mat ∘ SWAP) ∘ SWAP) ∘ (f ⊗₁ id)  ≈⟨ assoc ○ refl⟩∘⟨ S×.braiding.⇒.commute (f , id) ⟩
+    ((Mat ∘ SWAP) ∘ SWAP) ∘ (f ⊗₁ id)  ≈⟨ pullʳ (S×.braiding.⇒.commute (f , id)) ⟩
     (Mat ∘ SWAP) ∘ (id ⊗₁ f) ∘ SWAP    ≈⟨ Mat-SWAP ⟩∘⟨refl ⟩
-    (Midswap ∘ Mat) ∘ (id ⊗₁ f) ∘ SWAP ≈⟨ assoc ○ refl⟩∘⟨ pullˡ Mat-f-right ⟩
+    (Midswap ∘ Mat) ∘ (id ⊗₁ f) ∘ SWAP ≈⟨ pullʳ (pullˡ Mat-f-right) ⟩
     Midswap ∘ ((f ⊕₁ f) ∘ Mat) ∘ SWAP  ≈⟨ refl⟩∘⟨ pullʳ Mat-SWAP ⟩
     Midswap ∘ (f ⊕₁ f) ∘ Midswap ∘ Mat ∎
 
@@ -91,27 +100,40 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (SWAP ∘ Mat⁻¹) ∘ (id ⊕₁ P s) ∘ (Mat ∘ SWAP)                     ≈⟨ SWAP-Mat⁻¹ ⟩∘⟨ Equiv.refl ⟩∘⟨ Mat-SWAP ⟩
     (Mat⁻¹ ∘ Midswap) ∘ (id ⊕₁ P s) ∘ (Midswap ∘ Mat)               ≈˘⟨ refl⟩∘⟨ M⊎.⊗.identity ⟩⊕⟨refl ⟩∘⟨refl ⟩
     (Mat⁻¹ ∘ Midswap) ∘ ((id ⊕₁ id) ⊕₁ (id ⊕₁ s)) ∘ (Midswap ∘ Mat) ≈⟨ refl⟩∘⟨ pullˡ (⟺ swapInner-natural) ⟩
-    (Mat⁻¹ ∘ Midswap) ∘ (Midswap ∘ ((id ⊕₁ id) ⊕₁ (id ⊕₁ s))) ∘ Mat ≈⟨  pullˡ (cancelInner swapInner-commutative) ⟩
+    (Mat⁻¹ ∘ Midswap) ∘ (Midswap ∘ ((id ⊕₁ id) ⊕₁ (id ⊕₁ s))) ∘ Mat ≈⟨ pullˡ (cancelInner swapInner-commutative) ⟩
     (Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ s)) ∘ Mat                         ≈⟨ pushˡ (refl⟩∘⟨ M⊎.⊗.identity ⟩⊕⟨refl) ⟩
     Ctrl (P s)                                                       ∎
 
+  -- (10)
+  Ctrl-merge : {g h : Endo {A}} → Ctrl g ∘ Ctrl h ≈ Ctrl (g ∘ h)
+  Ctrl-merge {g = g} {h} = begin
+    (Mat⁻¹ ∘ id ⊕₁ g ∘ Mat) ∘ Mat⁻¹ ∘ id ⊕₁ h ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
+    ((Mat⁻¹ ∘ id ⊕₁ g) ∘ Mat) ∘ Mat⁻¹ ∘ id ⊕₁ h ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩
+    (Mat⁻¹ ∘ id ⊕₁ g) ∘ id ⊕₁ h ∘ Mat                 ≈⟨ center (⟺ M⊎.⊗.homomorphism) ⟩
+    Mat⁻¹ ∘ (id ∘ id) ⊕₁ (g ∘ h) ∘ Mat                ≈⟨ refl⟩∘⟨ identity² ⟩⊕⟨refl ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ id ⊕₁ (g ∘ h) ∘ Mat                       ∎
+  
   -- (6)
   Ctrl-comm : f ∘ g ≈ g ∘ f → Ctrl f ∘ Ctrl g ≈ Ctrl g ∘ Ctrl f
   Ctrl-comm {f = f} {g} fg≡gf = begin
-    (Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
-    ((Mat⁻¹ ∘ (id ⊕₁ f)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩
-    (Mat⁻¹ ∘ id ⊕₁ f) ∘ (id ⊕₁ g) ∘ Mat                   ≈⟨ center (⊗ʳ-comm fg≡gf) ⟩
-    Mat⁻¹ ∘ (id ⊕₁ g ∘ id ⊕₁ f) ∘ Mat                     ≈⟨ assoc²'' ⟩
-    (Mat⁻¹ ∘ id ⊕₁ g) ∘ (id ⊕₁ f ∘ Mat)                   ≈˘⟨ cancelInner Mat-invʳ ⟩
-    ((Mat⁻¹ ∘ (id ⊕₁ g)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat ≈⟨ assoc ⟩∘⟨refl ⟩
-    (Mat⁻¹ ∘ (id ⊕₁ g) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat   ∎
-  
+    Ctrl f ∘ Ctrl g ≈⟨ Ctrl-merge ⟩
+    Ctrl (f ∘ g)    ≈⟨ refl⟩∘⟨ refl⟩⊕⟨ fg≡gf ⟩∘⟨refl ⟩ -- expand defn to see
+    Ctrl (g ∘ f)    ≈˘⟨ Ctrl-merge ⟩
+    Ctrl g ∘ Ctrl f ∎
+
   CP-comm : s ∘ t ≈ t ∘ s → Ctrl (P s) ∘ Ctrl (P t) ≈ Ctrl (P t) ∘ Ctrl (P s)
   CP-comm {s = s} {t} st≡ts = Ctrl-comm (P-comm s t st≡ts)
 
   -- (7)
-  CP-P-right : Ctrl (P s) ∘ (id ⊗₁ P s) ≈ (id ⊗₁ P s) ∘ Ctrl (P s)
-  CP-P-right = {!!}
+  CP-P-right : s ∘ t ≈ t ∘ s → Ctrl (P s) ∘ (id ⊗₁ P t) ≈ (id ⊗₁ P t) ∘ Ctrl (P s)
+  CP-P-right {s = s} {t} st≡ts = begin
+    (Mat⁻¹ ∘ (id ⊕₁ P s) ∘ Mat) ∘ (id ⊗₁ P t)  ≈⟨ pullʳ (pullʳ Mat-f-right) ⟩
+    Mat⁻¹ ∘ (id ⊕₁ P s) ∘ (P t ⊕₁ P t) ∘ Mat   ≈⟨ refl⟩∘⟨ pullˡ (⟺ M⊎.⊗.homomorphism) ⟩
+    Mat⁻¹ ∘ ((id ∘ P t) ⊕₁ (P s ∘ P t)) ∘ Mat  ≈⟨ refl⟩∘⟨ id-comm-sym ⟩⊕⟨ P-comm s t st≡ts ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ ((P t ∘ id) ⊕₁ (P t ∘ P s)) ∘ Mat  ≈⟨ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ ((P t ⊕₁ P t) ∘ (id ⊕₁ P s)) ∘ Mat ≈⟨ assoc²'' ⟩
+    (Mat⁻¹ ∘ (P t ⊕₁ P t)) ∘ (id ⊕₁ P s) ∘ Mat ≈⟨ Mat⁻¹-2f ⟩∘⟨refl ○ assoc ⟩
+    (id ⊗₁ P t) ∘ Mat⁻¹ ∘ (id ⊕₁ P s) ∘ Mat    ∎
   
   -- (8)
   Mat-X-left : Mat ∘ (X ⊗₁ id {2C}) ≈ σ⊕ ∘ Mat
