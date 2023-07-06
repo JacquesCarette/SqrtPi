@@ -140,8 +140,13 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-X-left = {!!}
   
   -- (9) (for some reason, Agda won't infer which object Mat is over)
-  Mat-P-left : {D : Obj} → Mat {D} ∘ (P s ⊗₁ id) ≈ (id ⊕₁ (s ● id)) ∘ Mat
-  Mat-P-left = {!!}
+  Mat-P-left : Mat {2C} ∘ (P s ⊗₁ id) ≈ (id ⊕₁ (s ● id)) ∘ Mat
+  Mat-P-left {s = s} = begin
+    Mat ∘ (P s ⊗₁ id)                                     ≈⟨ Mat-f-left ⟩ -- and defn of P s
+    Midswap ∘ ((id ⊕₁ s) ⊕₁ (id ⊕₁ s)) ∘ Midswap ∘ Mat    ≈⟨ refl⟩∘⟨ pullˡ (⟺ swapInner-natural) ⟩
+    Midswap ∘ (Midswap ∘ ((id ⊕₁ id) ⊕₁ (s ⊕₁ s))) ∘ Mat  ≈⟨ assoc²'' ○ elimˡ swapInner-commutative ⟩
+    (id ⊕₁ id) ⊕₁ (s ⊕₁ s) ∘ Mat                          ≈⟨ M⊎.⊗.identity ⟩⊕⟨ ⊕-to-●id ⟩∘⟨refl ⟩
+    (id ⊕₁ (s ● id)) ∘ Mat                              ∎
 
   ----------------------------------------------------------------
   -- Lemma lem:had

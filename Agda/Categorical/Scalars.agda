@@ -182,11 +182,11 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = begin
-    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                                        ≈⟨ laplazaXXIII ⟩∘⟨ refl⟩∘⟨ laplazaXXIII⁻¹ ⟩
-    ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘  s ⊗₁ (f ⊕₁ g) ∘ (δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐))      ≈⟨ center dl-commute ⟩
-    (λ⇒ ⊕₁ λ⇒) ∘  ((s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ refl⟩∘⟨ cancelInner dl.isoʳ ⟩
+    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                                      ≈⟨ laplazaXXIII ⟩∘⟨ refl⟩∘⟨ laplazaXXIII⁻¹ ⟩
+    ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘  s ⊗₁ (f ⊕₁ g) ∘ (δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐))     ≈⟨ center dl-commute ⟩
+    (λ⇒ ⊕₁ λ⇒) ∘ ((s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ refl⟩∘⟨ cancelInner dl.isoʳ ⟩
     (λ⇒ ⊕₁ λ⇒) ∘ (s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ (λ⇐ ⊕₁ λ⇐)               ≈˘⟨ M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩
-    (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐)                      ∎
+    (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐)                     ∎
 
   -- (vii)
   -- used in PXP proof
@@ -215,6 +215,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
      (g ∘ λ⇒) ∘ s ⊗₁ f ∘ λ⇐           ≈⟨ assoc ⟩
      g ∘ λ⇒ ∘ s ⊗₁ f ∘ λ⇐   ∎ 
 
+
   -----------------------------
   -- extra lemmas that are implicitly assumed currently
   ●-cong : {A B : Obj} {s t : Scalar} {f g : A ⇒ B} → s ≈ t → f ≈ g →
@@ -230,4 +231,13 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     s ● f ≈ t ● f
   ●-congˡ s≈t = ●-cong s≈t Equiv.refl
 
-
+  ---------------------------------
+  -- this should have been pulled out as well
+  ⊕-to-●id : {s : Scalar} → s ⊕₁ s ≈ s ● id
+  ⊕-to-●id {s = s} = begin
+    s ⊕₁ s               ≈˘⟨ identityʳ ⟩⊕⟨ identityʳ ⟩
+    (s ∘ id) ⊕₁ (s ∘ id) ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩
+    (s ● id) ⊕₁ (s ● id) ≈˘⟨ ●-distrib-⊕ ⟩
+    s ● (id ⊕₁ id)       ≈⟨ ●-congʳ M⊎.⊗.identity ⟩
+    s ● id ∎
+    
