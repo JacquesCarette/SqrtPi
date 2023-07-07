@@ -23,11 +23,6 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Functor.Bifunctor.Properties using ([_]-commute)
   
-  private
-    module M× = Monoidal M×
-    module S⊎ = Symmetric S⊎
-    module S× = Symmetric S×
-
   open import Categorical.Scalars SR
   open import Categorical.Gates SR
   open import Categorical.MatProp SR
@@ -44,7 +39,18 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
       A B : Obj
       f g : A ⇒ B
       s t : Scalar
-      
+
+  ----------------------------------------------------------------
+  -- As usual, some lemmas used implicitly need proof
+  E3-inv : S ∘ V ∘ S ≈ ω ^ 6 ● (V ∘ S ∘ V)
+  E3-inv = begin
+    S ∘ V ∘ S                     ≈˘⟨ 𝟙●f≈f _ ⟩
+    𝟙 ● (S ∘ V ∘ S)               ≈⟨ ●-congˡ (⟺ E1) ⟩
+    ω ^ 8 ● (S ∘ V ∘ S)           ≈⟨ ●-congˡ (⟺ (^-add ω 6 2)) ⟩
+    (ω ^ 6 ∘ ω ^ 2) ● (S ∘ V ∘ S) ≈˘⟨ push-scalar-left ⟩
+    ω ^ 6 ● (ω ^ 2 ● (S ∘ V ∘ S)) ≈⟨ ●-congʳ (⟺ E3) ⟩
+    ω ^ 6 ● (V ∘ S ∘ V) ∎
+  
   ----------------------------------------------------------------
   -- Full Abstraction for ≤ 2-qubit Clifford
   --
@@ -63,12 +69,25 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   -- C4
   A4 : H ^ 2 ≈ id
   A4 = begin
-    H ∘ H ≡⟨⟩
+    H ∘ H                                                ≡⟨⟩
     H ∘ (ω ● (X ∘ S ∘ V ∘ S ∘ X))                        ≈˘⟨ ●-over-∘ ⟩
-    ω ● (ω ● (X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ {!!} ⟩
-    ω ^ 2 ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ {!!} ⟩
-    ω ^ 2 ● ((X ∘ S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X)            ≈⟨ {!!} ⟩
-    id                            ∎
+    ω ● (ω ● (X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ ●-congʳ ●-assocʳ ○ push-scalar-left ⟩
+    ω ^ 2 ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ ●-congʳ (sym-assoc ○ pull-last (sym-assoc ⟩∘⟨refl ○ cancelʳ X²≡id) ⟩∘⟨refl) ⟩
+    i ● ((X ∘ S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X)                ≈⟨ ●-congʳ ((refl⟩∘⟨ E3-inv) ⟩∘⟨ (⟺ assoc²' ○ E3-inv ⟩∘⟨refl)) ⟩
+    i ● ((X ∘ ω ^ 6 ● (V ∘ S ∘ V)) ∘ (ω ^ 6 ● (V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar ⟩
+    (i ∘ ω ^ 6) ● ((X ∘ ω ^ 6 ● (V ∘ S ∘ V)) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ ●-cong (^-add ω 2 6) assoc ⟩
+    ω ^ 8 ● (X ∘ ω ^ 6 ● (V ∘ S ∘ V) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar ⟩
+    (ω ^ 8 ∘ ω ^ 6) ● (X ∘ (V ∘ S ∘ V) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ ●-cong (E1 ⟩∘⟨refl) (refl⟩∘⟨ sym-assoc ⟩∘⟨ assoc)  ⟩
+    (𝟙 ∘ ω ^ 6) ● (X ∘ ((V ∘ S) ∘ V) ∘ V ∘ (S ∘ V) ∘ X)   ≈⟨ ●-cong identityˡ (refl⟩∘⟨ center E2) ⟩
+    ω ^ 6 ● (X ∘ (V ∘ S) ∘ X ∘ (S ∘ V) ∘ X)               ≈⟨ ●-congʳ (refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ (sym-assoc ○ refl⟩∘⟨ assoc ○ pullˡ assoc) ) ⟩
+    ω ^ 6 ● ((X ∘ V) ∘ (S ∘ X ∘ S) ∘ (V ∘ X))             ≈⟨ ●-congʳ (refl⟩∘⟨ PXP i ⟩∘⟨refl) ⟩
+    ω ^ 6 ● ((X ∘ V) ∘ (i ● X) ∘ V ∘ X)                   ≈⟨ extract-scalar ⟩
+    (ω ^ 6 ∘ ω ^ 2) ● ((X ∘ V) ∘ X ∘ V ∘ X)               ≈⟨ ●-cong (^-add ω 6 2) (XV-comm ⟩∘⟨refl) ⟩
+    ω ^ 8 ● ((V ∘ X) ∘ X ∘ V ∘ X)                         ≈⟨ ●-congˡ E1 ○ 𝟙●f≈f _ ⟩
+    (V ∘ X) ∘ X ∘ V ∘ X                                   ≈⟨ cancelInner X²≡id ⟩
+    V ∘ V ∘ X                                             ≈⟨ pullˡ E2 ⟩
+    X ∘ X                                                 ≈⟨ X²≡id ⟩
+    id                                                    ∎
   -- A5
   A5 : S ^ 4 ≈ id
   A5 = {!!}
@@ -77,7 +96,7 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   A6 = {!!}
   -- A7
   A7 : CZ ^ 2 ≈ id
-  A7 = {!!}
+  A7 = CZ²≡id
   -- A8
   A8 : Ctrl Z ∘ (S ⊗₁ id) ≈ (S ⊗₁ id) ∘ Ctrl Z
   A8 = {!!}
@@ -99,9 +118,9 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     (Z ⊗₁ X) ∘ SWAP ∘ Ctrl Z ∘ SWAP    ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
     (Z ⊗₁ X) ∘ Ctrl Z                  ∎
   -- A12
-  A12 : inv ω ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
+  A12 : ω ^ 7 ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
   A12 = {!!}
   -- A13
-  A13 : inv ω ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
+  A13 : ω ^ 7 ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
   A13 = {!!}
 
