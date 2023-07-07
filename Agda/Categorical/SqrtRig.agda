@@ -3,8 +3,10 @@
 module Categorical.SqrtRig where
 
 open import Data.Nat using (ℕ; zero; suc; _+_)
+open import Data.Nat.Properties using (+-comm)
 open import Data.Product using (_,_)
 open import Level using (_⊔_)
+open import Relation.Binary.PropositionalEquality.Core using (_≡_; refl)
 
 open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
@@ -94,10 +96,20 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     pow s (a + b)     ≈˘⟨ ^≈pow s (a + b) ⟩
     s ^ (a + b)   ∎
 
-  ^-cong : {a : Obj} {x y : Endo {a}} → x ≈ y → (n : ℕ) → x ^ n ≈ y ^ n
-  ^-cong x≈y zero = Equiv.refl
-  ^-cong x≈y (suc zero) = x≈y
-  ^-cong x≈y (suc (suc n)) = ∘-resp-≈ x≈y (^-cong x≈y (suc n))
+  base^-cong : {a : Obj} {x y : Endo {a}} → x ≈ y → (n : ℕ) → x ^ n ≈ y ^ n
+  base^-cong x≈y zero = Equiv.refl
+  base^-cong x≈y (suc zero) = x≈y
+  base^-cong x≈y (suc (suc n)) = ∘-resp-≈ x≈y (base^-cong x≈y (suc n))
+
+  exp^-cong : {a : Obj} {x : Endo {a}} {i j : ℕ} → i ≡ j → x ^ i ≈ x ^ j
+  exp^-cong refl = Equiv.refl
+  
+  ^-comm : {s : Scalar} (a b : ℕ) → s ^ a ∘ s ^ b ≈ s ^ b ∘ s ^ a
+  ^-comm {s} a b = begin
+    s ^ a ∘ s ^ b ≈⟨ ^-add s a b ⟩
+    s ^ (a + b)   ≈⟨ exp^-cong (+-comm a b) ⟩
+    s ^ (b + a)   ≈˘⟨ ^-add s b a ⟩
+    s ^ b ∘ s ^ a ∎
   
   -- Scalar multiplication (Definition 4.1)
   infixr 25 _●_
@@ -121,10 +133,3 @@ record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : 
   
   field
     E3 : V ∘ S ∘ V ≈ ω ^ 2 ● S ∘ V ∘ S
-
-  -- the paper actually works in a Rig Groupoid in some places. Let's start
-  -- small to actually express what is in the lemmas
-  field
-    inv : Scalar → Scalar
-    invˡ : (s : Scalar) → inv s ∘ s ≈ 𝟙
-    invʳ : (s : Scalar) → s ∘ inv s ≈ 𝟙
