@@ -31,8 +31,8 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
-  -- open MonR M× using (_⟩⊗⟨refl)
-  -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
+  open MonR M× using (serialize₁₂)
+  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_)
 
   private
     variable
@@ -114,10 +114,20 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     (S ⊗₁ id) ∘ Ctrl Z ∎ 
   -- A9
   A9 : Ctrl Z ∘ (id ⊗₁ S) ≈ (id ⊗₁ S) ∘ Ctrl Z
-  A9 = {!!}
+  A9 = CP-P-right (^-comm 4 2)
+  
   -- A10 (i.e. given S²≡Z and HSSH≡X this is what we need to prove
   A10 : Ctrl Z ∘ (X ⊗₁ id) ≈ (X ⊗₁ Z) ∘ Ctrl Z
-  A10 = {!!}
+  A10 = begin
+    (Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat) ∘ (X ⊗₁ id)               ≈⟨ sym-assoc ⟩∘⟨refl ○ pullʳ Mat-X-left ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ Z)) ∘ σ⊕ ∘ Mat                      ≈⟨ center (⟺ (S⊎.braiding.⇒.commute (Z , id))) ⟩
+    Mat⁻¹ ∘ (σ⊕ ∘ (Z ⊕₁ id)) ∘ Mat                      ≈⟨ pull-first Mat⁻¹σ ⟩
+    ((X ⊗₁ id) ∘ Mat⁻¹) ∘ (Z ⊕₁ id) ∘ Mat               ≈˘⟨ refl⟩∘⟨ identityʳ ⟩⊕⟨ Z²≡id ⟩∘⟨refl ⟩
+    ((X ⊗₁ id) ∘ Mat⁻¹) ∘ ((Z ∘ id) ⊕₁ (Z ∘ Z)) ∘ Mat   ≈⟨ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩
+    ((X ⊗₁ id) ∘ Mat⁻¹) ∘ ((Z ⊕₁ Z) ∘ (id ⊕₁ Z)) ∘ Mat  ≈⟨ sym-assoc ○ center Mat⁻¹-2f ⟩∘⟨refl ⟩
+    ((X ⊗₁ id) ∘ ((id ⊗₁ Z) ∘ Mat⁻¹) ∘ (id ⊕₁ Z)) ∘ Mat ≈⟨ assoc ○ refl⟩∘⟨ assoc ○ pull-first (⟺ serialize₁₂) ⟩
+    (X ⊗₁ Z) ∘ Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat    ∎
+  
   -- A11 (Same comments as A10)
   -- Uses 4.5(5)
   A11 : Ctrl Z ∘ (id ⊗₁ X) ≈ Z ⊗₁ X ∘ Ctrl Z
