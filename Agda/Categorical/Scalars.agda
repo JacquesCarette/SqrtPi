@@ -41,9 +41,9 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   -- used in CZ²≡id 
   -𝟙²≡𝟙 : -𝟙 ^ 2 ≈ 𝟙
   -𝟙²≡𝟙 = begin
-    (ω ^ 4) ∘ ω ^ 4                       ≈⟨ pullʳ (pullʳ assoc) ⟩
-    ω ^ 8                                 ≈⟨ E1 ⟩
-    𝟙                                     ∎
+    (ω ^ 4) ∘ ω ^ 4  ≈⟨ pullʳ (pullʳ assoc) ⟩
+    ω ^ 8            ≈⟨ E1 ⟩
+    𝟙                ∎
 
   i²≡-𝟙 : i ^ 2 ≈ -𝟙
   i²≡-𝟙 = assoc
@@ -53,6 +53,15 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     ω ^ 6             ≈⟨ pushʳ (pushʳ sym-assoc) ⟩
     ω ^ 4 ∘ ω ^ 2 ∎
 
+  -i≡i◎-𝟙 : -i ≈ i ∘ -𝟙
+  -i≡i◎-𝟙 = pullˡ Equiv.refl
+
+  -i◎i≡𝟙 : -i ∘ i ≈ 𝟙
+  -i◎i≡𝟙 = begin
+    ω ^ 6 ∘ ω ^ 2 ≈⟨ ^-add ω 6 2 ⟩
+    ω ^ 8         ≈⟨ E1 ⟩
+    𝟙             ∎
+  
   -- short-names for important lemmas
   -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)
   -- 2. infrastructure for 'commutative cubes'
@@ -240,4 +249,20 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     (s ● id) ⊕₁ (s ● id) ≈˘⟨ ●-distrib-⊕ ⟩
     s ● (id ⊕₁ id)       ≈⟨ ●-congʳ M⊎.⊗.identity ⟩
     s ● id ∎
-    
+
+  merge-scalars : {s t : Scalar} {A B C : Obj} {g : A ⇒ B} {f : B ⇒ C} →
+    (s ● f) ∘ (t ● g) ≈ (s ∘ t) ● (f ∘ g)
+  merge-scalars {s = s} {t} {g = g} {f} = begin
+    (s ● f) ∘ (t ● g) ≈˘⟨ ●-assocˡ ⟩
+    s ● (f ∘ (t ● g)) ≈˘⟨ ●-congʳ ●-over-∘ ⟩
+    s ● (t ● (f ∘ g)) ≈⟨ push-scalar-left ⟩
+    (s ∘ t) ● (f ∘ g) ∎
+
+  extract-scalar : {s t : Scalar} {A B C D : Obj} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
+    s ● (h ∘ (t ● g) ∘ f) ≈ (s ∘ t) ● (h ∘ g ∘ f)
+  extract-scalar {s = s} {t} {f = f} {g} {h} = begin
+    s ● (h ∘ (t ● g) ∘ f)   ≈⟨ ●-congʳ (pullˡ (⟺ ●-over-∘) ) ⟩
+    s ● (t ● (h ∘ g) ∘ f)   ≈⟨ ●-congʳ ●-assocʳ ⟩
+    s ● (t ● ((h ∘ g) ∘ f)) ≈⟨ ●-congʳ (●-congʳ assoc) ⟩
+    s ● (t ● (h ∘ g ∘ f))   ≈⟨ push-scalar-left ⟩
+    (s ∘ t) ● (h ∘ g ∘ f)   ∎
