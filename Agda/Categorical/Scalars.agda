@@ -61,7 +61,13 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     ω ^ 6 ∘ ω ^ 2 ≈⟨ ^-add ω 6 2 ⟩
     ω ^ 8         ≈⟨ E1 ⟩
     𝟙             ∎
-  
+
+  i⁴≡𝟙 : i ^ 4 ≈ 𝟙
+  i⁴≡𝟙 = begin
+    i ∘ i ∘ i ∘ i     ≈⟨ sym-assoc ⟩
+    (i ∘ i) ∘ (i ∘ i) ≈⟨ i²≡-𝟙 ⟩∘⟨ i²≡-𝟙 ⟩
+    -𝟙 ∘ -𝟙           ≈⟨ -𝟙²≡𝟙 ⟩
+    𝟙                 ∎
   -- short-names for important lemmas
   -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)
   -- 2. infrastructure for 'commutative cubes'
