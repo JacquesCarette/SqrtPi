@@ -98,8 +98,18 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     id ⊕₁ id              ≈⟨ M⊎.⊗.identity ⟩
     id        ∎
   -- A6
+  -- prelim lemma
+  SH-expand : S ∘ H ≈ ω ^ 3 ● (X ∘ V ∘ S ∘ X)
+  SH-expand = begin
+    S ∘ ω ● (X ∘ S ∘ V ∘ S ∘ X)   ≈˘⟨ ●-over-∘ ⟩
+    ω ● (S ∘ X ∘ S ∘ V ∘ S ∘ X)   ≈⟨ ●-congʳ (⟺ assoc²' ○ {!PXP i!} ⟩∘⟨refl) ⟩
+    ω ● ((ω ^ 2 ● X) ∘ V ∘ S ∘ X) ≈⟨ ●-congʳ ●-assocʳ ⟩
+    ω ● (ω ^ 2 ● (X ∘ V ∘ S ∘ X)) ≈⟨ push-scalar-left ⟩
+    ω ^ 3 ● (X ∘ V ∘ S ∘ X)       ∎
+  
   A6 : (S ∘ H) ^ 3 ≈ ω ● id
-  A6 = {!!}
+  A6 = {!begin
+    !}
   -- A7
   A7 : CZ ^ 2 ≈ id
   A7 = CZ²≡id
@@ -135,10 +145,12 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     Ctrl Z ∘ (id ⊗₁ X)                 ≈˘⟨ SWAP-CP-SWAP ⟩∘⟨refl ⟩
     (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (id ⊗₁ X) ≈⟨ assoc²' ⟩
     SWAP ∘ Ctrl Z ∘ SWAP ∘ (id ⊗₁ X)   ≈⟨ refl⟩∘⟨ refl⟩∘⟨ S×.braiding.⇒.commute (id , X) ⟩
-    SWAP ∘ Ctrl Z ∘ (X ⊗₁ id) ∘ SWAP   ≈⟨ refl⟩∘⟨ {!!} ⟩
-    SWAP ∘ ((X ⊗₁ Z) ∘ Ctrl Z) ∘ SWAP  ≈⟨ {!!} ⟩
+    SWAP ∘ Ctrl Z ∘ (X ⊗₁ id) ∘ SWAP   ≈⟨ refl⟩∘⟨ pullˡ A10 ⟩
+    SWAP ∘ ((X ⊗₁ Z) ∘ Ctrl Z) ∘ SWAP  ≈⟨ pull-first (S×.braiding.⇒.commute (X , Z)) ○ assoc ⟩
     (Z ⊗₁ X) ∘ SWAP ∘ Ctrl Z ∘ SWAP    ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
     (Z ⊗₁ X) ∘ Ctrl Z                  ∎
+
+  -- prelim lemmas
   -- A12
   A12 : ω ^ 7 ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
   A12 = {!!}
