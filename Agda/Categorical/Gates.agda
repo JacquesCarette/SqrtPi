@@ -105,17 +105,11 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     (id ∘ id) ⊕₁ (s ∘ s)  ≈⟨ identity² ⟩⊕⟨refl ⟩
     id ⊕₁ s ^ 2           ∎
 
-  -- (iv) Split into two parts. Show P is invertible instead of assuming
-  P-invˡ : (s : Scalar) → P (inv s) ∘ P s ≈ id
-  P-invˡ s = begin
-    (id ⊕₁ inv s) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
-    (id ∘ id) ⊕₁ (inv s ∘ s)  ≈⟨ identity² ⟩⊕⟨ invˡ s ⟩
-    id ⊕₁ id                  ≈⟨ S⊎.⊗.identity ⟩
-    id                         ∎
-  P-invʳ : (s : Scalar) → P s ∘ P (inv s) ≈ id
-  P-invʳ s = begin
-    (id ⊕₁ s) ∘ (id ⊕₁ inv s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
-    (id ∘ id) ⊕₁ (s ∘ inv s)  ≈⟨ identity² ⟩⊕⟨ invʳ s ⟩
+  -- (iv) Show P is invertible for invertible scalars instead of assuming
+  P-inv : {s t : Scalar} → t ∘ s ≈ id → P t ∘ P s ≈ id
+  P-inv {s = s} {t} ts≈id  = begin
+    (id ⊕₁ t) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
+    (id ∘ id) ⊕₁ (t ∘ s)  ≈⟨ identity² ⟩⊕⟨ ts≈id ⟩
     id ⊕₁ id                  ≈⟨ S⊎.⊗.identity ⟩
     id                         ∎
 
@@ -125,8 +119,8 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   ⊗ʳ-comm fg≡gf = ⟺ M⊎.⊗.homomorphism ○ refl⟩⊕⟨ fg≡gf ○ M⊎.⊗.homomorphism
   
   -- used in MatProp: Ctrl-comm (and thus CP-comm)
-  P-comm : (s t : Scalar) → s ∘ t ≈ t ∘ s → P s ∘ P t ≈ P t ∘ P s
-  P-comm s t st≡ts = ⊗ʳ-comm st≡ts
+  P-comm : {s t : Scalar} → s ∘ t ≈ t ∘ s → P s ∘ P t ≈ P t ∘ P s
+  P-comm st≡ts = ⊗ʳ-comm st≡ts
 
   -- (vi)
   PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
@@ -181,13 +175,14 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   CCX²≡id = CA∘CB≡id CX²≡id
 
   -- (xi)
-  XPs : (s : Scalar) → X ∘ P s ≈ s ● P (inv s) ∘ X
-  XPs s = begin
-    σ⊕ ∘ (id ⊕₁ s)             ≈⟨ S⊎.braiding.⇒.commute (id , s) ⟩
-    (s ⊕₁ id) ∘ X               ≈˘⟨ identityʳ ⟩⊕⟨ invʳ s ⟩∘⟨refl ⟩
-    (s ∘ id) ⊕₁ (s ∘ inv s) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
-    (s ● id) ⊕₁ (s ● inv s) ∘ X ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
-    s ● (id ⊕₁ inv s) ∘ X       ∎
+  XPs : {s t : Scalar} → s ∘ t ≈ id → X ∘ P s ≈ s ● (P t ∘ X)
+  XPs {s = s} {t} st≈id = begin
+    σ⊕ ∘ (id ⊕₁ s)          ≈⟨ S⊎.braiding.⇒.commute (id , s) ⟩
+    (s ⊕₁ id) ∘ X           ≈˘⟨ identityʳ ⟩⊕⟨ st≈id ⟩∘⟨refl ⟩
+    (s ∘ id) ⊕₁ (s ∘ t) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
+    (s ● id) ⊕₁ (s ● t) ∘ X ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
+    s ● (id ⊕₁ t) ∘ X       ≈⟨ ●-assocʳ ⟩
+    s ● ((id ⊕₁ t) ∘ X)     ∎
 
   -----------------------------------------------------------------------------
   -- Corrolaries that are used in the proofs "inline"
