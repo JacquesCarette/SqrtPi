@@ -165,6 +165,14 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (λ⇒ ⊕₁ λ⇒) ∘ σ⊕ ∘ δᵣ⇒               ≈⟨ pullˡ (⟺ (S⊎.braiding.⇒.commute (λ⇒ , λ⇒))) ⟩
     (σ⊕ ∘ (λ⇒ ⊕₁ λ⇒)) ∘ δᵣ⇒             ≈⟨ assoc ⟩ 
     σ⊕ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒               ∎
+
+  -- cor of above
+  Mat⁻¹σ : Mat⁻¹ ∘ σ⊕ ≈ (X ⊗₁ id {2C}) ∘ Mat⁻¹
+  Mat⁻¹σ = begin
+    Mat⁻¹ ∘ σ⊕                          ≈⟨ insertʳ Mat-invʳ ⟩
+    ((Mat⁻¹ ∘ σ⊕) ∘ Mat) ∘ Mat⁻¹        ≈⟨ pullʳ (⟺ Mat-X-left) ⟩∘⟨refl ⟩
+    (Mat⁻¹ ∘ (Mat ∘ (X ⊗₁ id))) ∘ Mat⁻¹ ≈⟨ cancelˡ Mat-invˡ ⟩∘⟨refl ⟩
+    (X ⊗₁ id) ∘ Mat⁻¹                   ∎
   
   -- (9) (for some reason, Agda won't infer which object Mat is over)
   Mat-P-left : Mat {2C} ∘ (P s ⊗₁ id) ≈ (id ⊕₁ (s ● id)) ∘ Mat
