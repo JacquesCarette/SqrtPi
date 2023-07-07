@@ -132,4 +132,4 @@ record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : 
   S = id ⊕₁ (ω ^ 2)
   
   field
-    E3 : V ∘ S ∘ V ≈ ω ^ 2 ● S ∘ V ∘ S
+    E3 : V ∘ S ∘ V ≈ ω ^ 2 ● (S ∘ V ∘ S)
