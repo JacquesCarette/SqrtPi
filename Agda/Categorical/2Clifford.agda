@@ -90,7 +90,13 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     id                                                    ∎
   -- A5
   A5 : S ^ 4 ≈ id
-  A5 = {!!}
+  A5 = begin
+    (P i) ^ 4             ≈⟨ sym-assoc ⟩
+    (P i) ^ 2 ∘ (P i) ^ 2 ≈⟨ P² i ⟩∘⟨ P² i ⟩
+    (P (i ^ 2)) ^ 2       ≈⟨ P² (i ∘ i) ⟩
+    P (i ^ 2 ∘ i ^ 2)     ≈⟨ cong-P (^-add i 2 2 ○ i⁴≡𝟙) ⟩
+    id ⊕₁ id              ≈⟨ M⊎.⊗.identity ⟩
+    id        ∎
   -- A6
   A6 : (S ∘ H) ^ 3 ≈ ω ● id
   A6 = {!!}
@@ -99,7 +105,13 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   A7 = CZ²≡id
   -- A8
   A8 : Ctrl Z ∘ (S ⊗₁ id) ≈ (S ⊗₁ id) ∘ Ctrl Z
-  A8 = {!!}
+  A8 = begin
+    Ctrl Z ∘ (S ⊗₁ id)                 ≈⟨ ⟺ SWAP-CP-SWAP ⟩∘⟨refl ⟩
+    (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (S ⊗₁ id) ≈⟨ assoc ○ refl⟩∘⟨ pullʳ (S×.braiding.⇒.commute (S , id)) ⟩
+    SWAP ∘ (Ctrl Z ∘ (id ⊗₁ S) ∘ SWAP) ≈⟨ refl⟩∘⟨ pullˡ (CP-P-right (^-comm 4 2)) ⟩
+    SWAP ∘ ((id ⊗₁ S) ∘ Ctrl Z) ∘ SWAP ≈⟨ pull-first (S×.braiding.⇒.commute (id , S)) ○ assoc ⟩
+    (S ⊗₁ id) ∘ SWAP ∘ Ctrl Z ∘ SWAP    ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
+    (S ⊗₁ id) ∘ Ctrl Z ∎ 
   -- A9
   A9 : Ctrl Z ∘ (id ⊗₁ S) ≈ (id ⊗₁ S) ∘ Ctrl Z
   A9 = {!!}
