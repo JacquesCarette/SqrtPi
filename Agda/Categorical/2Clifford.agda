@@ -74,14 +74,14 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     ω ● (ω ● (X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ ●-congʳ ●-assocʳ ○ push-scalar-left ⟩
     ω ^ 2 ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)    ≈⟨ ●-congʳ (sym-assoc ○ pull-last (sym-assoc ⟩∘⟨refl ○ cancelʳ X²≡id) ⟩∘⟨refl) ⟩
     i ● ((X ∘ S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X)                ≈⟨ ●-congʳ ((refl⟩∘⟨ E3-inv) ⟩∘⟨ (⟺ assoc²' ○ E3-inv ⟩∘⟨refl)) ⟩
-    i ● ((X ∘ ω ^ 6 ● (V ∘ S ∘ V)) ∘ (ω ^ 6 ● (V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar ⟩
+    i ● ((X ∘ ω ^ 6 ● (V ∘ S ∘ V)) ∘ (ω ^ 6 ● (V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar3 ⟩
     (i ∘ ω ^ 6) ● ((X ∘ ω ^ 6 ● (V ∘ S ∘ V)) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ ●-cong (^-add ω 2 6) assoc ⟩
-    ω ^ 8 ● (X ∘ ω ^ 6 ● (V ∘ S ∘ V) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar ⟩
+    ω ^ 8 ● (X ∘ ω ^ 6 ● (V ∘ S ∘ V) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ extract-scalar3 ⟩
     (ω ^ 8 ∘ ω ^ 6) ● (X ∘ (V ∘ S ∘ V) ∘ ((V ∘ S ∘ V) ∘ X)) ≈⟨ ●-cong (E1 ⟩∘⟨refl) (refl⟩∘⟨ sym-assoc ⟩∘⟨ assoc)  ⟩
     (𝟙 ∘ ω ^ 6) ● (X ∘ ((V ∘ S) ∘ V) ∘ V ∘ (S ∘ V) ∘ X)   ≈⟨ ●-cong identityˡ (refl⟩∘⟨ center E2) ⟩
     ω ^ 6 ● (X ∘ (V ∘ S) ∘ X ∘ (S ∘ V) ∘ X)               ≈⟨ ●-congʳ (refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ (sym-assoc ○ refl⟩∘⟨ assoc ○ pullˡ assoc) ) ⟩
     ω ^ 6 ● ((X ∘ V) ∘ (S ∘ X ∘ S) ∘ (V ∘ X))             ≈⟨ ●-congʳ (refl⟩∘⟨ PXP i ⟩∘⟨refl) ⟩
-    ω ^ 6 ● ((X ∘ V) ∘ (i ● X) ∘ V ∘ X)                   ≈⟨ extract-scalar ⟩
+    ω ^ 6 ● ((X ∘ V) ∘ (i ● X) ∘ V ∘ X)                   ≈⟨ extract-scalar3 ⟩
     (ω ^ 6 ∘ ω ^ 2) ● ((X ∘ V) ∘ X ∘ V ∘ X)               ≈⟨ ●-cong (^-add ω 6 2) (XV-comm ⟩∘⟨refl) ⟩
     ω ^ 8 ● ((V ∘ X) ∘ X ∘ V ∘ X)                         ≈⟨ ●-congˡ E1 ○ 𝟙●f≈f _ ⟩
     (V ∘ X) ∘ X ∘ V ∘ X                                   ≈⟨ cancelInner X²≡id ⟩
@@ -102,14 +102,40 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   SH-expand : S ∘ H ≈ ω ^ 3 ● (X ∘ V ∘ S ∘ X)
   SH-expand = begin
     S ∘ ω ● (X ∘ S ∘ V ∘ S ∘ X)   ≈˘⟨ ●-over-∘ ⟩
-    ω ● (S ∘ X ∘ S ∘ V ∘ S ∘ X)   ≈⟨ ●-congʳ (⟺ assoc²' ○ {!PXP i!} ⟩∘⟨refl) ⟩
+    ω ● (S ∘ X ∘ S ∘ V ∘ S ∘ X)   ≈⟨ ●-congʳ (⟺ assoc²' ○ PXP i ⟩∘⟨refl) ⟩
     ω ● ((ω ^ 2 ● X) ∘ V ∘ S ∘ X) ≈⟨ ●-congʳ ●-assocʳ ⟩
     ω ● (ω ^ 2 ● (X ∘ V ∘ S ∘ X)) ≈⟨ push-scalar-left ⟩
     ω ^ 3 ● (X ∘ V ∘ S ∘ X)       ∎
   
   A6 : (S ∘ H) ^ 3 ≈ ω ● id
-  A6 = {!begin
-    !}
+  A6 = begin
+    (S ∘ H) ^ 3                   ≈⟨ base^-cong SH-expand 3 ⟩
+    (ω ^ 3 ● (X ∘ V ∘ S ∘ X)) ^ 3 ≡⟨⟩
+    ω ^ 3 ● (X ∘ V ∘ S ∘ X) ∘ ω ^ 3 ● (X ∘ V ∘ S ∘ X) ∘ ω ^ 3 ● (X ∘ V ∘ S ∘ X)
+        ≈⟨ refl⟩∘⟨ merge-scalars  ⟩
+    ω ^ 3 ● (X ∘ V ∘ S ∘ X) ∘ (ω ^ 3 ∘ ω ^ 3) ● ((X ∘ V ∘ S ∘ X) ∘ X ∘ V ∘ S ∘ X)
+        ≈⟨ merge-scalars ⟩
+    (ω ^ 3 ∘ ω ^ 3 ∘ ω ^ 3) ● ((X ∘ V ∘ S ∘ X) ∘ (X ∘ V ∘ S ∘ X) ∘ X ∘ V ∘ S ∘ X)
+        ≈⟨ ●-cong (refl⟩∘⟨ ^-add ω 3 3) (pullˡ (pull-last (cancelInner X²≡id))) ⟩
+    (ω ^ 3 ∘ ω ^ 6) ● ((X ∘ V ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ V ∘ S ∘ X)
+        ≈⟨ ●-cong (^-add ω 3 6) (pull-last (pull-last (cancelInner X²≡id))) ⟩
+    ω ^ 9 ● (X ∘ V ∘ S ∘ V ∘ S ∘ V ∘ S ∘ X)
+        ≈⟨ ●-cong (ω⁸⁺ᵃ≡ωᵃ {1}) (refl⟩∘⟨ (⟺ assoc²' ○ E3 ⟩∘⟨refl)) ⟩
+    ω ● (X ∘ (ω ^ 2 ● (S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X))
+        ≈⟨ extract-scalar3 ⟩
+    ω ^ 3 ● (X ∘ (S ∘ V ∘ S) ∘ S ∘ V ∘ S ∘ X)
+        ≈⟨ ●-congʳ (refl⟩∘⟨ ⟺ (cancelInner X²≡id)) ⟩
+    ω ^ 3 ● (X ∘ ((S ∘ V ∘ S) ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)
+        ≈⟨ ●-cong (⟺ (^-add ω 2 1)) (sym-assoc ○ (refl⟩∘⟨ (assoc ○ refl⟩∘⟨ assoc)) ⟩∘⟨refl) ⟩
+    (ω ^ 2 ∘ ω) ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)
+        ≈˘⟨ extract-scalar2 ⟩
+    ω ^ 2 ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ ω ● (X ∘ S ∘ V ∘ S ∘ X))
+        ≈⟨ ⟺ push-scalar-left ○ ●-congʳ ●-assocˡ ⟩
+    ω ● (ω ● (X ∘ S ∘ V ∘ S ∘ X) ∘ ω ● (X ∘ S ∘ V ∘ S ∘ X))
+        ≡⟨⟩
+    ω ● (H ∘ H)
+        ≈⟨ ●-congʳ A4 ⟩
+    ω ● id      ∎
   -- A7
   A7 : CZ ^ 2 ≈ id
   A7 = CZ²≡id
