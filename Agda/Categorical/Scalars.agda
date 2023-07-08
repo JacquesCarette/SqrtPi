@@ -11,6 +11,7 @@ open import Categorical.SqrtRig using (SqrtRig; module Kit)
 module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoidal 𝒞} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} {R : RigCategory 𝒞 S⊎ S×} (SR : SqrtRig R) where
 
+  open import Data.Nat using (ℕ; zero; suc; _+_)
   open import Data.Product using (_,_)
   open import Level using (Level)
 
@@ -68,6 +69,13 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     (i ∘ i) ∘ (i ∘ i) ≈⟨ i²≡-𝟙 ⟩∘⟨ i²≡-𝟙 ⟩
     -𝟙 ∘ -𝟙           ≈⟨ -𝟙²≡𝟙 ⟩
     𝟙                 ∎
+
+  ω⁸⁺ᵃ≡ωᵃ : {a : ℕ} → ω ^ (8 + a) ≈ ω ^ a
+  ω⁸⁺ᵃ≡ωᵃ {a} = begin
+    ω ^ (8 + a)   ≈˘⟨ ^-add ω 8 a ⟩
+    ω ^ 8 ∘ ω ^ a ≈⟨ E1 ⟩∘⟨refl ○ identityˡ ⟩
+    ω ^ a         ∎
+  
   -- short-names for important lemmas
   -- 1. the unitors are equal at the unit (follows from Kelly's Coherence thms)
   -- 2. infrastructure for 'commutative cubes'
@@ -264,9 +272,16 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     s ● (t ● (f ∘ g)) ≈⟨ push-scalar-left ⟩
     (s ∘ t) ● (f ∘ g) ∎
 
-  extract-scalar : {s t : Scalar} {A B C D : Obj} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
+  extract-scalar2 : {s t : Scalar} {B C D : Obj} {g : B ⇒ C} {h : C ⇒ D} →
+    s ● (h ∘ (t ● g)) ≈ (s ∘ t) ● (h ∘ g)
+  extract-scalar2 {s = s} {t} {g = g} {h} = begin
+    s ● (h ∘ (t ● g))   ≈⟨ ●-congʳ (⟺ ●-over-∘) ⟩
+    s ● (t ● (h ∘ g))   ≈⟨ push-scalar-left ⟩
+    (s ∘ t) ● (h ∘ g)   ∎
+    
+  extract-scalar3 : {s t : Scalar} {A B C D : Obj} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
     s ● (h ∘ (t ● g) ∘ f) ≈ (s ∘ t) ● (h ∘ g ∘ f)
-  extract-scalar {s = s} {t} {f = f} {g} {h} = begin
+  extract-scalar3 {s = s} {t} {f = f} {g} {h} = begin
     s ● (h ∘ (t ● g) ∘ f)   ≈⟨ ●-congʳ (pullˡ (⟺ ●-over-∘) ) ⟩
     s ● (t ● (h ∘ g) ∘ f)   ≈⟨ ●-congʳ ●-assocʳ ⟩
     s ● (t ● ((h ∘ g) ∘ f)) ≈⟨ ●-congʳ (●-congʳ assoc) ⟩
