@@ -192,7 +192,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (ω ∘ ω) ● (((X ∘ S ∘ V ∘ S ∘ X) ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)   ≈⟨ ●-congʳ (pullʳ (cancelˡ X²≡id)) ⟩
     i ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ S ∘ V ∘ S ∘ X)                    ≈⟨ ●-congʳ (sym-assoc ○ (sym-assoc ⟩∘⟨refl ○ sym-assoc ⟩∘⟨refl ○ assoc ○ assoc ⟩∘⟨ assoc) ⟩∘⟨refl) ⟩
     i ● (((X ∘ S ∘ V) ∘ (S ∘ X ∘ S)) ∘ V ∘ S ∘ X)                ≈⟨ ●-congʳ ((refl⟩∘⟨ PXP i) ⟩∘⟨refl) ⟩
-    i ● (((X ∘ S ∘ V) ∘ (i ● X)) ∘ V ∘ S ∘ X)                    ≈⟨ ●-congʳ assoc ○ extract-scalar ⟩
+    i ● (((X ∘ S ∘ V) ∘ (i ● X)) ∘ V ∘ S ∘ X)                    ≈⟨ ●-congʳ assoc ○ extract-scalar3 ⟩
     (i ∘ i) ● ((X ∘ S ∘ V) ∘ X ∘ V ∘ S ∘ X)                      ≈⟨ ●-cong i²≡-𝟙 (refl⟩∘⟨ pullˡ XV-comm) ⟩
     -𝟙 ● ((X ∘ S ∘ V) ∘ (V ∘ X) ∘ S ∘ X)                         ≈⟨ ●-congʳ (sym-assoc ○ (sym-assoc ⟩∘⟨refl ○ center E2) ⟩∘⟨refl) ⟩
     -𝟙 ● (((X ∘ S) ∘ X ∘ X) ∘ S ∘ X)                             ≈⟨ ●-congʳ (elimʳ X²≡id ⟩∘⟨refl)  ⟩
@@ -209,14 +209,14 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (ω ● ((X ∘ S ∘ V ∘ S ∘ X) ∘ Z)) ∘ (ω ● (X ∘ S ∘ V ∘ S ∘ X))    ≈⟨ merge-scalars ⟩
     (ω ∘ ω) ● (((X ∘ S ∘ V ∘ S ∘ X) ∘ Z) ∘ X ∘ S ∘ V ∘ S ∘ X)      ≈⟨ ●-congʳ (pull-last (pull-last (XPs -𝟙²≡𝟙)) ⟩∘⟨refl) ⟩
     i ● ((X ∘ S ∘ V ∘ S ∘ -𝟙 ● (Z ∘ X)) ∘ X ∘ S ∘ V ∘ S ∘ X)       ≈⟨ ●-congʳ ( (⟺ assoc² ○ sym-assoc) ⟩∘⟨refl) ⟩
-    i ● (((((X ∘ S) ∘ V) ∘ S) ∘ -𝟙 ● (Z ∘ X)) ∘ X ∘ S ∘ V ∘ S ∘ X) ≈⟨ ●-congʳ assoc ○ extract-scalar ⟩
+    i ● (((((X ∘ S) ∘ V) ∘ S) ∘ -𝟙 ● (Z ∘ X)) ∘ X ∘ S ∘ V ∘ S ∘ X) ≈⟨ ●-congʳ assoc ○ extract-scalar3 ⟩
     (i ∘ -𝟙) ● ((((X ∘ S) ∘ V) ∘ S) ∘ (Z ∘ X) ∘ X ∘ S ∘ V ∘ S ∘ X)  ≈⟨ ●-cong (⟺ -i≡i◎-𝟙) (refl⟩∘⟨ cancelInner X²≡id) ⟩
     -i ● ((((X ∘ S) ∘ V) ∘ S) ∘ Z ∘ S ∘ V ∘ S ∘ X)                 ≈⟨ ●-congʳ (center (P-comm (^-comm 2 4))) ⟩
     -i ● (((X ∘ S) ∘ V) ∘ (Z ∘ S) ∘ S ∘ V ∘ S ∘ X)                 ≈⟨ ●-congʳ (refl⟩∘⟨ center S²≡Z ) ⟩
     -i ● (((X ∘ S) ∘ V) ∘ Z ∘ Z ∘ V ∘ S ∘ X)                       ≈⟨ ●-congʳ (refl⟩∘⟨ cancelˡ Z²≡id ) ⟩
     -i ● (((X ∘ S) ∘ V) ∘ V ∘ S ∘ X)                               ≈⟨ ●-congʳ (center E2) ⟩
     -i ● ((X ∘ S) ∘ X ∘ S ∘ X)                                     ≈⟨ ●-congʳ (refl⟩∘⟨ sym-assoc ○ assoc ○ refl⟩∘⟨ (sym-assoc ○ PXP i ⟩∘⟨refl)) ⟩
-    -i ● (X ∘ i ● X ∘ X)                                           ≈⟨ extract-scalar ⟩
+    -i ● (X ∘ i ● X ∘ X)                                           ≈⟨ extract-scalar3 ⟩
     (-i ∘ i) ● (X ∘ X ∘ X)                                         ≈⟨ ●-cong -i◎i≡𝟙 (cancelˡ X²≡id) ⟩
     𝟙 ● X                                                          ≈⟨ 𝟙●f≈f X ⟩
     X                                                              ∎
