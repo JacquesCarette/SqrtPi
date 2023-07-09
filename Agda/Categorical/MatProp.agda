@@ -74,8 +74,38 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   ie
     α⇐ ∘ δᵣ⇒ ⊕₁ δᵣ⇒ ∘ δₗ⇒ ≈ α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐ ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒
   -}
-  postulate
-    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+
+
+
+
+
+
+--  postulate
+--    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+
+  lap-coh-1-sq1 : (SWAP ⊕₁ SWAP) ∘ δᵣ⇒ ∘ SWAP ≈ δₗ⇒
+  lap-coh-1-sq1 = ? 
+
+  lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (SWAP ⊕₁ SWAP) ≈ δₗ⇒ ⊕₁ δₗ⇒
+  lap-coh-1-sq2 = ?
+
+  lap-coh-1-sq3 : (SWAP ⊕₁ SWAP) ⊕₁ (SWAP ⊕₁ SWAP) ≈ id
+  lap-coh-1-sq3 = {!!}
+
+  lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+  lap-coh-1-sq4 = {!!} 
+
+  lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+  lap-coh-1 = begin 
+    (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP
+      ≈⟨ {!!} ⟩
+    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∎
+
+
+
+
+
+
     
   Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = begin
