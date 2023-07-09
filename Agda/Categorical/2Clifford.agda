@@ -32,7 +32,7 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MonR M× using (serialize₁₂)
-  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_)
+  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_; _⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
   private
     variable
@@ -136,6 +136,7 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     ω ● (H ∘ H)
         ≈⟨ ●-congʳ A4 ⟩
     ω ● id      ∎
+    
   -- A7
   A7 : CZ ^ 2 ≈ id
   A7 = CZ²≡id
@@ -176,11 +177,73 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
     (Z ⊗₁ X) ∘ SWAP ∘ Ctrl Z ∘ SWAP    ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
     (Z ⊗₁ X) ∘ Ctrl Z                  ∎
 
-  -- prelim lemmas
-  -- A12
-  A12 : ω ^ 7 ● ((S ∘ H ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
-  A12 = {!!}
-  -- A13
-  A13 : ω ^ 7 ● (S ⊗₁ (S ∘ H ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)  ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
-  A13 = {!!}
+  -- prelim lemmas for A12 (which is A13 in Bian-Selinger, as they've been swapped)
+  SHSHS≈ωH : (S ∘ H) ∘ (S ∘ H) ∘ S ≈ ω ● H
+  SHSHS≈ωH = begin
+    (S ∘ H) ∘ (S ∘ H) ∘ S             ≈⟨ insertʳ A4 ⟩
+    (((S ∘ H) ∘ (S ∘ H) ∘ S) ∘ H) ∘ H ≈⟨ (assoc²' ○ A6) ⟩∘⟨refl ⟩
+    ω ● id ∘ H                        ≈⟨ ●-assocʳ ○ ●-congʳ identityˡ ⟩
+    ω ● H                             ∎
 
+  i●SHSZHS≈ω●ZHZ : i ● (((S ∘ H) ∘ S) ∘ (Z ∘ H) ∘ S) ≈ ω ● (Z ∘ H ∘ Z)
+  i●SHSZHS≈ω●ZHZ = begin
+    i ● (((S ∘ H) ∘ S) ∘ (Z ∘ H) ∘ S)             ≈⟨ ●-congʳ (sym-assoc ○ ⟺ (cancelInner A4) ⟩∘⟨refl ○ assoc) ⟩
+    i ● ((((S ∘ H) ∘ S) ∘ H) ∘ (H ∘ Z ∘ H) ∘ S)   ≈⟨ ●-congʳ (refl⟩∘⟨ HZH≡X ⟩∘⟨refl) ⟩
+    i ● ((((S ∘ H) ∘ S) ∘ H) ∘ X ∘ S)             ≈⟨ ●-congʳ (assoc ⟩∘⟨ XPs (^-comm 2 6 ○ -i◎i≡𝟙)) ⟩
+    i ● (((S ∘ H) ∘ (S ∘ H)) ∘ i ● (P (ω ^ 6) ∘ X)) ≈⟨ extract-scalar2 ⟩
+    i ^ 2 ● ((((S ∘ H) ∘ (S ∘ H)) ∘ (P (ω ^ 6)) ∘ X)) ≈⟨ ●-congʳ (refl⟩∘⟨ ⟺ (P∘P (^-add ω 2 4)) ⟩∘⟨refl) ⟩
+    i ^ 2 ● ((((S ∘ H) ∘ (S ∘ H)) ∘ (S ∘ Z) ∘ X)) ≈⟨ ●-cong (^-add ω 2 2) (refl⟩∘⟨ assoc ○ pullˡ assoc) ⟩
+    ω ^ 4 ● (((S ∘ H) ∘ (S ∘ H) ∘ S) ∘ (Z ∘ X))   ≈⟨ ●-congʳ (SHSHS≈ωH ⟩∘⟨refl) ⟩
+    ω ^ 4 ● (ω ● H ∘ Z ∘ X)                       ≈⟨ (●-congʳ ●-assocʳ) ○ push-scalar-left ⟩
+    (ω ^ 4 ∘ ω ) ● (H ∘ Z ∘ X)                    ≈⟨ ●-cong (^-add ω 4 1) (refl⟩∘⟨ PX -𝟙²≡𝟙) ⟩
+    ω ^ 5 ● (H ∘ ω ^ 4 ● (X ∘ Z))                 ≈⟨ extract-scalar2 ⟩
+    (ω ^ 5 ∘ ω ^ 4) ● (H ∘ X ∘ Z)                 ≈⟨ ●-cong (^-add ω 5 4) (sym-assoc ○ ⟺ (cancelInner A4)) ⟩
+    ω ^ 9 ● (((H ∘ X) ∘ H) ∘ H ∘ Z)               ≈⟨ ●-cong (ω⁸⁺ᵃ≡ωᵃ {1}) ((assoc ○ HXH≡Z) ⟩∘⟨refl) ⟩
+    ω ● (Z ∘ H ∘ Z) ∎
+
+  push-Mat-out : (S ⊗₁ ((S ∘ H) ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)
+    ≈ Mat⁻¹ ∘ ω ● (H ⊕₁ (Z ∘ H ∘ Z)) ∘ Mat
+  push-Mat-out = begin
+    (S ⊗₁ ((S ∘ H) ∘ S)) ∘ (Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat) ∘ id ⊗₁ (H ∘ S)
+        ≈⟨ serialize₁₂ ⟩∘⟨ (sym-assoc ⟩∘⟨refl ○ pullʳ Mat-f-right) ⟩
+    ((S ⊗₁ id) ∘ (id ⊗₁ ((S ∘ H) ∘ S))) ∘ (Mat⁻¹ ∘ (id ⊕₁ Z)) ∘ ((H ∘ S) ⊕₁ (H ∘ S)) ∘ Mat
+        ≈⟨ sym-assoc ○ center (⟺ Mat⁻¹-2f) ⟩∘⟨refl ⟩
+    ((S ⊗₁ id) ∘ (Mat⁻¹ ∘ ((S ∘ H) ∘ S) ⊕₁ ((S ∘ H) ∘ S)) ∘ (id ⊕₁ Z)) ∘ ((H ∘ S) ⊕₁ (H ∘ S)) ∘ Mat
+        ≈⟨ assoc ○ refl⟩∘⟨ (assoc ○ assoc) ○ sym-assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
+    ((S ⊗₁ id) ∘ Mat⁻¹) ∘ (((S ∘ H) ∘ S) ⊕₁ ((S ∘ H) ∘ S) ∘ (id ⊕₁ Z) ∘ (H ∘ S) ⊕₁ (H ∘ S)) ∘ Mat
+        ≈⟨ refl⟩∘⟨ ⟺ (M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism) ⟩∘⟨refl ⟩
+    ((S ⊗₁ id) ∘ Mat⁻¹) ∘ ((((S ∘ H) ∘ S) ∘ id ∘ (H ∘ S)) ⊕₁ (((S ∘ H) ∘ S) ∘ Z ∘ (H ∘ S))) ∘ Mat
+        ≈⟨ P-Mat⁻¹ ⟩∘⟨ (refl⟩∘⟨ identityˡ ○ assoc ○ refl⟩∘⟨ sym-assoc) ⟩⊕⟨ (refl⟩∘⟨ sym-assoc) ⟩∘⟨refl ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ i ● id)) ∘ ((((S ∘ H) ∘ (S ∘ H) ∘ S)) ⊕₁ (((S ∘ H) ∘ S) ∘ (Z ∘ H) ∘ S)) ∘ Mat
+        ≈⟨ assoc ○ refl⟩∘⟨ sym-assoc ⟩
+    Mat⁻¹ ∘ ((id ⊕₁ i ● id) ∘ ((((S ∘ H) ∘ (S ∘ H) ∘ S)) ⊕₁ (((S ∘ H) ∘ S) ∘ (Z ∘ H) ∘ S))) ∘ Mat
+        ≈⟨ refl⟩∘⟨ ⟺ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ (((id ∘ ((S ∘ H) ∘ (S ∘ H) ∘ S)) ⊕₁ (i ● id  ∘ ((S ∘ H) ∘ S) ∘ (Z ∘ H) ∘ S))) ∘ Mat
+        ≈⟨ refl⟩∘⟨ (identityˡ ○ SHSHS≈ωH) ⟩⊕⟨ (●-assocʳ ○ ●-congʳ identityˡ ○ i●SHSZHS≈ω●ZHZ) ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ ω ● H ⊕₁ ω ● (Z ∘ H ∘ Z) ∘ Mat
+        ≈⟨ refl⟩∘⟨ ⟺ ●-distrib-⊕ ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ ω ● (H ⊕₁ (Z ∘ H ∘ Z)) ∘ Mat                             ∎
+
+  pull-Mat-left : (H ⊕₁ H) ∘ (id ⊕₁ Z) ∘ Mat ≈ Mat ∘ (id ⊗₁ H) ∘ Ctrl Z
+  pull-Mat-left = begin
+    (H ⊕₁ H) ∘ (id ⊕₁ Z) ∘ Mat                 ≈⟨ ⟺ (cancelInner Mat-invʳ) ⟩
+    ((H ⊕₁ H) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat ≈⟨ pushˡ (⟺ Mat-f-right) ⟩
+    Mat ∘ (id ⊗₁ H) ∘ Ctrl Z   ∎
+    
+  -- A12
+  A12 : ω ^ 7 ● ((S ⊗₁ ((S ∘ H) ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)) ≈ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z
+  A12 = begin
+     ω ^ 7 ● ((S ⊗₁ ((S ∘ H) ∘ S)) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ S)) ≈⟨ ●-congʳ push-Mat-out ⟩
+     ω ^ 7 ● (Mat⁻¹ ∘ ω ● (H ⊕₁ (Z ∘ H ∘ Z)) ∘ Mat)          ≈⟨ extract-scalar3 ⟩
+     (ω ^ 7 ∘ ω) ● (Mat⁻¹ ∘ (H ⊕₁ (Z ∘ H ∘ Z)) ∘ Mat)        ≈⟨ ●-cong (^-add ω 7 1) (refl⟩∘⟨ ⟺ (identityˡ ○ identityʳ) ⟩⊕⟨refl ⟩∘⟨refl) ⟩
+     ω ^ 8 ● (Mat⁻¹ ∘ ((id ∘ H ∘ id) ⊕₁ (Z ∘ H ∘ Z)) ∘ Mat)  ≈⟨ ●-cong E1 (refl⟩∘⟨ (M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism) ⟩∘⟨refl) ⟩
+     𝟙 ● (Mat⁻¹ ∘ ((id ⊕₁ Z) ∘ (H ⊕₁ H) ∘ (id ⊕₁ Z)) ∘ Mat)  ≈⟨ 𝟙●f≈f _ ⟩
+     (Mat⁻¹ ∘ ((id ⊕₁ Z) ∘ (H ⊕₁ H) ∘ (id ⊕₁ Z)) ∘ Mat)      ≈⟨ refl⟩∘⟨ (assoc ○ refl⟩∘⟨ assoc) ⟩
+     Mat⁻¹ ∘ (id ⊕₁ Z) ∘ (H ⊕₁ H) ∘ (id ⊕₁ Z) ∘ Mat          ≈⟨ refl⟩∘⟨ refl⟩∘⟨ pull-Mat-left ⟩
+     Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat ∘ (id ⊗₁ H) ∘ Ctrl Z            ≈⟨ ⟺ assoc²' ⟩
+     Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z                             ∎
+
+  -- A13
+  A13 : ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
+  A13 = {!!}
+  
