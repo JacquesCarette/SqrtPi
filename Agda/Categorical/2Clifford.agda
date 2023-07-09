@@ -245,5 +245,11 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
 
   -- A13
   A13 : ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
-  A13 = {!!}
+  A13 = begin
+    ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id                 ≈⟨ {!!} ⟩
+    ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (H ∘ S) ⊗₁ id ≈⟨ {!!} ⟩
+    ω ^ 7 ● (SWAP ∘ (S ⊗₁ ((S ∘ H) ∘ S))) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S) ∘ SWAP) ≈⟨ {!!} ⟩
+    SWAP ∘ ω ^ 7 ● (SWAP ∘ (S ⊗₁ ((S ∘ H) ∘ S))) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S)) ∘ SWAP ≈⟨ {!!} ⟩
+    SWAP ∘ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z ∘ SWAP                                      ≈⟨ {!!} ⟩
+    Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z                           ∎
   
