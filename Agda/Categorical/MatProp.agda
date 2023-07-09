@@ -76,10 +76,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -}
 
 
-
-
-
-
 --  postulate
 --    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
 
@@ -92,6 +88,9 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   lap-coh-1-sq3 : (SWAP ⊕₁ SWAP) ⊕₁ (SWAP ⊕₁ SWAP) ≈ id
   lap-coh-1-sq3 = {!!}
 
+  lap-coh-1-sq123 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+  lap-coh-1-sq123 = {!!} 
+
   lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {1C} {1C} {2C})
   lap-coh-1-sq4 = {!!} 
 
@@ -99,6 +98,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   lap-coh-1 = begin 
     (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP
       ≈⟨ {!!} ⟩
+    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ 
+      ≈⟨ Equiv.sym lap-coh-1-sq4 ⟩
     Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∎
 
 
