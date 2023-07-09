@@ -28,7 +28,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MR C
-  -- open MonR M× using (_⟩⊗⟨refl)
+  open MonR M× using (_⟩⊗⟨refl)
   open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)
   
   X : 2×2
@@ -184,6 +184,16 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     s ● (id ⊕₁ t) ∘ X       ≈⟨ ●-assocʳ ⟩
     s ● ((id ⊕₁ t) ∘ X)     ∎
 
+  -- the proofs call this (xi) as well...
+  PX : {s t : Scalar} → s ∘ t ≈ id → P s ∘ X ≈ s ● (X ∘ P t)
+  PX {s = s} {t} st≈id = begin
+    (id ⊕₁ s) ∘ σ⊕            ≈˘⟨ st≈id ⟩⊕⟨ identityʳ ⟩∘⟨refl ⟩
+    ((s ∘ t) ⊕₁ (s ∘ id)) ∘ X ≈˘⟨ (scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘) ⟩∘⟨refl ⟩
+    ((s ● t) ⊕₁ (s ● id)) ∘ X ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
+    s ● (t ⊕₁ id) ∘ X         ≈⟨ ●-assocʳ ⟩
+    s ● ((t ⊕₁ id) ∘ X)       ≈˘⟨ ●-congʳ (S⊎.braiding.⇒.commute (id , t)) ⟩
+    s ● (X ∘ P t)             ∎
+    
   -----------------------------------------------------------------------------
   -- Corrolaries that are used in the proofs "inline"
   cong-P : {s t : Scalar} → (s ≈ t) → P s ≈ P t
@@ -194,3 +204,6 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     P i ∘ P i ≈⟨ P² i ⟩
     P (i ^ 2) ≈⟨ cong-P i²≡-𝟙 ⟩
     P -𝟙      ∎
+
+  P∘P : {s t u : Scalar} → s ∘ t ≈ u → P s ∘ P t ≈ P u
+  P∘P st≈u = ⟺ S⊎.⊗.homomorphism ○ identity² ⟩⊕⟨ st≈u

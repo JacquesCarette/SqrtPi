@@ -218,6 +218,14 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (id ⊕₁ id) ⊕₁ (s ⊕₁ s) ∘ Mat                          ≈⟨ M⊎.⊗.identity ⟩⊕⟨ ⊕-to-●id ⟩∘⟨refl ⟩
     (id ⊕₁ (s ● id)) ∘ Mat                              ∎
 
+  -- immediate cor. of (9) that's used as if it were (9) in the proofs
+  P-Mat⁻¹ : (P s ⊗₁ id) ∘ Mat⁻¹ {2C} ≈ Mat⁻¹ ∘ (id ⊕₁ s ● id)
+  P-Mat⁻¹ {s = s} = begin
+    (P s ⊗₁ id) ∘ Mat⁻¹ {2C}               ≈⟨ insertˡ Mat-invˡ ⟩
+    Mat⁻¹ ∘ Mat ∘ (P s ⊗₁ id) ∘ Mat⁻¹      ≈⟨ refl⟩∘⟨ pullˡ Mat-P-left ⟩
+    Mat⁻¹ ∘ ((id ⊕₁ s ● id) ∘ Mat) ∘ Mat⁻¹ ≈⟨ refl⟩∘⟨ cancelʳ Mat-invʳ ⟩
+    Mat⁻¹ ∘ (id ⊕₁ s ● id)                 ∎
+  
   ----------------------------------------------------------------
   -- Lemma lem:had
   HXH≡Z : H ∘ X ∘ H ≈ Z
