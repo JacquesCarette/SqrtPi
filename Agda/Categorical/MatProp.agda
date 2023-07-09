@@ -159,6 +159,13 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ s)) ∘ Mat                         ≈⟨ pushˡ (refl⟩∘⟨ M⊎.⊗.identity ⟩⊕⟨refl) ⟩
     Ctrl (P s)                                                       ∎
 
+  -- (5)' convenient reformulation of above
+  SWAP-CP : SWAP ∘ Ctrl (P s) ≈ Ctrl (P s) ∘ SWAP
+  SWAP-CP {s = s} = begin
+    SWAP ∘ Ctrl (P s)                 ≈⟨ insertʳ S×.commutative ○ assoc ⟩∘⟨refl ⟩
+    (SWAP ∘ Ctrl (P s) ∘ SWAP) ∘ SWAP ≈⟨ SWAP-CP-SWAP ⟩∘⟨refl ⟩
+    Ctrl (P s) ∘ SWAP                 ∎
+  
   -- (10)
   Ctrl-merge : {g h : Endo {A}} → Ctrl g ∘ Ctrl h ≈ Ctrl (g ∘ h)
   Ctrl-merge {g = g} {h} = begin
