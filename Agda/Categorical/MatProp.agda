@@ -87,21 +87,28 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c} ⊕₁ δₗ⇒ {A} {B} {d})
   lap-coh-1-sq2 = {!!}
 
-  lap-coh-1-sq3 : (SWAP ⊕₁ SWAP) ⊕₁ (SWAP ⊕₁ SWAP) ≈ id
+  lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id 
   lap-coh-1-sq3 = {!!}
 
   -- (A + B) (C + D) ===> (AC + AD) + (BC + BD)
   lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
   lap-coh-1-sq4 = {!!} 
 
+  lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
+  lap-coh-1-sq124 = begin
+    (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗
+      ≈⟨ pullˡ (Equiv.sym lap-coh-1-sq2) ○ assoc ⟩ 
+    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗
+      ≈⟨ refl⟩∘⟨ lap-coh-1-sq1 ⟩ 
+    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
+
+  lap-coh-1-sq1234 : δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {1C} {1C} {2C})
+  lap-coh-1-sq1234 = Equiv.sym (elimˡ lap-coh-1-sq3) ○ lap-coh-1-sq124
+
   lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
   lap-coh-1 = begin 
     (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP
-      ≈⟨ {!!} ⟩
-    (δₗ⇒ ⊕₁ δₗ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ SWAP
-      ≈⟨ {!!} ⟩
-    (δₗ⇒ ⊕₁ δₗ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒
-      ≈⟨ {!!} ⟩
+      ≈⟨ lap-coh-1-sq1234 ⟩
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ 
       ≈⟨ Equiv.sym lap-coh-1-sq4 ⟩
     Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∎
