@@ -34,7 +34,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R 
   open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using (parallel)
+  open MonR M⊎ using (parallel; split₁ˡ)
     renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_;
     ⊗-distrib-over-∘ to ⊕-distrib-over-∘)
 
@@ -123,21 +123,23 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (M⊎.⊗.identity ⟩⊕⟨ M⊎.⊗.identity) ○ M⊎.⊗.identity 
 
   -- Square 4: (A + B) (C + D) ===> (AC + AD) + (BC + BD)
-{-
-  Midswap′ : ⊕α⇐ ∘ (id ⊕₁ (⊕α⇒ ∘ σ⊕ ⊕₁ id ∘ ⊕α⇐)) ∘ ⊕α⇒ ≈
-             ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐
-  Midswap′ = {!!}
--}
   -- α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐
-  lap-coh-1-sq4 : Midswap {A = 1C ⊗₀ 1C} {1C ⊗₀ 1C} {1C ⊗₀ 1C} {1C ⊗₀ 1C} ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+  lap-coh-1-sq4 : Midswap {A = W₁ ⊗₀ W₂} {W₁ ⊗₀ X₂} {Y₁ ⊗₀ W₂} {Y₁ ⊗₀ X₂} ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
   lap-coh-1-sq4 = begin
-    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒                                     ≡⟨⟩
-    (⊕α⇐ ∘ (id ⊕₁ (⊕α⇒ ∘ (σ⊕ ⊕₁ id) ∘ ⊕α⇐)) ∘ ⊕α⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒     ≈⟨ {!swapInner-coherent ⟩∘⟨refl!} ⟩
-    (⊕α⇒ ∘ ((⊕α⇐ ∘ (id ⊕₁ σ⊕) ∘ ⊕α⇒) ⊕₁ id) ∘ ⊕α⇐) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒     ≈⟨ {!!} ⟩
+    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≡⟨⟩
+    (⊕α⇐ ∘ (id ⊕₁ (⊕α⇒ ∘ (σ⊕ ⊕₁ id) ∘ ⊕α⇐)) ∘ ⊕α⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≈⟨ swapInner-coherent ⟩∘⟨refl ⟩
+    (⊕α⇒ ∘ ((⊕α⇐ ∘ (id ⊕₁ σ⊕) ∘ ⊕α⇒) ⊕₁ id) ∘ ⊕α⇐) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≈⟨ (refl⟩∘⟨ (split₁ˡ ○ refl⟩∘⟨ split₁ˡ) ⟩∘⟨refl) ⟩∘⟨refl ⟩
+    (⊕α⇒ ∘ ((⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id)) ∘ ⊕α⇐) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≈⟨ assoc ○ refl⟩∘⟨ (assoc ○ assoc ○ refl⟩∘⟨ assoc) ⟩
     ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐ ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
       ≈⟨ refl⟩∘⟨ laplazaIX ⟩ 
-    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒   ≈⟨ sym-assoc ⟩ 
-    (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ≈⟨ elimˡ S⊎.braided.associator.isoʳ  ⟩ 
+    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+      ≈⟨ sym-assoc ⟩ 
+    (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+      ≈⟨ elimˡ S⊎.braided.associator.isoʳ  ⟩ 
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
   
 
