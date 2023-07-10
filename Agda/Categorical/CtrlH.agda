@@ -33,7 +33,7 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MonR M× using (serialize₁₂; serialize₂₁)
-  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_; _⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_)
+  open MonR M⊎ using (split₂ˡ) renaming (_⟩⊗⟨_ to _⟩⊕⟨_; _⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
   private
     variable
@@ -95,14 +95,24 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
     SWAP ∘ (H ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ H ⊗₁ id) ∘ SWAP ≈⟨ refl⟩∘⟨ (refl⟩∘⟨ CZ↝CX ⟩∘⟨refl) ⟩∘⟨refl ⟩
     SWAP ∘ (H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id) ∘ SWAP                       ≈⟨ refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ assoc ⟩
     (SWAP ∘ H ⊗₁ id) ∘ Ctrl X ∘ (H ⊗₁ id ∘ SWAP)                     ≈⟨ S×.braiding.⇒.commute (H , id) ⟩∘⟨ refl⟩∘⟨ ⟺ (S×.braiding.⇒.commute (id , H)) ⟩
-    (id ⊗₁ H ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ id ⊗₁ H)                     ≈⟨ assoc ○ refl⟩∘⟨ {!⟺ assoc²'!} ⟩
+    (id ⊗₁ H ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ id ⊗₁ H)                     ≈⟨ assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
     id ⊗₁ H ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ id ⊗₁ H                       ∎
 
   ---------------------------------------------------------------
   -- lem:nctrlh
   -- How is negative control related to Ctrl ?
-  nCtrl~Ctrl : (f : Endo {A}) → nCtrl f ≈ X ⊗₁ id ∘ Ctrl f ∘ X ⊗₁ id
-  nCtrl~Ctrl f = {!!}
+  nCtrl~Ctrl : (f : Endo {A}) → nCtrl f ≈ (X ⊗₁ id) ∘ Ctrl f ∘ (X ⊗₁ id)
+  nCtrl~Ctrl f = begin
+    Mat⁻¹ ∘ (f ⊕₁ id) ∘ Mat                           ≈˘⟨ refl⟩∘⟨ cancelInner S⊎.commutative ⟩
+    Mat⁻¹ ∘ ((f ⊕₁ id) ∘ σ⊕) ∘ (σ⊕ ∘ Mat)             ≈˘⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , f) ⟩∘⟨ Mat-X-left ⟩
+    Mat⁻¹ ∘ (σ⊕ ∘ (id ⊕₁ f)) ∘ (Mat ∘ (X ⊗₁ id))      ≈⟨ refl⟩∘⟨ assoc ○ pullˡ (Mat⁻¹σ) ○ assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
+    (X ⊗₁ id) ∘ (Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat) ∘ (X ⊗₁ id) ≡⟨⟩
+    X ⊗₁ id ∘ Ctrl f ∘ X ⊗₁ id            ∎
 
-  nCtrl+inv~Ctrl : (f : Endo {A}) → f ∘ f ≈ f → nCtrl f ≈ Ctrl f ∘ id ⊗₁ f
-  nCtrl+inv~Ctrl f invol = {!!}
+  nCtrl+inv~Ctrl : (f : Endo {A}) → f ∘ f ≈ id → nCtrl f ≈ Ctrl f ∘ id ⊗₁ f
+  nCtrl+inv~Ctrl f invol = begin
+    Mat⁻¹ ∘ (f ⊕₁ id) ∘ Mat              ≈⟨ refl⟩∘⟨ refl⟩⊕⟨ ⟺ invol ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ (f ⊕₁ (f ∘ f)) ∘ Mat         ≈⟨ refl⟩∘⟨ split₂ˡ ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ ((id ⊕₁ f) ∘ (f ⊕₁ f)) ∘ Mat ≈⟨ refl⟩∘⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ ⟺ Mat-f-right ○ ⟺ assoc²' ⟩
+    (Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat) ∘ id ⊗₁ f  ≡⟨⟩
+    Ctrl f ∘ id ⊗₁ f                     ∎
