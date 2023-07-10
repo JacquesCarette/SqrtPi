@@ -93,9 +93,9 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
     (H ⊗₁ H) ∘ (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (H ⊗₁ H)                     ≈⟨ pullˡ (pullˡ (⟺ (S×.braiding.⇒.commute (H , H)))) ○ assoc ⟩∘⟨refl ○ assoc ○ refl⟩∘⟨ (pull-last (S×.braiding.⇒.commute (H , H)) ○ ⟺ assoc²') ⟩
     SWAP ∘ (H ⊗₁ H ∘ Ctrl Z ∘ H ⊗₁ H) ∘ SWAP                         ≈⟨ refl⟩∘⟨ (serialize₁₂ ⟩∘⟨ refl⟩∘⟨ serialize₂₁ ○ assoc ○ refl⟩∘⟨ (⟺ assoc²')) ⟩∘⟨refl ⟩
     SWAP ∘ (H ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ H ⊗₁ id) ∘ SWAP ≈⟨ refl⟩∘⟨ (refl⟩∘⟨ CZ↝CX ⟩∘⟨refl) ⟩∘⟨refl ⟩
-    SWAP ∘ (H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id) ∘ SWAP                       ≈⟨ {!!} ⟩
-    (SWAP ∘ H ⊗₁ id) ∘ Ctrl X ∘ (H ⊗₁ id ∘ SWAP)                     ≈⟨ {!!} ⟩
-    (id ⊗₁ H ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ id ⊗₁ H)                     ≈⟨ ? ⟩
+    SWAP ∘ (H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id) ∘ SWAP                       ≈⟨ refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ assoc ⟩
+    (SWAP ∘ H ⊗₁ id) ∘ Ctrl X ∘ (H ⊗₁ id ∘ SWAP)                     ≈⟨ S×.braiding.⇒.commute (H , id) ⟩∘⟨ refl⟩∘⟨ ⟺ (S×.braiding.⇒.commute (id , H)) ⟩
+    (id ⊗₁ H ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ id ⊗₁ H)                     ≈⟨ assoc ○ refl⟩∘⟨ {!⟺ assoc²'!} ⟩
     id ⊗₁ H ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ id ⊗₁ H                       ∎
 
   ---------------------------------------------------------------
