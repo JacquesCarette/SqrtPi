@@ -16,10 +16,12 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open import Data.Product using (_,_)
   open import Level using (Level)
 
+  open import Categories.Category.Monoidal.Braided.Properties using (braiding-coherence)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
   open import Categories.Category.Monoidal.Interchange.Symmetric S⊎
   open import Categories.Category.Monoidal.Properties using (module Kelly's)
-  open import Categories.Category.Monoidal.Braided.Properties
+  open import Categories.Category.Monoidal.Utilities using (module Shorthands)
+  open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐)
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Morphism.Reasoning C
 
@@ -29,7 +31,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open Category C -- all of it
   open HomReasoning
   open SqrtRig SR
-  open Kit R
+  open Kit R 
   open MonR M× using (_⟩⊗⟨refl)
   open MonR M⊎ using (parallel)
     renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_;
@@ -133,7 +135,17 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- Square 4: (A + B) (C + D) ===> (AC + AD) + (BC + BD)
 
   lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
-  lap-coh-1-sq4 = {!!} 
+  lap-coh-1-sq4 = begin
+    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≈⟨ {!!} ⟩
+    ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐ ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+      ≈⟨ refl⟩∘⟨ laplazaIX ⟩ 
+    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+      ≈⟨ Equiv.sym assoc ⟩ 
+    (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
+      ≈⟨ elimˡ {!!}  ⟩ 
+    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
+  
 
    -- Glue squares 1, 2, and 4:
 
