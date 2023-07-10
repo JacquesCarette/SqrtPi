@@ -32,7 +32,7 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
-  -- open MonR M× using (_⟩⊗⟨refl)
+  open MonR M× using (serialize₁₂; serialize₂₁)
   open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_; _⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
   private
@@ -52,7 +52,7 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   CX↝CZ = begin
     id ⊗₁ H ∘ (Mat⁻¹ ∘ (id ⊕₁ X) ∘ Mat) ∘ id ⊗₁ H ≈⟨ sym-assoc ○ sym-assoc ⟩∘⟨refl ○ assoc ○ refl⟩∘⟨ assoc ⟩
     (id ⊗₁ H ∘ Mat⁻¹) ∘ (id ⊕₁ X) ∘ Mat ∘ id ⊗₁ H ≈⟨ ⟺ Mat⁻¹-2f ⟩∘⟨ refl⟩∘⟨ Mat-f-right ⟩
-    (Mat⁻¹ ∘ (H ⊕₁ H)) ∘ (id ⊕₁ X) ∘ H ⊕₁ H ∘ Mat ≈⟨ assoc ○ refl⟩∘⟨ {!⟺ assoc²'!} ⟩
+    (Mat⁻¹ ∘ (H ⊕₁ H)) ∘ (id ⊕₁ X) ∘ H ⊕₁ H ∘ Mat ≈⟨ assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
     Mat⁻¹ ∘ ((H ⊕₁ H) ∘ (id ⊕₁ X) ∘ H ⊕₁ H) ∘ Mat ≈⟨ refl⟩∘⟨ (⟺ (M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism) ○ (refl⟩∘⟨ identityˡ) ⟩⊕⟨refl) ⟩∘⟨refl ⟩
     Mat⁻¹ ∘ ((H ∘ H) ⊕₁ (H ∘ X ∘ H)) ∘ Mat        ≈⟨ refl⟩∘⟨ A4 ⟩⊕⟨ HXH≡Z ⟩∘⟨refl ⟩
     Mat⁻¹ ∘ (id ⊕₁ Z) ∘ Mat                       ≡⟨⟩
@@ -61,17 +61,42 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   -- Note how this could also have been written
   -- SWAP ∘ id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H ∘ SWAP ≈ Ctrl Z
   -- which shows how Ctrl Z is symmetric top-down
-  bCX↝CZ : H ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ H ⊗₁ id ≈ Ctrl Z
-  bCX↝CZ = {!!}
+  bCX↝CZ : (H ⊗₁ id ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ H ⊗₁ id) ≈ Ctrl Z
+  bCX↝CZ = begin
+     (H ⊗₁ id ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ H ⊗₁ id) ≈⟨ ⟺ (S×.braiding.⇒.commute (id , H)) ⟩∘⟨ refl⟩∘⟨ S×.braiding.⇒.commute (H , id) ⟩
+     (SWAP ∘ id ⊗₁ H) ∘ Ctrl X ∘ (id ⊗₁ H ∘ SWAP) ≈⟨ assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
+     SWAP ∘ (id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H) ∘ SWAP   ≈⟨ refl⟩∘⟨ CX↝CZ ⟩∘⟨refl ⟩
+     SWAP ∘ Ctrl Z ∘ SWAP                         ≈⟨ SWAP-CP-SWAP ⟩
+     Ctrl Z                                       ∎
 
+  -- There's a much easier proof of this that repeating the one above, viz:
   CZ↝CX :  id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ≈ Ctrl X
-  CZ↝CX = {!!}
+  CZ↝CX = begin
+    id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H                         ≈⟨ refl⟩∘⟨ ⟺ CX↝CZ ⟩∘⟨refl ⟩
+    id ⊗₁ H ∘ (id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H) ∘ id ⊗₁ H   ≈⟨ sym-assoc ○ sym-assoc ⟩∘⟨refl ○ assoc²' ⟩
+    (id ⊗₁ H ∘ id ⊗₁ H) ∘ Ctrl X ∘ (id ⊗₁ H ∘ id ⊗₁ H) ≈⟨ elimˡ (bottom-cancel A4) ○ elimʳ (bottom-cancel A4) ⟩
+    Ctrl X                     ∎
 
-  sCZ↝bCX :  H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ≈ SWAP ∘ Ctrl X ∘ SWAP
-  sCZ↝bCX = {!!}
+  -- same here
+  sCZ↝bCX : H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ≈ SWAP ∘ Ctrl X ∘ SWAP
+  sCZ↝bCX = begin
+     H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id                                         ≈⟨ refl⟩∘⟨ ⟺ bCX↝CZ ⟩∘⟨refl ⟩
+     H ⊗₁ id ∘ ((H ⊗₁ id ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ H ⊗₁ id)) ∘ H ⊗₁ id ≈⟨ refl⟩∘⟨ (assoc ○ assoc ○ refl⟩∘⟨ (sym-assoc ○ ⟺ assoc²' ⟩∘⟨refl ○ assoc) ) ⟩
+     H ⊗₁ id ∘ H ⊗₁ id ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ H ⊗₁ id ∘ H ⊗₁ id     ≈⟨ cancelˡ (top-cancel A4) ○ elimʳ (top-cancel A4) ⟩
+     SWAP ∘ Ctrl X ∘ SWAP ∎
 
-  sCX↝HbCX : H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id ≈ id ⊗₁ H ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ id ⊗₁ H
-  sCX↝HbCX = {!!}
+  sCX↝HbCX : H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id ≈ id ⊗₁ H ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ id ⊗₁ H
+  sCX↝HbCX = begin
+    H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id                                       ≈⟨ refl⟩∘⟨ ⟺ CZ↝CX ⟩∘⟨refl ⟩
+    H ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ H ⊗₁ id                 ≈⟨ refl⟩∘⟨ assoc ○ sym-assoc ○ refl⟩∘⟨ assoc ⟩
+    (H ⊗₁ id ∘ id ⊗₁ H) ∘ Ctrl Z ∘ (id ⊗₁ H ∘ H ⊗₁ id)               ≈˘⟨ serialize₁₂ ⟩∘⟨ SWAP-CP-SWAP ⟩∘⟨ serialize₂₁  ⟩
+    (H ⊗₁ H) ∘ (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (H ⊗₁ H)                     ≈⟨ pullˡ (pullˡ (⟺ (S×.braiding.⇒.commute (H , H)))) ○ assoc ⟩∘⟨refl ○ assoc ○ refl⟩∘⟨ (pull-last (S×.braiding.⇒.commute (H , H)) ○ ⟺ assoc²') ⟩
+    SWAP ∘ (H ⊗₁ H ∘ Ctrl Z ∘ H ⊗₁ H) ∘ SWAP                         ≈⟨ refl⟩∘⟨ (serialize₁₂ ⟩∘⟨ refl⟩∘⟨ serialize₂₁ ○ assoc ○ refl⟩∘⟨ (⟺ assoc²')) ⟩∘⟨refl ⟩
+    SWAP ∘ (H ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ H ⊗₁ id) ∘ SWAP ≈⟨ refl⟩∘⟨ (refl⟩∘⟨ CZ↝CX ⟩∘⟨refl) ⟩∘⟨refl ⟩
+    SWAP ∘ (H ⊗₁ id ∘ Ctrl X ∘ H ⊗₁ id) ∘ SWAP                       ≈⟨ {!!} ⟩
+    (SWAP ∘ H ⊗₁ id) ∘ Ctrl X ∘ (H ⊗₁ id ∘ SWAP)                     ≈⟨ {!!} ⟩
+    (id ⊗₁ H ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ id ⊗₁ H)                     ≈⟨ ? ⟩
+    id ⊗₁ H ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ id ⊗₁ H                       ∎
 
   ---------------------------------------------------------------
   -- lem:nctrlh
