@@ -48,8 +48,8 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   -- A15
   A15 : (T ∘ H ∘ S ∘ S ∘ H) ^ 2 ≈ ω ● id
   A15 = begin
-    (T ∘ H ∘ S ∘ S ∘ H) ^ 2 ≈⟨ ^-cong (refl⟩∘⟨ refl⟩∘⟨ pullˡ S²≡Z) 2 ⟩
-    (T ∘ H ∘ Z ∘ H) ^ 2     ≈⟨ ^-cong (refl⟩∘⟨ HZH≡X) 2 ⟩
+    (T ∘ H ∘ S ∘ S ∘ H) ^ 2 ≈⟨ base^-cong (refl⟩∘⟨ refl⟩∘⟨ pullˡ S²≡Z) 2 ⟩
+    (T ∘ H ∘ Z ∘ H) ^ 2     ≈⟨ base^-cong (refl⟩∘⟨ HZH≡X) 2 ⟩
     (T ∘ X) ^ 2             ≈⟨ sym-assoc ○ (assoc ⟩∘⟨refl)  ⟩
     (P ω ∘ X ∘ P ω) ∘ X    ≈⟨ PXP ω ⟩∘⟨refl ⟩
     (ω ● X) ∘ X             ≈⟨ ●-assocʳ ⟩
@@ -58,7 +58,13 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   
   -- A16
   A16 : Ctrl Z ∘ (T ⊗₁ id) ≈ (T ⊗₁ id) ∘ Ctrl Z
-  A16 = {!!}
+  A16 = begin
+    Ctrl Z ∘ (T ⊗₁ id)                 ≈⟨ ⟺ SWAP-CP-SWAP ⟩∘⟨refl ⟩
+    (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (T ⊗₁ id) ≈⟨ sym-assoc ⟩∘⟨refl ○ pullʳ (S×.braiding.⇒.commute (T , id)) ⟩
+    (SWAP ∘ Ctrl Z) ∘ (id ⊗₁ T) ∘ SWAP ≈⟨ center (CP-P-right (^-comm 4 1)) ⟩
+    SWAP ∘ ((id ⊗₁ T) ∘ Ctrl Z) ∘ SWAP ≈⟨ assoc²'' ○ S×.braiding.⇒.commute (id , T) ⟩∘⟨refl ○ assoc ⟩
+    (T ⊗₁ id) ∘ SWAP ∘ Ctrl Z ∘ SWAP   ≈⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
+    (T ⊗₁ id) ∘ Ctrl Z                 ∎   
   
   -- A17
   A17 : (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z ∘ (id ⊗₁ H) ≈
