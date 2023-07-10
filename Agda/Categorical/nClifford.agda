@@ -65,7 +65,7 @@ module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
       ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H                                  ≈⟨ {!!} ⟩
     (H ⊗₁ id) ⊗₁ H ∘
       ((Ctrl X ⊗₁ id) ∘ α⇐ ∘ (id ⊗₁ SWAP) ∘ (id ⊗₁ Ctrl X) ∘ α⇒)
-      ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H                                  ≈⟨ ? ⟩
+      ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H                                  ≈⟨ {!!} ⟩
     Ctrl Z ⊗₁ id ∘ α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∎
 
   --
