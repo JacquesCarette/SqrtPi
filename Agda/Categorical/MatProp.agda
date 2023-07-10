@@ -32,6 +32,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open MonR M⊎ using (parallel)
     renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
+--AMR  open M⊎ using () renaming (_⊗₀_ to _⊕₀_) public
+
   private
     variable
       A B c d : Obj
@@ -75,13 +77,13 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     α⇐ ∘ δᵣ⇒ ⊕₁ δᵣ⇒ ∘ δₗ⇒ ≈ α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐ ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒
   -}
 
-
---  postulate
---    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
+  ----------------------------------------------------------------------------------------------------------------
+  --  postulate
+  --    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
 
   -- (A+B) (C+D) ===> (A+B) C + (A+B) D
   lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {c} {d} {A ⊕₀ B})
-  lap-coh-1-sq1 = {!!} 
+  lap-coh-1-sq1 = Equiv.sym (Equiv.sym assoc ○ ∘-resp-≈ˡ laplazaII ○ assoc) ○ elimʳ S×.commutative
 
   -- C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
   lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c} ⊕₁ δₗ⇒ {A} {B} {d})
@@ -106,19 +108,10 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   lap-coh-1-sq1234 = Equiv.sym (elimˡ lap-coh-1-sq3) ○ lap-coh-1-sq124
 
   lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
-  lap-coh-1 = begin 
-    (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP
-      ≈⟨ lap-coh-1-sq1234 ⟩
-    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ 
-      ≈⟨ Equiv.sym lap-coh-1-sq4 ⟩
-    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∎
+  lap-coh-1 = lap-coh-1-sq1234 ○ Equiv.sym lap-coh-1-sq4 
 
+  ----------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-    
   Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = begin
     ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ SWAP                                  ≈⟨ laplazaXXIII ⟩⊕⟨ laplazaXXIII ⟩∘⟨refl ⟩∘⟨refl ⟩
