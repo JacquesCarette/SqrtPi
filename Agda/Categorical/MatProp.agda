@@ -18,7 +18,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   open import Categories.Category.Monoidal.Braided.Properties using (braiding-coherence)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
-  open import Categories.Category.Monoidal.Interchange.Symmetric S⊎
+  import Categories.Category.Monoidal.Interchange.Symmetric as IS
+  open IS S⊎
   open import Categories.Category.Monoidal.Properties using (module Kelly's)
   open import Categories.Category.Monoidal.Utilities using (module Shorthands)
   open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐)
@@ -39,7 +40,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   private
     variable
-      A B c d : Obj
+      A B W₁ W₂ X₁ X₂ Y₁ Y₂ Z₁ Z₂ : Obj
       f g : A ⇒ B
       s t : Scalar
       
@@ -83,12 +84,12 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   -- Square 1: (A+B) (C+D) ===> (A+B) C + (A+B) D
 
-  lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {c} {d} {A ⊕₀ B})
+  lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {X₁} {X₂} {A ⊕₀ B})
   lap-coh-1-sq1 = Equiv.sym (Equiv.sym assoc ○ ∘-resp-≈ˡ laplazaII ○ assoc) ○ elimʳ S×.commutative
 
   -- Square 2: C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
 
-  lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c}) ∘ σ⊗ ≈ δᵣ⇒ 
+  lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {X₁}) ∘ σ⊗ ≈ δᵣ⇒ 
   lap-coh-1-sq2-help =
         ∘-resp-≈ʳ laplazaII ○
         sym-assoc ○
@@ -96,35 +97,24 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
                M⊎.⊗.F-resp-≈ (S×.commutative , S×.commutative) ○
                M⊎.⊗.identity )
 
-  lap-coh-1-sq2-half : ∀ {A B C} → (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {C}) ≈ δᵣ⇒ ∘ σ⊗
+  lap-coh-1-sq2-half : ∀ {A B X₁} → (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {X₁}) ≈ δᵣ⇒ ∘ σ⊗
   lap-coh-1-sq2-half = begin
-    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒
-      ≈⟨ Equiv.sym identityʳ ⟩
-    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ id
-      ≈⟨ refl⟩∘⟨ (Equiv.sym S×.commutative) ⟩
-    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ (σ⊗ ∘ σ⊗) 
-      ≈⟨ Equiv.sym assoc ⟩
-    (((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ σ⊗) ∘ σ⊗
-      ≈⟨  assoc ⟩∘⟨refl ⟩
-    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗) ∘ σ⊗
-      ≈⟨ lap-coh-1-sq2-help ⟩∘⟨refl ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒                ≈⟨ introʳ S×.commutative ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ (σ⊗ ∘ σ⊗)  ≈⟨ sym-assoc ○ assoc ⟩∘⟨refl ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗) ∘ σ⊗    ≈⟨ lap-coh-1-sq2-help ⟩∘⟨refl ⟩
     δᵣ⇒ ∘ σ⊗ ∎
  
-  lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c} ⊕₁ δₗ⇒ {A} {B} {d})
-  lap-coh-1-sq2 = parallel (Equiv.sym lap-coh-1-sq2-half) (Equiv.sym lap-coh-1-sq2-half) 
+  lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {X₁} ⊕₁ δₗ⇒ {A} {B} {X₂})
+  lap-coh-1-sq2 = ⟺ (parallel lap-coh-1-sq2-half lap-coh-1-sq2-half)
 
   -- Square 3: 
 
   swap1≈id : σ⊗ {1C} {1C} ≈ id
   swap1≈id = begin
-    σ⊗ 
-      ≈⟨ introˡ M×.unitorˡ.isoˡ ⟩
-    (λ⇐ ∘ λ⇒) ∘ σ⊗ 
-      ≈⟨ assoc ⟩
-    λ⇐ ∘ λ⇒ ∘ σ⊗ 
-      ≈⟨ refl⟩∘⟨ braiding-coherence S×.braided ⟩
-    λ⇐ ∘ ρ⇒ 
-      ≈⟨ ∘-resp-≈ʳ (Equiv.sym (Kelly's.coherence₃ M×)) ○ M×.unitorˡ.isoˡ ⟩
+    σ⊗             ≈⟨ introˡ M×.unitorˡ.isoˡ ⟩
+    (λ⇐ ∘ λ⇒) ∘ σ⊗ ≈⟨ assoc ⟩
+    λ⇐ ∘ λ⇒ ∘ σ⊗   ≈⟨ refl⟩∘⟨ braiding-coherence S×.braided ⟩
+    λ⇐ ∘ ρ⇒        ≈⟨ ∘-resp-≈ʳ (⟺ (Kelly's.coherence₃ M×)) ○ M×.unitorˡ.isoˡ ⟩
     id ∎
 
   lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id
@@ -133,23 +123,27 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (M⊎.⊗.identity ⟩⊕⟨ M⊎.⊗.identity) ○ M⊎.⊗.identity 
 
   -- Square 4: (A + B) (C + D) ===> (AC + AD) + (BC + BD)
-
-  lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
+{-
+  Midswap′ : ⊕α⇐ ∘ (id ⊕₁ (⊕α⇒ ∘ σ⊕ ⊕₁ id ∘ ⊕α⇐)) ∘ ⊕α⇒ ≈
+             ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐
+  Midswap′ = {!!}
+-}
+  -- α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐
+  lap-coh-1-sq4 : Midswap {A = 1C ⊗₀ 1C} {1C ⊗₀ 1C} {1C ⊗₀ 1C} {1C ⊗₀ 1C} ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
   lap-coh-1-sq4 = begin
-    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
-      ≈⟨ {!!} ⟩
+    Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒                                     ≡⟨⟩
+    (⊕α⇐ ∘ (id ⊕₁ (⊕α⇒ ∘ (σ⊕ ⊕₁ id) ∘ ⊕α⇐)) ∘ ⊕α⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒     ≈⟨ {!swapInner-coherent ⟩∘⟨refl!} ⟩
+    (⊕α⇒ ∘ ((⊕α⇐ ∘ (id ⊕₁ σ⊕) ∘ ⊕α⇒) ⊕₁ id) ∘ ⊕α⇐) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒     ≈⟨ {!!} ⟩
     ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐ ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
       ≈⟨ refl⟩∘⟨ laplazaIX ⟩ 
-    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
-      ≈⟨ Equiv.sym assoc ⟩ 
-    (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
-      ≈⟨ elimˡ {!!}  ⟩ 
+    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒   ≈⟨ sym-assoc ⟩ 
+    (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ≈⟨ elimˡ S⊎.braided.associator.isoʳ  ⟩ 
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
   
 
    -- Glue squares 1, 2, and 4:
 
-  lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
+  lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {X₁} {X₂} {A ⊕₀ B})
   lap-coh-1-sq124 = begin
     (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗
       ≈⟨ pullˡ (Equiv.sym lap-coh-1-sq2) ○ assoc ⟩ 
