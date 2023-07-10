@@ -39,14 +39,34 @@ module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
       A B : Obj
       f g : A ⇒ B
       s t : Scalar
-      
+
+  postulate
+    P1 : α⇐ ∘ id ⊗₁ Ctrl X ∘ α⇒ ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id ≈
+         (Ctrl X ⊗₁ id) ∘ α⇐ ∘ (id ⊗₁ SWAP) ∘ (id ⊗₁ Ctrl X) ∘ α⇒
   ----------------------------------------------------------------
   Zz zZ : C [ (2C ⊗₀ 2C) ⊗₀ 2C , (2C ⊗₀ 2C) ⊗₀ 2C ]
   Zz = Ctrl Z ⊗₁ id ∘ α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒
   zZ = α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∘ Ctrl Z ⊗₁ id
   
   B1 : zZ ≈ Zz
-  B1 = {!!}
+  B1 = begin
+    α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∘ Ctrl Z ⊗₁ id ≈⟨ {!!} ⟩ -- CZ↝CX and bCX↝CZ
+    α⇐ ∘ id ⊗₁ (id ⊗₁ H ∘ Ctrl X ∘ id ⊗₁ H) ∘ α⇒ ∘ ((H ⊗₁ id ∘ SWAP) ∘ Ctrl X ∘ (SWAP ∘ H ⊗₁ id)) ⊗₁ id ≈⟨ {!!} ⟩
+    α⇐ ∘ id ⊗₁ id ⊗₁ H ∘ id ⊗₁ Ctrl X ∘ id ⊗₁ id ⊗₁ H ∘
+      α⇒ ∘ (H ⊗₁ id) ⊗₁ id ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ id ≈⟨ {!!} ⟩  --bifunc
+    α⇐ ∘ id ⊗₁ id ⊗₁ H ∘ id ⊗₁ Ctrl X ∘ id ⊗₁ id ⊗₁ H ∘
+      H ⊗₁ id ⊗₁ id ∘ α⇒ ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ id  ≈⟨ {!!} ⟩
+    α⇐ ∘ H ⊗₁ id ⊗₁ H ∘ id ⊗₁ Ctrl X ∘ id ⊗₁ id ⊗₁ id ∘
+      id ⊗₁ id ⊗₁ id ∘ α⇒ ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H   ≈⟨ {!!} ⟩
+    α⇐ ∘ H ⊗₁ (id ⊗₁ H) ∘ id ⊗₁ Ctrl X ∘ 
+      α⇒ ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H   ≈⟨ {!!} ⟩
+    (H ⊗₁ id) ⊗₁ H ∘
+      (α⇐ ∘ id ⊗₁ Ctrl X ∘ α⇒ ∘ SWAP ⊗₁ id ∘ Ctrl X ⊗₁ id)
+      ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H                                  ≈⟨ {!!} ⟩
+    (H ⊗₁ id) ⊗₁ H ∘
+      ((Ctrl X ⊗₁ id) ∘ α⇐ ∘ (id ⊗₁ SWAP) ∘ (id ⊗₁ Ctrl X) ∘ α⇒)
+      ∘ SWAP ⊗₁ id ∘ (H ⊗₁ id) ⊗₁ H                                  ≈⟨ ? ⟩
+    Ctrl Z ⊗₁ id ∘ α⇐ ∘ id ⊗₁ Ctrl Z ∘ α⇒ ∎
 
   --
   cc dd : C [ 2C ⊗₀ 2C , 2C ⊗₀ 2C ]
