@@ -28,7 +28,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open SqrtRig SR
   open Kit R
   open MR C
-  open MonR M× using (_⟩⊗⟨refl)
+  open MonR M× using (_⟩⊗⟨_; _⟩⊗⟨refl)
   open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)
   
   X : 2×2
@@ -207,3 +207,21 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
 
   P∘P : {s t u : Scalar} → s ∘ t ≈ u → P s ∘ P t ≈ P u
   P∘P st≈u = ⟺ S⊎.⊗.homomorphism ○ identity² ⟩⊕⟨ st≈u
+
+  ------------------------------------------------------------------------------
+  -- Even more general stuff that should be pulled out
+  bottom-cancel : {A B C : Obj} {f : A ⇒ B} {g : B ⇒ A} → f ∘ g ≈ id →
+    id {C} ⊗₁ f ∘ id ⊗₁ g ≈ id
+  bottom-cancel {f = f} {g} fg≈id = begin
+    id ⊗₁ f ∘ id ⊗₁ g    ≈˘⟨ M×.⊗.homomorphism ⟩
+    (id ∘ id) ⊗₁ (f ∘ g) ≈⟨ identity² ⟩⊗⟨ fg≈id ⟩
+    id ⊗₁ id             ≈⟨ M×.⊗.identity ⟩
+    id                   ∎
+
+  top-cancel : {A B C : Obj} {f : A ⇒ B} {g : B ⇒ A} → f ∘ g ≈ id →
+    f ⊗₁ id {C} ∘ g ⊗₁ id ≈ id
+  top-cancel {f = f} {g} fg≈id = begin
+    f ⊗₁ id ∘ g ⊗₁ id    ≈˘⟨ M×.⊗.homomorphism ⟩
+    (f ∘ g) ⊗₁ (id ∘ id) ≈⟨ fg≈id ⟩⊗⟨ identity² ⟩
+    id ⊗₁ id             ≈⟨ M×.⊗.identity ⟩
+    id                   ∎
