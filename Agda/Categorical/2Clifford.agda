@@ -244,12 +244,21 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
      Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z                             ∎
 
   -- A13
-  A13 : ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
+  A13 : ω ^ 7 ● ((((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id) ≈ Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z
   A13 = begin
-    ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id                 ≈⟨ {!!} ⟩
-    ω ^ 7 ● (((S ∘ H) ∘ S) ⊗₁ S) ∘ (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (H ∘ S) ⊗₁ id ≈⟨ {!!} ⟩
-    ω ^ 7 ● (SWAP ∘ (S ⊗₁ ((S ∘ H) ∘ S))) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S) ∘ SWAP) ≈⟨ {!!} ⟩
-    SWAP ∘ ω ^ 7 ● (SWAP ∘ (S ⊗₁ ((S ∘ H) ∘ S))) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S)) ∘ SWAP ≈⟨ {!!} ⟩
-    SWAP ∘ Ctrl Z ∘ (id ⊗₁ H) ∘ Ctrl Z ∘ SWAP                                      ≈⟨ {!!} ⟩
+    ω ^ 7 ● ((((S ∘ H) ∘ S) ⊗₁ S) ∘ Ctrl Z ∘ (H ∘ S) ⊗₁ id)
+        ≈⟨ ●-congʳ (refl⟩∘⟨ ⟺ SWAP-CP-SWAP ⟩∘⟨refl) ⟩
+    ω ^ 7 ● ((((S ∘ H) ∘ S) ⊗₁ S) ∘ (SWAP ∘ Ctrl Z ∘ SWAP) ∘ (H ∘ S) ⊗₁ id)
+        ≈⟨ ●-congʳ (assoc²'' ○ ⟺ (S×.braiding.⇒.commute (S , (S ∘ H) ∘ S)) ⟩∘⟨ pullʳ (S×.braiding.⇒.commute (H ∘ S , id))) ⟩
+    ω ^ 7 ● ((SWAP ∘ (S ⊗₁ ((S ∘ H) ∘ S))) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S) ∘ SWAP))
+        ≈⟨ ●-congʳ assoc ○ ●-over-∘ ○ refl⟩∘⟨ (●-congʳ (⟺ assoc²') ○ ●-assocˡ) ⟩
+    SWAP ∘ ω ^ 7 ● ((S ⊗₁ ((S ∘ H) ∘ S)) ∘ Ctrl Z ∘ (id ⊗₁ (H ∘ S))) ∘ SWAP
+        ≈⟨ refl⟩∘⟨ A12 ⟩∘⟨refl ○ sym-assoc ○ sym-assoc ⟩∘⟨refl ○ assoc ○ refl⟩∘⟨ assoc ⟩
+    (SWAP ∘ Ctrl Z) ∘ (id ⊗₁ H) ∘ Ctrl Z ∘ SWAP
+        ≈⟨ ⟺ (cancelInner S×.commutative) ○ assoc ⟩∘⟨refl ⟩
+    (SWAP ∘ Ctrl Z ∘ SWAP) ∘ SWAP ∘ (id ⊗₁ H) ∘ Ctrl Z ∘ SWAP
+        ≈⟨ SWAP-CP-SWAP ⟩∘⟨ (pullˡ (S×.braiding.⇒.commute (id , H)) ○ assoc) ⟩
+    Ctrl Z ∘ (H ⊗₁ id) ∘ SWAP ∘ Ctrl Z ∘ SWAP
+        ≈⟨ refl⟩∘⟨ refl⟩∘⟨ SWAP-CP-SWAP ⟩
     Ctrl Z ∘ (H ⊗₁ id) ∘ Ctrl Z                           ∎
   
