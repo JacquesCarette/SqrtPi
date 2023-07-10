@@ -30,9 +30,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open Kit R
   open MonR M× using (_⟩⊗⟨refl)
   open MonR M⊎ using (parallel)
-    renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_)
-
---AMR  open M⊎ using () renaming (_⊗₀_ to _⊕₀_) public
+    renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_;
+    ⊗-distrib-over-∘ to ⊕-distrib-over-∘)
 
   private
     variable
@@ -82,12 +81,37 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   --    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
 
   -- (A+B) (C+D) ===> (A+B) C + (A+B) D
+
   lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {c} {d} {A ⊕₀ B})
   lap-coh-1-sq1 = Equiv.sym (Equiv.sym assoc ○ ∘-resp-≈ˡ laplazaII ○ assoc) ○ elimʳ S×.commutative
 
+  lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c}) ∘ σ⊗ ≈ δᵣ⇒ 
+  lap-coh-1-sq2-help =
+        ∘-resp-≈ʳ laplazaII ○
+        sym-assoc ○
+        elimˡ (Equiv.sym ⊕-distrib-over-∘ ○
+               M⊎.⊗.F-resp-≈ (S×.commutative , S×.commutative) ○
+               M⊎.⊗.identity )
+
+  lap-coh-1-sq2-half : ∀ {A B C} → (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {C}) ≈ δᵣ⇒ ∘ σ⊗
+  lap-coh-1-sq2-half = begin
+    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒
+      ≈⟨ Equiv.sym identityʳ ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ id
+      ≈⟨ refl⟩∘⟨ (Equiv.sym S×.commutative) ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ (σ⊗ ∘ σ⊗) 
+      ≈⟨ Equiv.sym assoc ⟩
+    (((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ σ⊗) ∘ σ⊗
+      ≈⟨  assoc ⟩∘⟨refl ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗) ∘ σ⊗
+      ≈⟨ lap-coh-1-sq2-help ⟩∘⟨refl ⟩
+    δᵣ⇒ ∘ σ⊗ ∎
+ 
   -- C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
+
   lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c} ⊕₁ δₗ⇒ {A} {B} {d})
-  lap-coh-1-sq2 = {!!}
+  lap-coh-1-sq2 = parallel (Equiv.sym lap-coh-1-sq2-half) (Equiv.sym lap-coh-1-sq2-half) 
+
 
   lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id 
   lap-coh-1-sq3 = {!!}
