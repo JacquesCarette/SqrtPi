@@ -251,17 +251,17 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   
   -- (8)
   postulate
-    lapI+II : δᵣ⇒ ∘ (X ⊗₁ id {2C}) ≈ σ⊕ ∘ δᵣ⇒
+    lapI+II : {A : Obj} → δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
     
-  Mat-X-left : Mat ∘ (X ⊗₁ id {2C}) ≈ σ⊕ ∘ Mat
+  Mat-X-left : {A : Obj} → Mat ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ Mat
   Mat-X-left = begin
-    ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ (X ⊗₁ id {2C}) ≈⟨ pullʳ lapI+II ⟩
-    (λ⇒ ⊕₁ λ⇒) ∘ σ⊕ ∘ δᵣ⇒               ≈⟨ pullˡ (⟺ (S⊎.braiding.⇒.commute (λ⇒ , λ⇒))) ⟩
-    (σ⊕ ∘ (λ⇒ ⊕₁ λ⇒)) ∘ δᵣ⇒             ≈⟨ assoc ⟩ 
-    σ⊕ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒               ∎
+    ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ (X ⊗₁ id) ≈⟨ pullʳ lapI+II ⟩
+    (λ⇒ ⊕₁ λ⇒) ∘ σ⊕ ∘ δᵣ⇒          ≈⟨ pullˡ (⟺ (S⊎.braiding.⇒.commute (λ⇒ , λ⇒))) ⟩
+    (σ⊕ ∘ (λ⇒ ⊕₁ λ⇒)) ∘ δᵣ⇒        ≈⟨ assoc ⟩ 
+    σ⊕ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒          ∎
 
   -- cor of above
-  Mat⁻¹σ : Mat⁻¹ ∘ σ⊕ ≈ (X ⊗₁ id {2C}) ∘ Mat⁻¹
+  Mat⁻¹σ : {A : Obj} → Mat⁻¹ ∘ σ⊕ ≈ (X ⊗₁ id {A}) ∘ Mat⁻¹
   Mat⁻¹σ = begin
     Mat⁻¹ ∘ σ⊕                          ≈⟨ insertʳ Mat-invʳ ⟩
     ((Mat⁻¹ ∘ σ⊕) ∘ Mat) ∘ Mat⁻¹        ≈⟨ pullʳ (⟺ Mat-X-left) ⟩∘⟨refl ⟩
