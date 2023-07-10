@@ -18,6 +18,8 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
   open import Categories.Category.Monoidal.Interchange.Symmetric S⊎
+  open import Categories.Category.Monoidal.Properties using (module Kelly's)
+  open import Categories.Category.Monoidal.Braided.Properties
   import Categories.Category.Monoidal.Reasoning as MonR
   open import Categories.Morphism.Reasoning C
 
@@ -111,8 +113,22 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   -- Square 3: 
 
-  lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id 
-  lap-coh-1-sq3 = {!!}
+  swap1≈id : σ⊗ {1C} {1C} ≈ id
+  swap1≈id = begin
+    σ⊗ 
+      ≈⟨ introˡ M×.unitorˡ.isoˡ ⟩
+    (λ⇐ ∘ λ⇒) ∘ σ⊗ 
+      ≈⟨ assoc ⟩
+    λ⇐ ∘ λ⇒ ∘ σ⊗ 
+      ≈⟨ refl⟩∘⟨ braiding-coherence S×.braided ⟩
+    λ⇐ ∘ ρ⇒ 
+      ≈⟨ ∘-resp-≈ʳ (Equiv.sym (Kelly's.coherence₃ M×)) ○ M×.unitorˡ.isoˡ ⟩
+    id ∎
+
+  lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id
+  lap-coh-1-sq3 =
+    (swap1≈id ⟩⊕⟨ swap1≈id) ⟩⊕⟨ swap1≈id ⟩⊕⟨ swap1≈id ○
+    (M⊎.⊗.identity ⟩⊕⟨ M⊎.⊗.identity) ○ M⊎.⊗.identity 
 
   -- Square 4: (A + B) (C + D) ===> (AC + AD) + (BC + BD)
 
