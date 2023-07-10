@@ -57,6 +57,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ Mat ∘ (id ⊗₁ f)) ∘ Mat⁻¹  ≈⟨ cancelˡ Mat-invˡ ⟩∘⟨refl ⟩
     (id ⊗₁ f) ∘ Mat⁻¹                  ∎
   
+  ----------------------------------------------------------------------------------------------------------------
   -- (2)
   -- recall that Midswap is α⇐ ∘ id ⊗ (α⇒ ∘ σ⇒ ⊗ id ∘ α⇐) ∘ α⇒
   -- and
@@ -76,14 +77,12 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     α⇐ ∘ δᵣ⇒ ⊕₁ δᵣ⇒ ∘ δₗ⇒ ≈ α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐ ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒
   -}
 
-  ----------------------------------------------------------------------------------------------------------------
-  --  postulate
-  --    lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
-
-  -- (A+B) (C+D) ===> (A+B) C + (A+B) D
+  -- Square 1: (A+B) (C+D) ===> (A+B) C + (A+B) D
 
   lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {c} {d} {A ⊕₀ B})
   lap-coh-1-sq1 = Equiv.sym (Equiv.sym assoc ○ ∘-resp-≈ˡ laplazaII ○ assoc) ○ elimʳ S×.commutative
+
+  -- Square 2: C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
 
   lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c}) ∘ σ⊗ ≈ δᵣ⇒ 
   lap-coh-1-sq2-help =
@@ -107,18 +106,20 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
       ≈⟨ lap-coh-1-sq2-help ⟩∘⟨refl ⟩
     δᵣ⇒ ∘ σ⊗ ∎
  
-  -- C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
-
   lap-coh-1-sq2 : (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ≈ (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {c} ⊕₁ δₗ⇒ {A} {B} {d})
   lap-coh-1-sq2 = parallel (Equiv.sym lap-coh-1-sq2-half) (Equiv.sym lap-coh-1-sq2-half) 
 
+  -- Square 3: 
 
   lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id 
   lap-coh-1-sq3 = {!!}
 
-  -- (A + B) (C + D) ===> (AC + AD) + (BC + BD)
+  -- Square 4: (A + B) (C + D) ===> (AC + AD) + (BC + BD)
+
   lap-coh-1-sq4 : Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
   lap-coh-1-sq4 = {!!} 
+
+   -- Glue squares 1, 2, and 4:
 
   lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {c} {d} {A ⊕₀ B})
   lap-coh-1-sq124 = begin
@@ -128,11 +129,10 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
       ≈⟨ refl⟩∘⟨ lap-coh-1-sq1 ⟩ 
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
 
-  lap-coh-1-sq1234 : δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {1C} {1C} {2C})
-  lap-coh-1-sq1234 = Equiv.sym (elimˡ lap-coh-1-sq3) ○ lap-coh-1-sq124
+  -- Glue all squares
 
   lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
-  lap-coh-1 = lap-coh-1-sq1234 ○ Equiv.sym lap-coh-1-sq4 
+  lap-coh-1 = Equiv.sym (elimˡ lap-coh-1-sq3) ○ lap-coh-1-sq124 ○ Equiv.sym lap-coh-1-sq4
 
   ----------------------------------------------------------------------------------------------------------------
 
