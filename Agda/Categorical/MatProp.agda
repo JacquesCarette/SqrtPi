@@ -245,25 +245,23 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   -- (8)
 
-  -- postulate
-  --  lapI+II : {A : Obj} → δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
-
+  -- convenient general lemma
+  parallel-intro : {A B : Obj} {f : A ⇒ B} {g : B ⇒ A} → f ∘ g ≈ id → f ⊕₁ f ∘ g ⊕₁ g ≈ id
+  parallel-intro {f = f} {g} fg≈id = begin
+    f ⊕₁ f ∘ g ⊕₁ g    ≈˘⟨ M⊎.⊗.homomorphism ⟩
+    (f ∘ g) ⊕₁ (f ∘ g) ≈⟨ fg≈id ⟩⊕⟨ fg≈id ⟩
+    id ⊕₁ id           ≈⟨ M⊎.⊗.identity ⟩
+    id              ∎
+    
   lapI+II : δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
   lapI+II = begin
-    δᵣ⇒ ∘ (X ⊗₁ id)
-      ≈⟨ {!!} ⟩ -- id on the left
-    (σ⊗ ⊕₁ σ⊗) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ (X ⊗₁ id)
-      ≈⟨ {!!} ⟩ -- laplazaII in the middle
-    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗ ∘ (X ⊗₁ id)
-      ≈⟨ {!!} ⟩ -- naturality on the right
-    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ (id ⊗₁ X) ∘ σ⊗ 
-      ≈⟨ {!!} ⟩ -- laplazaI in the middle
-    (σ⊗ ⊕₁ σ⊗) ∘ σ⊕ ∘ δₗ⇒ ∘ σ⊗ 
-      ≈⟨ {!!} ⟩ -- laplazaII on the right
-    (σ⊗ ⊕₁ σ⊗) ∘ σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ 
-      ≈⟨ {!!} ⟩  -- naturality on the left
-    σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ 
-      ≈⟨ {!!} ⟩  -- id in the middle
+    δᵣ⇒ ∘ (X ⊗₁ id)                             ≈⟨ introˡ (parallel-intro S×.commutative)○ pullʳ sym-assoc ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ ((σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒) ∘ (X ⊗₁ id) ≈⟨ refl⟩∘⟨ (⟺ laplazaII) ⟩∘⟨refl ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ ∘ σ⊗) ∘ (X ⊗₁ id)         ≈⟨ refl⟩∘⟨ pullʳ (S×.braiding.⇒.commute (X , id)) ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ (id ⊗₁ X) ∘ σ⊗           ≈⟨ refl⟩∘⟨ pullˡ (⟺ laplazaI) ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ (σ⊕ ∘ δₗ⇒) ∘ σ⊗                ≈⟨ refl⟩∘⟨ (assoc ○ (refl⟩∘⟨ laplazaII)) ⟩
+    (σ⊗ ⊕₁ σ⊗) ∘ σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒          ≈⟨ pullˡ (⟺ (S⊎.braiding.⇒.commute _)) ⟩
+    (σ⊕ ∘ (σ⊗ ⊕₁ σ⊗)) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒        ≈⟨ cancelInner (parallel-intro S×.commutative) ⟩
     σ⊕ ∘ δᵣ⇒ ∎
     
   --------------------------------------------------------------------------------------------------------
