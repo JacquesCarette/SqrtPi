@@ -139,7 +139,9 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
     (SWAP ∘ Ctrl X ∘ SWAP) ∘ Ctrl X ∘ id ⊗₁ T
       ≈⟨ ⟺ sCZ↝bCX ⟩∘⟨  ⟺ CZ↝CX  ⟩∘⟨refl ⟩ 
     (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ 
+      ≈⟨ assoc ○ refl⟩∘⟨  assoc ⟩ 
+    H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ id ⊗₁ T
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨  refl⟩∘⟨  (assoc ○ refl⟩∘⟨ assoc) ⟩ 
     H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ id ⊗₁ T
       ≈⟨ refl⟩∘⟨ refl⟩∘⟨ ⟺ assoc ⟩ 
     H ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ id ∘ id ⊗₁ H) ∘ Ctrl Z ∘ (id ⊗₁ H ∘ id ⊗₁ T)
