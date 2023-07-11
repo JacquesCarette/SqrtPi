@@ -82,11 +82,15 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   A17-help : T ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ≈ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
   A17-help = begin
     T ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
-      ≈⟨ {!!} ⟩ -- insert id using CX²≡id : CX ^ 2 ≈ id
+      ≈⟨ intro-center CX²≡id ⟩ 
+    T ⊗₁ id ∘ (Ctrl X ∘ Ctrl X) ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
+      ≈⟨ refl⟩∘⟨ assoc ⟩ 
     T ⊗₁ id ∘ Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
-      ≈⟨ {!!} ⟩ -- P6
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ P6 ⟩ 
     T ⊗₁ id ∘ Ctrl X ∘ SWAP
-      ≈⟨ {!!} ⟩ -- using CZ-CX on first CX
+      ≈⟨ refl⟩∘⟨  ⟺ {!CZ↝CX!} ⟩∘⟨refl ⟩ -- using CZ-CX on first CX
+    T ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ SWAP
+      ≈⟨ {!!} ⟩  
     T ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ SWAP
       ≈⟨ {!!} ⟩  -- slide parallel
     id ⊗₁ H ∘ T ⊗₁ id ∘ Ctrl Z ∘ id ⊗₁ H ∘ SWAP
