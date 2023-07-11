@@ -31,8 +31,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
-  open MonR M× using (serialize₁₂; serialize₂₁)
-  -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
+  open MonR M× using (serialize₁₂; serialize₂₁; split₁ʳ; merge₂ˡ)
   open import Categorical.CtrlH SR using (CZ↝CX; sCZ↝bCX)
 
   private
@@ -113,7 +112,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
     Ctrl X ∘ SWAP ∘ id ⊗₁ T
       ≈⟨ refl⟩∘⟨ (⟺ P6 ⟩∘⟨refl) ⟩
     Ctrl X ∘ (Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X) ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ 
+      ≈⟨ refl⟩∘⟨ (assoc ○ refl⟩∘⟨ (assoc ○ refl⟩∘⟨ (assoc ○ refl⟩∘⟨ assoc))) ⟩ 
     Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
       ≈⟨ cancelˡ CX²≡id ⟩
     SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T ∎
@@ -122,19 +121,29 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
         H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ (H ∘ T)
   A17 = begin
     (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
-      ≈⟨ {!!} ⟩ -- parallel
-    T ⊗₁ id ∘ (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H)
+      ≈⟨ split₁ʳ ⟩∘⟨refl ⟩ 
+    (T ⊗₁ id ∘ H ⊗₁ id) ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ serialize₁₂ ⟩∘⟨refl  ⟩ 
+    (T ⊗₁ id ∘ H ⊗₁ id) ∘ Ctrl Z ∘ (H ⊗₁ id ∘ id ⊗₁ H) ∘ Ctrl Z ∘ id ⊗₁ H
+      ≈⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ refl⟩∘⟨ assoc  ⟩ 
+    T ⊗₁ id ∘ H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
+      ≈⟨ refl⟩∘⟨ (⟺ assoc ○ ⟺ assoc ○ assoc ⟩∘⟨refl) ⟩ 
+    T ⊗₁ id ∘ (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
       ≈⟨ refl⟩∘⟨ sCZ↝bCX ⟩∘⟨ CZ↝CX  ⟩ 
     T ⊗₁ id ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ Ctrl X
-      ≈⟨ {!!} ⟩ 
+      ≈⟨ refl⟩∘⟨ (assoc ○ refl⟩∘⟨ assoc) ⟩ 
     T ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
       ≈⟨ A17-help ⟩ 
     SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩  
+      ≈⟨ ⟺ assoc ○ ⟺ assoc ○ assoc ⟩∘⟨refl ⟩  
     (SWAP ∘ Ctrl X ∘ SWAP) ∘ Ctrl X ∘ id ⊗₁ T
       ≈⟨ ⟺ sCZ↝bCX ⟩∘⟨  ⟺ CZ↝CX  ⟩∘⟨refl ⟩ 
     (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ -- parallel
+      ≈⟨ {!!} ⟩ 
+    H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ id ⊗₁ T
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ ⟺ assoc ⟩ 
+    H ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ id ∘ id ⊗₁ H) ∘ Ctrl Z ∘ (id ⊗₁ H ∘ id ⊗₁ T)
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ ⟺ serialize₁₂ ⟩∘⟨  refl⟩∘⟨ merge₂ˡ ⟩ 
     H ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ T) ∎
   
   -- A18
