@@ -241,10 +241,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ (P t ⊕₁ P t)) ∘ (id ⊕₁ P s) ∘ Mat ≈⟨ Mat⁻¹-2f ⟩∘⟨refl ○ assoc ⟩
     (id ⊗₁ P t) ∘ Mat⁻¹ ∘ (id ⊕₁ P s) ∘ Mat    ∎
   
-  --------------------------------------------------------------------------------------------------------
-
   -- (8)
-
   -- convenient general lemma
   parallel-intro : {A B : Obj} {f : A ⇒ B} {g : B ⇒ A} → f ∘ g ≈ id → f ⊕₁ f ∘ g ⊕₁ g ≈ id
   parallel-intro {f = f} {g} fg≈id = begin
@@ -264,8 +261,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (σ⊕ ∘ (σ⊗ ⊕₁ σ⊗)) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒        ≈⟨ cancelInner (parallel-intro S×.commutative) ⟩
     σ⊕ ∘ δᵣ⇒ ∎
     
-  --------------------------------------------------------------------------------------------------------
-
   Mat-X-left : {A : Obj} → Mat ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ Mat
   Mat-X-left = begin
     ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ (X ⊗₁ id) ≈⟨ pullʳ lapI+II ⟩
