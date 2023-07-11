@@ -248,17 +248,23 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   -- postulate
   --  lapI+II : {A : Obj} → δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
 
-  l1 : σ⊕ ∘ δₗ⇒ ≈ δₗ⇒ ∘ (id {A} ⊗₁ X)
-  l1 = laplazaI
-
-{--  
-compatible     σ⊕ ∘ δₗ⇒ ∘ σ⊗                    ≈       δₗ⇒ ∘ (id ⊗₁ X) ∘ σ⊗
-commmute       σ⊕ ∘ δₗ⇒ ∘ σ⊗                    ≈       δₗ⇒ ∘ σ⊗ ∘ (X ⊗₁ id)
-lap2           σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗       ≈       (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ (X ⊗₁ id)
---}
-
   lapI+II : δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
-  lapI+II = {!!} 
+  lapI+II = begin
+    δᵣ⇒ ∘ (X ⊗₁ id)
+      ≈⟨ {!!} ⟩ -- id on the left
+    (σ⊗ ⊕₁ σ⊗) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ (X ⊗₁ id)
+      ≈⟨ {!!} ⟩ -- laplazaII in the middle
+    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗ ∘ (X ⊗₁ id)
+      ≈⟨ {!!} ⟩ -- naturality on the right
+    (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ (id ⊗₁ X) ∘ σ⊗ 
+      ≈⟨ {!!} ⟩ -- laplazaI in the middle
+    (σ⊗ ⊕₁ σ⊗) ∘ σ⊕ ∘ δₗ⇒ ∘ σ⊗ 
+      ≈⟨ {!!} ⟩ -- laplazaII on the right
+    (σ⊗ ⊕₁ σ⊗) ∘ σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ 
+      ≈⟨ {!!} ⟩  -- naturality on the left
+    σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ 
+      ≈⟨ {!!} ⟩  -- id in the middle
+    σ⊕ ∘ δᵣ⇒ ∎
     
   --------------------------------------------------------------------------------------------------------
 
