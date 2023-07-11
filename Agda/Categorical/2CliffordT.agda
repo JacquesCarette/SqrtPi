@@ -33,7 +33,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   open Kit R
   -- open MonR M× using (_⟩⊗⟨refl)
   -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
-  open import Categorical.CtrlH using (CZ↝CX; sCZ↝bCX)
+  open import Categorical.CtrlH SR using (CZ↝CX; sCZ↝bCX)
 
   private
     variable
@@ -88,7 +88,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
     T ⊗₁ id ∘ Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
       ≈⟨ refl⟩∘⟨ refl⟩∘⟨ P6 ⟩ 
     T ⊗₁ id ∘ Ctrl X ∘ SWAP
-      ≈⟨ refl⟩∘⟨  ⟺ {!CZ↝CX!} ⟩∘⟨refl ⟩ -- using CZ-CX on first CX
+      ≈⟨ refl⟩∘⟨  ⟺ CZ↝CX ⟩∘⟨refl ⟩ -- using CZ-CX on first CX
     T ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ SWAP
       ≈⟨ {!!} ⟩  
     T ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ SWAP
@@ -104,7 +104,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
     Ctrl X ∘ SWAP ∘ id ⊗₁ T
       ≈⟨ {!!} ⟩ -- P6
     Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ -- CX²≡id : CX ^ 2 ≈ id
+      ≈⟨ cancelˡ CX²≡id ⟩ -- CX²≡id : CX ^ 2 ≈ id
     SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T ∎
 
   A17 : (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ≈
