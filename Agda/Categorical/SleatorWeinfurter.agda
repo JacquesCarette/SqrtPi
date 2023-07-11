@@ -16,13 +16,6 @@ module Categorical.SleatorWeinfurter {o ℓ e} {C : Category o ℓ e}
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-{-
-  open import Categories.Category.Monoidal.Braided.Properties using (braiding-coherence)
-  open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
-  import Categories.Category.Monoidal.Interchange.Symmetric as IS
-
-  open IS S⊎
--}
   open import Categories.Category.Monoidal.Properties using (module Kelly's)
   open import Categories.Category.Monoidal.Utilities using (module Shorthands)
   open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐)
@@ -155,3 +148,13 @@ module Categorical.SleatorWeinfurter {o ℓ e} {C : Category o ℓ e}
     (id ⊕₁ σ⊕) ∘
     ((id ⊕₁ V) ⊕₁ (id ⊕₁ V))) ∘ 3Mat    ≈⟨ refl⟩∘⟨ additive-SL ⟩∘⟨refl ⟩
     3Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ X) ∘ 3Mat        ∎
+
+  SL₂ : 3Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ X) ∘ 3Mat ≈ CCX
+  SL₂ = begin
+    (Mat⁻¹ ∘ Mat⁻¹ ⊕₁ Mat⁻¹) ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ X) ∘ Mat ⊕₁ Mat ∘ Mat
+        ≈⟨ assoc ○ refl⟩∘⟨ ⟺ assoc²' ⟩
+    Mat⁻¹ ∘ (Mat⁻¹ ⊕₁ Mat⁻¹ ∘ (id ⊕₁ id) ⊕₁ (id ⊕₁ X) ∘ Mat ⊕₁ Mat) ∘ Mat
+        ≈˘⟨ refl⟩∘⟨ (M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism) ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ (Mat⁻¹ ∘ (id ⊕₁ id) ∘ Mat) ⊕₁ (Mat⁻¹ ∘ (id ⊕₁ X) ∘ Mat) ∘ Mat
+        ≈⟨ refl⟩∘⟨ (refl⟩∘⟨ elimˡ M⊎.⊗.identity ○ Mat-invˡ) ⟩⊕⟨refl ⟩∘⟨refl ⟩
+    Mat⁻¹ ∘ (id ⊕₁ (Mat⁻¹ ∘ (id ⊕₁ X) ∘ Mat)) ∘ Mat                       ∎
