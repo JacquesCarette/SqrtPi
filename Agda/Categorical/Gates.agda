@@ -225,3 +225,13 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     (f ∘ g) ⊗₁ (id ∘ id) ≈⟨ fg≈id ⟩⊗⟨ identity² ⟩
     id ⊗₁ id             ≈⟨ M×.⊗.identity ⟩
     id                   ∎
+
+  VXV≡id : (V ∘ X) ∘ V ≈ id
+  VXV≡id = begin
+    (V ∘ X) ∘ V ≈˘⟨ XV-comm ⟩∘⟨refl ⟩
+    (X ∘ V) ∘ V ≈⟨ pullʳ E2 ⟩
+    X ∘ X       ≈⟨ X²≡id ⟩
+    id          ∎
+
+  VVX≡id : V ∘ V ∘ X ≈ id
+  VVX≡id = pullˡ E2 ○ X²≡id
