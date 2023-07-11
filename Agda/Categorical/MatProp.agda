@@ -62,7 +62,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ Mat ∘ (id ⊗₁ f)) ∘ Mat⁻¹  ≈⟨ cancelˡ Mat-invˡ ⟩∘⟨refl ⟩
     (id ⊗₁ f) ∘ Mat⁻¹                  ∎
   
-  ----------------------------------------------------------------------------------------------------------------
   -- (2)
   -- recall that Midswap is α⇐ ∘ id ⊗ (α⇒ ∘ σ⇒ ⊗ id ∘ α⇐) ∘ α⇒
   -- and
@@ -142,7 +141,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
       ≈⟨ elimˡ S⊎.braided.associator.isoʳ  ⟩ 
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
   
-
    -- Glue squares 1, 2, and 4:
 
   lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {X₁} {X₂} {A ⊕₀ B})
@@ -157,8 +155,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
 
   lap-coh-1 : (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP ≈ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
   lap-coh-1 = Equiv.sym (elimˡ lap-coh-1-sq3) ○ lap-coh-1-sq124 ○ Equiv.sym lap-coh-1-sq4
-
-  ----------------------------------------------------------------------------------------------------------------
 
   Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = begin
@@ -245,10 +241,27 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ (P t ⊕₁ P t)) ∘ (id ⊕₁ P s) ∘ Mat ≈⟨ Mat⁻¹-2f ⟩∘⟨refl ○ assoc ⟩
     (id ⊗₁ P t) ∘ Mat⁻¹ ∘ (id ⊕₁ P s) ∘ Mat    ∎
   
+  --------------------------------------------------------------------------------------------------------
+
   -- (8)
-  postulate
-    lapI+II : {A : Obj} → δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
+
+  -- postulate
+  --  lapI+II : {A : Obj} → δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
+
+  l1 : σ⊕ ∘ δₗ⇒ ≈ δₗ⇒ ∘ (id {A} ⊗₁ X)
+  l1 = laplazaI
+
+{--  
+compatible     σ⊕ ∘ δₗ⇒ ∘ σ⊗                    ≈       δₗ⇒ ∘ (id ⊗₁ X) ∘ σ⊗
+commmute       σ⊕ ∘ δₗ⇒ ∘ σ⊗                    ≈       δₗ⇒ ∘ σ⊗ ∘ (X ⊗₁ id)
+lap2           σ⊕ ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗       ≈       (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ (X ⊗₁ id)
+--}
+
+  lapI+II : δᵣ⇒ ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ δᵣ⇒
+  lapI+II = {!!} 
     
+  --------------------------------------------------------------------------------------------------------
+
   Mat-X-left : {A : Obj} → Mat ∘ (X ⊗₁ id {A}) ≈ σ⊕ ∘ Mat
   Mat-X-left = begin
     ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ (X ⊗₁ id) ≈⟨ pullʳ lapI+II ⟩
