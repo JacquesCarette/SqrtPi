@@ -31,7 +31,7 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   open HomReasoning
   open SqrtRig SR
   open Kit R
-  -- open MonR M× using (_⟩⊗⟨refl)
+  open MonR M× using (serialize₁₂; serialize₂₁)
   -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
   open import Categorical.CtrlH SR using (CZ↝CX; sCZ↝bCX)
 
@@ -72,6 +72,9 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   -- Postulate classical equivalences (can automatically generate
   -- proof from CKS paper but will probably be huge)
 
+  slide : (f ⊗₁ id) ∘ (id ⊗₁ g) ≈ (id ⊗₁ g) ∘ (f ⊗₁ id)
+  slide = ⟺ serialize₁₂ ○ serialize₂₁ 
+
   postulate
     P6 : Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ≈ SWAP
 
@@ -88,23 +91,31 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
     T ⊗₁ id ∘ Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
       ≈⟨ refl⟩∘⟨ refl⟩∘⟨ P6 ⟩ 
     T ⊗₁ id ∘ Ctrl X ∘ SWAP
-      ≈⟨ refl⟩∘⟨  ⟺ CZ↝CX ⟩∘⟨refl ⟩ -- using CZ-CX on first CX
+      ≈⟨ refl⟩∘⟨ ⟺ CZ↝CX ⟩∘⟨refl ⟩ 
     T ⊗₁ id ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ SWAP
-      ≈⟨ {!!} ⟩  
-    T ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ SWAP
-      ≈⟨ {!!} ⟩  -- slide parallel
-    id ⊗₁ H ∘ T ⊗₁ id ∘ Ctrl Z ∘ id ⊗₁ H ∘ SWAP
-      ≈⟨ {!!} ⟩  -- swap T and CZ using A16
-    id ⊗₁ H ∘ Ctrl Z ∘ T ⊗₁ id ∘ id ⊗₁ H ∘ SWAP
-      ≈⟨ {!!} ⟩  -- slide parallel
-    id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ T ⊗₁ id ∘ SWAP
-      ≈⟨ {!!} ⟩ -- use CZ-CX
+      ≈⟨ refl⟩∘⟨ assoc ○ ⟺ assoc ⟩ 
+    (T ⊗₁ id ∘ id ⊗₁ H) ∘ (Ctrl Z ∘ id ⊗₁ H) ∘ SWAP
+      ≈⟨ slide ⟩∘⟨refl ⟩ 
+    (id ⊗₁ H ∘ T ⊗₁ id) ∘ (Ctrl Z ∘ id ⊗₁ H) ∘ SWAP
+      ≈⟨ assoc ○ refl⟩∘⟨ refl⟩∘⟨ assoc ○ refl⟩∘⟨ ⟺ assoc  ⟩ 
+    id ⊗₁ H ∘ (T ⊗₁ id ∘ Ctrl Z) ∘ id ⊗₁ H ∘ SWAP
+      ≈⟨ refl⟩∘⟨ ⟺ A16 ⟩∘⟨refl ⟩  
+    id ⊗₁ H ∘ (Ctrl Z ∘ T ⊗₁ id) ∘ id ⊗₁ H ∘ SWAP
+      ≈⟨ refl⟩∘⟨ (assoc ○ refl⟩∘⟨  ⟺ assoc)  ⟩  
+    id ⊗₁ H ∘ Ctrl Z ∘ (T ⊗₁ id ∘ id ⊗₁ H) ∘ SWAP
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ slide ⟩∘⟨refl ⟩  
+    id ⊗₁ H ∘ Ctrl Z ∘ (id ⊗₁ H ∘ T ⊗₁ id) ∘ SWAP
+      ≈⟨ refl⟩∘⟨ refl⟩∘⟨ assoc ○ refl⟩∘⟨ ⟺ assoc ○ ⟺ assoc ⟩ 
+    (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ T ⊗₁ id ∘ SWAP
+      ≈⟨ CZ↝CX ⟩∘⟨refl ⟩
     Ctrl X ∘ T ⊗₁ id ∘ SWAP
-      ≈⟨ {!!} ⟩ -- naturality
+      ≈⟨ refl⟩∘⟨ ⟺ (S×.braiding.⇒.commute (id , T)) ⟩ 
     Ctrl X ∘ SWAP ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ -- P6
+      ≈⟨ refl⟩∘⟨ (⟺ P6 ⟩∘⟨refl) ⟩
+    Ctrl X ∘ (Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X) ∘ id ⊗₁ T
+      ≈⟨ {!!} ⟩ 
     Ctrl X ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
-      ≈⟨ cancelˡ CX²≡id ⟩ -- CX²≡id : CX ^ 2 ≈ id
+      ≈⟨ cancelˡ CX²≡id ⟩
     SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T ∎
 
   A17 : (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ≈
@@ -112,17 +123,17 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   A17 = begin
     (T ∘ H) ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
       ≈⟨ {!!} ⟩ -- parallel
-    T ⊗₁ id ∘ H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
-      ≈⟨ {!!} ⟩ -- sCZ-bCX
-    T ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H
-      ≈⟨ {!!} ⟩ -- CZ-CX
+    T ⊗₁ id ∘ (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H)
+      ≈⟨ refl⟩∘⟨ sCZ↝bCX ⟩∘⟨ CZ↝CX  ⟩ 
+    T ⊗₁ id ∘ (SWAP ∘ Ctrl X ∘ SWAP) ∘ Ctrl X
+      ≈⟨ {!!} ⟩ 
     T ⊗₁ id ∘ SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X
       ≈⟨ A17-help ⟩ 
     SWAP ∘ Ctrl X ∘ SWAP ∘ Ctrl X ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩  -- CZ-CX
-    SWAP ∘ Ctrl X ∘ SWAP ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ id ⊗₁ T
-      ≈⟨ {!!} ⟩ -- sCZ-bCX
-    H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id ∘ id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H ∘ id ⊗₁ T
+      ≈⟨ {!!} ⟩  
+    (SWAP ∘ Ctrl X ∘ SWAP) ∘ Ctrl X ∘ id ⊗₁ T
+      ≈⟨ ⟺ sCZ↝bCX ⟩∘⟨  ⟺ CZ↝CX  ⟩∘⟨refl ⟩ 
+    (H ⊗₁ id ∘ Ctrl Z ∘ H ⊗₁ id) ∘ (id ⊗₁ H ∘ Ctrl Z ∘ id ⊗₁ H) ∘ id ⊗₁ T
       ≈⟨ {!!} ⟩ -- parallel
     H ⊗₁ id ∘ Ctrl Z ∘ (H ⊗₁ H) ∘ Ctrl Z ∘ id ⊗₁ (H ∘ T) ∎
   
