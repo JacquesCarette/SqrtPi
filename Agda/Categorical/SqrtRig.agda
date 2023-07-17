@@ -13,14 +13,14 @@ open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
 open import Categories.Category.Monoidal.Utilities using (module Shorthands)
 import Categories.Morphism as Mor
-open import Categories.Category.RigCategory
+open import Categories.Category.RigCategory using (RigCategory)
 
 -- A bit of useful kit
 module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) where
 
-  open Category C -- end up using it all
-  open HomReasoning
+  open Category C public -- end up using it all
+  open HomReasoning public
   open Mor C using (_≅_)
   private
     module C = Category C
@@ -118,7 +118,6 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
 record SqrtRig {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) : Set (ℓ ⊔ e) where
   open Kit R
-  open Category C
     
   field
     ω : Scalar

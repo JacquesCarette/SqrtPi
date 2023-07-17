@@ -22,8 +22,6 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open import Categories.Functor.Bifunctor using (module Bifunctor)
   import Categories.Morphism.Reasoning as MR
   
-  open Category 𝒞 -- all of it
-  open HomReasoning
   open MR 𝒞
   open SqrtRig SR
   open Kit R

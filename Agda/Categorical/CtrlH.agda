@@ -28,8 +28,6 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   open import Categorical.MatProp SR
   open import Categorical.2Clifford SR
   
-  open Category C -- all of it
-  open HomReasoning
   open SqrtRig SR
   open Kit R
   open MonR M× using (serialize₁₂; serialize₂₁)

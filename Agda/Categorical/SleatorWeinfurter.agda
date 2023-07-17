@@ -25,8 +25,6 @@ module Categorical.SleatorWeinfurter {o ℓ e} {C : Category o ℓ e}
   open import Categorical.Scalars SR
   open import Categorical.Gates SR
   
-  open Category C -- all of it
-  open HomReasoning
   open SqrtRig SR
   open Kit R 
   open MonR M× using (_⟩⊗⟨refl)

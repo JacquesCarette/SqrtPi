@@ -23,8 +23,6 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   
   open import Categorical.Scalars SR
 
-  open Category C -- all of it
-  open HomReasoning
   open SqrtRig SR
   open Kit R
   open MR C

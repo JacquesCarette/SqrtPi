@@ -28,8 +28,6 @@ module Categorical.2CliffordT {o ℓ e} {C : Category o ℓ e}
   open import Categorical.MatProp SR
   open import Categorical.CtrlH SR using (CZ↝CX; sCZ↝bCX)
   
-  open Category C -- all of it
-  open HomReasoning
   open SqrtRig SR
   open Kit R
   open MonR M× using (serialize₁₂; serialize₂₁; split₁ʳ; merge₂ˡ)
