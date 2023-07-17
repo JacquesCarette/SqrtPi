@@ -8,7 +8,7 @@ open import Data.Product using (_,_)
 open import Level using (_⊔_)
 open import Relation.Binary.PropositionalEquality.Core using (_≡_; refl)
 
-open import Categories.Category -- we need it all
+open import Categories.Category using (Category; _[_,_])
 open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
 open import Categories.Category.Monoidal.Utilities using (module Shorthands)
@@ -19,7 +19,7 @@ open import Categories.Category.RigCategory
 module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) where
 
-  open Category C
+  open Category C -- end up using it all
   open HomReasoning
   open Mor C using (_≅_)
   private
@@ -55,10 +55,8 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
 
   Scalar : Set ℓ
   Scalar = C [ 1C , 1C ]
-  Endo : {Obj} → Set ℓ
-  Endo {a} = C [ a , a ]
-  2×2 : Set ℓ
-  2×2 = C [ 2C , 2C ]
+  Endo : Obj → Set ℓ
+  Endo a = C [ a , a ]
     
   -- To make things shorter, define an abbreviation for 1
   𝟙 : Scalar
@@ -66,7 +64,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
 
   -- We need an operator for powering of endos (such as scalars)
   infixr 30 _^_
-  _^_ : {a : Obj} → Endo {a} → ℕ → Endo
+  _^_ : {a : Obj} → Endo a → ℕ → Endo a
   s ^ zero = C.id
   s ^ (suc zero) = s -- special case to make reasoning less painful
   s ^ suc (suc n) = s ∘ s ^ (suc n)
@@ -96,12 +94,12 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     pow s (a + b)     ≈˘⟨ ^≈pow s (a + b) ⟩
     s ^ (a + b)   ∎
 
-  base^-cong : {a : Obj} {x y : Endo {a}} → x ≈ y → (n : ℕ) → x ^ n ≈ y ^ n
+  base^-cong : {a : Obj} {x y : Endo a} → x ≈ y → (n : ℕ) → x ^ n ≈ y ^ n
   base^-cong x≈y zero = Equiv.refl
   base^-cong x≈y (suc zero) = x≈y
   base^-cong x≈y (suc (suc n)) = ∘-resp-≈ x≈y (base^-cong x≈y (suc n))
 
-  exp^-cong : {a : Obj} {x : Endo {a}} {i j : ℕ} → i ≡ j → x ^ i ≈ x ^ j
+  exp^-cong : {a : Obj} {x : Endo a} {i j : ℕ} → i ≡ j → x ^ i ≈ x ^ j
   exp^-cong refl = Equiv.refl
   
   ^-comm : {s : Scalar} (a b : ℕ) → s ^ a ∘ s ^ b ≈ s ^ b ∘ s ^ a

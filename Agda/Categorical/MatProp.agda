@@ -211,7 +211,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     Ctrl (P s) ∘ SWAP                 ∎
   
   -- (10)
-  Ctrl-merge : {g h : Endo {A}} → Ctrl g ∘ Ctrl h ≈ Ctrl (g ∘ h)
+  Ctrl-merge : {g h : Endo A} → Ctrl g ∘ Ctrl h ≈ Ctrl (g ∘ h)
   Ctrl-merge {g = g} {h} = begin
     (Mat⁻¹ ∘ id ⊕₁ g ∘ Mat) ∘ Mat⁻¹ ∘ id ⊕₁ h ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
     ((Mat⁻¹ ∘ id ⊕₁ g) ∘ Mat) ∘ Mat⁻¹ ∘ id ⊕₁ h ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩

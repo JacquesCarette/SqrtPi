@@ -101,7 +101,7 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
   ---------------------------------------------------------------
   -- lem:nctrlh
   -- How is negative control related to Ctrl ?
-  nCtrl~Ctrl : (f : Endo {A}) → nCtrl f ≈ (X ⊗₁ id) ∘ Ctrl f ∘ (X ⊗₁ id)
+  nCtrl~Ctrl : (f : Endo A) → nCtrl f ≈ (X ⊗₁ id) ∘ Ctrl f ∘ (X ⊗₁ id)
   nCtrl~Ctrl f = begin
     Mat⁻¹ ∘ (f ⊕₁ id) ∘ Mat                           ≈˘⟨ refl⟩∘⟨ cancelInner S⊎.commutative ⟩
     Mat⁻¹ ∘ ((f ⊕₁ id) ∘ σ⊕) ∘ (σ⊕ ∘ Mat)             ≈˘⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , f) ⟩∘⟨ Mat-X-left ⟩
@@ -109,7 +109,7 @@ module Categorical.CtrlH {o ℓ e} {C : Category o ℓ e}
     (X ⊗₁ id) ∘ (Mat⁻¹ ∘ (id ⊕₁ f) ∘ Mat) ∘ (X ⊗₁ id) ≡⟨⟩
     X ⊗₁ id ∘ Ctrl f ∘ X ⊗₁ id            ∎
 
-  nCtrl+inv~Ctrl : (f : Endo {A}) → f ∘ f ≈ id → nCtrl f ≈ Ctrl f ∘ id ⊗₁ f
+  nCtrl+inv~Ctrl : (f : Endo A) → f ∘ f ≈ id → nCtrl f ≈ Ctrl f ∘ id ⊗₁ f
   nCtrl+inv~Ctrl f invol = begin
     Mat⁻¹ ∘ (f ⊕₁ id) ∘ Mat              ≈⟨ refl⟩∘⟨ refl⟩⊕⟨ ⟺ invol ⟩∘⟨refl ⟩
     Mat⁻¹ ∘ (f ⊕₁ (f ∘ f)) ∘ Mat         ≈⟨ refl⟩∘⟨ split₂ˡ ⟩∘⟨refl ⟩

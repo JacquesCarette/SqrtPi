@@ -20,7 +20,7 @@ open HomReasoning
 open SqrtRig SR
 open Kit R
 
-Ctrl′ : {A : Obj} (m : Endo {A}) → A ⊗₀ 2C ⇒ A ⊗₀ 2C
+Ctrl′ : {A : Obj} (m : Endo A) → A ⊗₀ 2C ⇒ A ⊗₀ 2C
 Ctrl′ m = σ⊗ ∘ Ctrl m ∘ σ⊗
 
 -------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ bell = (H ⊗₁ id) ∘ CX
 
 -- QFT on 3 qubits
 
-qft1 : 2×2
+qft1 : C [ 2C , 2C ]
 qft1 = H
 
 qft2 :  2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C

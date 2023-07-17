@@ -31,14 +31,14 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open MonR M× using (_⟩⊗⟨_; _⟩⊗⟨refl)
   open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)
   
-  X : 2×2
+  X : C [ 2C , 2C ]
   X = σ⊕
 
-  P : Scalar → 2×2
+  P : Scalar → C [ 2C , 2C ]
   P s = id ⊕₁ s
 
   -- Note: S was already defined in SqrtRig
-  Z T H : 2×2
+  Z T H : C [ 2C , 2C ]
   Z = P -𝟙
   T = P ω
   H = ω ● (X ∘ S ∘ V ∘ S ∘ X)
@@ -53,10 +53,10 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   Mat⁻¹ : {A : Obj} → A ⊕₀ A ⇒ 2C ⊗₀ A
   Mat⁻¹ = δᵣ⇐ ∘ λ⇐ ⊕₁ λ⇐
   
-  Ctrl : {A : Obj} (m : Endo {A}) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
+  Ctrl : {A : Obj} (m : Endo A) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
   Ctrl m = Mat⁻¹ ∘ (id ⊕₁ m) ∘ Mat
 
-  nCtrl : {A : Obj} (m : Endo {A}) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
+  nCtrl : {A : Obj} (m : Endo A) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
   nCtrl m = Mat⁻¹ ∘ (m ⊕₁ id) ∘ Mat
 
   SWAP CX CZ : 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C
@@ -143,7 +143,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
     V ∘ X       ∎
 
   -- lemma that makes (viii) and (ix) the same
-  CA∘CB≡id : {o : Obj} {A B : Endo {o}} → A ∘ B ≈ id → Ctrl A ∘ Ctrl B ≈ id
+  CA∘CB≡id : {o : Obj} {A B : Endo o} → A ∘ B ≈ id → Ctrl A ∘ Ctrl B ≈ id
   CA∘CB≡id {A = A} {B} AB≈id = begin
     (Mat⁻¹ ∘ (id ⊕₁ A) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat   ≈⟨ sym-assoc ⟩∘⟨refl ⟩
     ((Mat⁻¹ ∘ (id ⊕₁ A)) ∘ Mat) ∘ Mat⁻¹ ∘ (id ⊕₁ B) ∘ Mat ≈⟨ cancelInner Mat-invʳ ⟩
