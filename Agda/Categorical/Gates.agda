@@ -24,7 +24,6 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open import Categorical.Scalars SR
 
   open SqrtRig SR
-  open Kit R
   open MR C
   open MonR M× using (_⟩⊗⟨_; _⟩⊗⟨refl)
   open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)

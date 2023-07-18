@@ -16,7 +16,6 @@ open import Categorical.Scalars SR
 open import Categorical.Gates SR
 
 open SqrtRig SR
-open Kit R
 
 Ctrl′ : {A : Obj} (m : Endo A) → A ⊗₀ 2C ⇒ A ⊗₀ 2C
 Ctrl′ m = σ⊗ ∘ Ctrl m ∘ σ⊗

@@ -28,9 +28,6 @@ module Categorical.nClifford {o ℓ e} {C : Category o ℓ e}
   open import Categorical.MatProp SR
   
   open SqrtRig SR
-  open Kit R
-  -- open MonR M× using (_⟩⊗⟨refl)
-  -- open MonR M⊎ using () renaming (_⟩⊗⟨refl to _⟩⊕⟨refl)
 
   private
     variable

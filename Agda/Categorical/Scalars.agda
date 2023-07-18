@@ -5,7 +5,7 @@ open import Categories.Category -- we need it all
 open import Categories.Category.Monoidal using (Monoidal)
 open import Categories.Category.Monoidal.Symmetric using (Symmetric)
 open import Categories.Category.RigCategory
-open import Categorical.SqrtRig using (SqrtRig; module Kit)
+open import Categorical.SqrtRig using (SqrtRig)
 
 -- Everything is over a SqrtRig
 module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoidal 𝒞} {S⊎ : Symmetric M⊎}
@@ -24,7 +24,6 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   
   open MR 𝒞
   open SqrtRig SR
-  open Kit R
   open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_; serialize₁₂)
   open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_)
   open BraidProp S×.braided using (module Shorthands; braiding-coherence-inv; inv-braiding-coherence)

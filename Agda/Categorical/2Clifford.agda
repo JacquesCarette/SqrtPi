@@ -28,7 +28,6 @@ module Categorical.2Clifford {o ℓ e} {C : Category o ℓ e}
   open import Categorical.MatProp SR
   
   open SqrtRig SR
-  open Kit R
   open MonR M× using (serialize₁₂)
   open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_; _⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_)
 
