@@ -33,6 +33,7 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open M× using (_⊗₀_; _⊗₁_) public
   open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
+  open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐) public
   open MonR M× using (split₁ʳ; merge₂ˡ; refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_; serialize₁₂; serialize₂₁) public
   open MonR M⊎ using (split₂ˡ; parallel; split₁ˡ)
     renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_; serialize₂₁ to serialize₂₁-⊕;
