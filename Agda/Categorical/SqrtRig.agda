@@ -20,6 +20,9 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) where
 
   open import Categories.Category.Monoidal.Properties using (module Kelly's) public
+  open import Categories.Category.Monoidal.Utilities using (unitor-coherenceˡ) public
+  import Categories.Category.Monoidal.Reasoning as MonR
+
   open Category C public -- end up using it all
   open HomReasoning public
   open Mor C using (_≅_)
@@ -30,7 +33,12 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
   open M× using (_⊗₀_; _⊗₁_) public
   open M⊎ using () renaming (_⊗₀_ to _⊕₀_; _⊗₁_ to _⊕₁_) public
   open Shorthands M× using (λ⇒; λ⇐; ρ⇒; ρ⇐; α⇒; α⇐) public
-
+  open MonR M× using (split₁ʳ; merge₂ˡ; refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_; serialize₁₂; serialize₂₁) public
+  open MonR M⊎ using (split₂ˡ; parallel; split₁ˡ)
+    renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_; serialize₂₁ to serialize₂₁-⊕;
+      ⊗-distrib-over-∘ to ⊕-distrib-over-∘)
+    public
+ 
   module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
   module dl {X} {Y} {Z} = _≅_ (distribₗ {X} {Y} {Z})
     

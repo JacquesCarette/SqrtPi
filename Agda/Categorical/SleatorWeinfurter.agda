@@ -25,10 +25,6 @@ module Categorical.SleatorWeinfurter {o ℓ e} {C : Category o ℓ e}
   open import Categorical.Gates SR
   
   open SqrtRig SR
-  open MonR M× using (_⟩⊗⟨refl)
-  open MonR M⊎ using (parallel; split₁ˡ)
-    renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; _⟩⊗⟨_ to _⟩⊕⟨_; refl⟩⊗⟨_ to refl⟩⊕⟨_;
-    ⊗-distrib-over-∘ to ⊕-distrib-over-∘)
 
   private
     variable

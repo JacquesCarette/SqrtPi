@@ -15,16 +15,14 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-  open import Categories.Category.Monoidal.Utilities using (unitor-coherenceˡ)
+  -- the following are only used in this file, so don't factor out
   import Categories.Category.Monoidal.Braided.Properties as BraidProp
-  import Categories.Category.Monoidal.Reasoning as MonR
+  
   open import Categories.Functor.Bifunctor using (module Bifunctor)
   import Categories.Morphism.Reasoning as MR
   
   open MR 𝒞
   open SqrtRig SR
-  open MonR M× using (refl⟩⊗⟨_; _⟩⊗⟨refl; _⟩⊗⟨_; serialize₁₂)
-  open MonR M⊎ using () renaming (_⟩⊗⟨_ to _⟩⊕⟨_)
   open BraidProp S×.braided using (module Shorthands; braiding-coherence-inv; inv-braiding-coherence)
 
   -- Define some of our constants.

@@ -16,17 +16,14 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-  -- open import Categories.Functor.Bifunctor using (module Bifunctor)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎) using (module swapInner)
-  import Categories.Category.Monoidal.Reasoning as MonR
   import Categories.Morphism.Reasoning as MR
   
   open import Categorical.Scalars SR
 
   open SqrtRig SR
   open MR C
-  open MonR M× using (_⟩⊗⟨_; _⟩⊗⟨refl)
-  open MonR M⊎ using (serialize₂₁) renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_)
+
   
   X : C [ 2C , 2C ]
   X = σ⊕
@@ -123,7 +120,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   PXP : (s : Scalar) → P s ∘ X ∘ P s ≈ s ● X
   PXP s = begin
     (id ⊕₁ s) ∘ X ∘ (id ⊕₁ s)  ≈⟨ refl⟩∘⟨ S⊎.braiding.⇒.commute (id , s) ⟩
-    (id ⊕₁ s) ∘ (s ⊕₁ id) ∘ X  ≈⟨ pullˡ (Equiv.sym serialize₂₁)  ⟩
+    (id ⊕₁ s) ∘ (s ⊕₁ id) ∘ X  ≈⟨ pullˡ (Equiv.sym serialize₂₁-⊕)  ⟩
     (s ⊕₁ s) ∘ X               ≈˘⟨ identityʳ ⟩⊕⟨ identityʳ ⟩∘⟨refl ⟩
     ((s ∘ id) ⊕₁ (s ∘ id)) ∘ X ≈˘⟨ scalar-●≈∘ ⟩⊕⟨ scalar-●≈∘ ⟩∘⟨refl ⟩
     (s ● id ⊕₁ s ● id) ∘ X     ≈˘⟨ ●-distrib-⊕ ⟩∘⟨refl ⟩
@@ -194,7 +191,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   -----------------------------------------------------------------------------
   -- Corrolaries that are used in the proofs "inline"
   cong-P : {s t : Scalar} → (s ≈ t) → P s ≈ P t
-  cong-P = MonR.⊗-resp-≈ʳ M⊎
+  cong-P = refl⟩⊕⟨_
   
   S²≡Z : S ∘ S ≈ Z
   S²≡Z = begin
