@@ -20,7 +20,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
   import Categories.Category.Monoidal.Interchange.Symmetric as IS
   open IS S⊎
-  open import Categories.Category.Monoidal.Properties using (module Kelly's)
   open import Categories.Category.Monoidal.Utilities using (module Shorthands)
   open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐)
   import Categories.Category.Monoidal.Reasoning as MonR

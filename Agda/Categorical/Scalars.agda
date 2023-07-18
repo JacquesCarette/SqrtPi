@@ -15,7 +15,6 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-  open import Categories.Category.Monoidal.Properties using (module Kelly's)
   open import Categories.Category.Monoidal.Utilities using (unitor-coherenceˡ)
   import Categories.Category.Monoidal.Braided.Properties as BraidProp
   import Categories.Category.Monoidal.Reasoning as MonR

@@ -16,7 +16,6 @@ module Categorical.SleatorWeinfurter {o ℓ e} {C : Category o ℓ e}
   open import Data.Product using (_,_)
   open import Level using (Level)
 
-  open import Categories.Category.Monoidal.Properties using (module Kelly's)
   open import Categories.Category.Monoidal.Utilities using (module Shorthands)
   open Shorthands M⊎ using () renaming (α⇒ to ⊕α⇒; α⇐ to ⊕α⇐)
   import Categories.Category.Monoidal.Reasoning as MonR

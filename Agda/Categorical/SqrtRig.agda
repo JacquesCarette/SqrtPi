@@ -19,6 +19,7 @@ open import Categories.Category.RigCategory using (RigCategory)
 module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symmetric M⊎}
   {S× : Symmetric M×} (R : RigCategory C S⊎ S×) where
 
+  open import Categories.Category.Monoidal.Properties using (module Kelly's) public
   open Category C public -- end up using it all
   open HomReasoning public
   open Mor C using (_≅_)
