@@ -39,23 +39,28 @@ module Kit {o ℓ e} {C : Category o ℓ e} {M⊎ M× : Monoidal C} {S⊎ : Symm
     renaming (_⟩⊗⟨refl to _⟩⊕⟨refl; refl⟩⊗⟨_ to refl⟩⊕⟨_; _⟩⊗⟨_ to _⟩⊕⟨_; serialize₂₁ to serialize₂₁-⊕;
       ⊗-distrib-over-∘ to ⊕-distrib-over-∘)
     public
- 
+
+  private
+    variable
+      A X Y Z : Obj
+
+  -- explicit eta to get around Agda oddities
   module dr {X} {Y} {Z} = _≅_ (distribᵣ {X} {Y} {Z})
   module dl {X} {Y} {Z} = _≅_ (distribₗ {X} {Y} {Z})
     
-  σ⊕ : ∀ {X Y} → X ⊕₀ Y ⇒ Y ⊕₀ X
+  σ⊕ : X ⊕₀ Y ⇒ Y ⊕₀ X
   σ⊕ {X} {Y} = S⊎.braiding.⇒.η (X , Y)
-  σ⊗ : ∀ {X Y} → X ⊗₀ Y ⇒ Y ⊗₀ X
+  σ⊗ : X ⊗₀ Y ⇒ Y ⊗₀ X
   σ⊗ {X} {Y} = S×.braiding.⇒.η (X , Y)
 
-  δᵣ⇒ : ∀ {X Y Z} → (X ⊕₀ Y) ⊗₀ Z ⇒ (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z)
+  δᵣ⇒ :  (X ⊕₀ Y) ⊗₀ Z ⇒ (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z)
   δᵣ⇒ = dr.from
-  δᵣ⇐ : ∀ {X Y Z} → (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z) ⇒ (X ⊕₀ Y) ⊗₀ Z
+  δᵣ⇐ : (X ⊗₀ Z) ⊕₀ (Y ⊗₀ Z) ⇒ (X ⊕₀ Y) ⊗₀ Z
   δᵣ⇐ = dr.to
 
-  δₗ⇒ : ∀ {X Y Z} → Z ⊗₀ (X ⊕₀ Y) ⇒ (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y)
+  δₗ⇒ : Z ⊗₀ (X ⊕₀ Y) ⇒ (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y)
   δₗ⇒ = dl.from
-  δₗ⇐ : ∀ {X Y Z} → (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y) ⇒ Z ⊗₀ (X ⊕₀ Y)
+  δₗ⇐ : (Z ⊗₀ X) ⊕₀ (Z ⊗₀ Y) ⇒ Z ⊗₀ (X ⊕₀ Y)
   δₗ⇐ = dl.to
   
   0C 1C 2C : Obj
