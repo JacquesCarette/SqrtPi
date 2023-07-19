@@ -14,7 +14,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
 
   open import Data.Product using (_,_)
-  open import Level using (Level)
+  -- open import Level using (Level)
 
   open import Categories.Category.Monoidal.Braided.Properties using (braiding-coherence)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
@@ -52,33 +52,14 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (Mat⁻¹ ∘ Mat ∘ (id ⊗₁ f)) ∘ Mat⁻¹  ≈⟨ cancelˡ Mat-invˡ ⟩∘⟨refl ⟩
     (id ⊗₁ f) ∘ Mat⁻¹                  ∎
   
-  -- (2)
-  -- recall that Midswap is α⇐ ∘ id ⊗ (α⇒ ∘ σ⇒ ⊗ id ∘ α⇐) ∘ α⇒
-  -- and
-  {-
-      laplazaIX : ∀ {A B C D} → [ (A ⊕₀ B) ⊗₀ (C ⊕₀ D) ⇒ (((A ⊗₀ C) ⊕₀ (B ⊗₀ C)) ⊕₀ (A ⊗₀ D)) ⊕₀ (B ⊗₀ D) ]⟨
-        dr.from                ⇒⟨ (A ⊗₀ (C ⊕₀ D)) ⊕₀ (B ⊗₀ (C ⊕₀ D)) ⟩
-        dl.from ⊕₁ dl.from     ⇒⟨ ((A ⊗₀ C) ⊕₀ (A ⊗₀ D)) ⊕₀ ((B ⊗₀ C) ⊕₀ (B ⊗₀ D)) ⟩
-        ⊕α⇐                    ⇒⟨ (((A ⊗₀ C) ⊕₀ (A ⊗₀ D)) ⊕₀ (B ⊗₀ C)) ⊕₀ (B ⊗₀ D) ⟩
-        ⊕α⇒ ⊕₁ C.id           ⇒⟨ ((A ⊗₀ C) ⊕₀ ((A ⊗₀ D) ⊕₀ (B ⊗₀ C))) ⊕₀ (B ⊗₀ D) ⟩
-        (C.id ⊕₁ B⊕) ⊕₁ C.id  ⇒⟨ ((A ⊗₀ C) ⊕₀ ((B ⊗₀ C) ⊕₀ (A ⊗₀ D))) ⊕₀ (B ⊗₀ D) ⟩
-        ⊕α⇐ ⊕₁ C.id
-      ≈
-        dl.from                ⇒⟨ ((A ⊕₀ B) ⊗₀ C) ⊕₀ ((A ⊕₀ B) ⊗₀ D) ⟩
-        dr.from ⊕₁ dr.from     ⇒⟨ ((A ⊗₀ C) ⊕₀ (B ⊗₀ C)) ⊕₀ ((A ⊗₀ D) ⊕₀ (B ⊗₀ D))  ⟩
-        ⊕α⇐
-  ie
-    α⇐ ∘ δᵣ⇒ ⊕₁ δᵣ⇒ ∘ δₗ⇒ ≈ α⇐ ⊕₁ id ∘ (id ⊕₁ σ⇒) ⊕₁ id ∘ α⇒ ⊕₁ id ∘ α⇐ ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒
-  -}
+  -- Square 1: (X₁+X₂) (Y₁+Y₂) ===> (X₁+X₂) Y₁ + (X₁+X₂) Y₂
 
-  -- Square 1: (A+B) (C+D) ===> (A+B) C + (A+B) D
+  lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ δₗ⇒ {Z = X₁ ⊕₀ X₂} {Y₁} {Y₂}
+  lap-coh-1-sq1 = ⟺ (extendʳ laplazaII) ○ elimʳ S×.commutative
 
-  lap-coh-1-sq1 : (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗ ≈ (δₗ⇒ {X₁} {X₂} {A ⊕₀ B})
-  lap-coh-1-sq1 = Equiv.sym (Equiv.sym assoc ○ ∘-resp-≈ˡ laplazaII ○ assoc) ○ elimʳ S×.commutative
+  -- Square 2: (A + B) C ===> A C + B C
 
-  -- Square 2: C (A+B) + D (A + B) ===> (AC + BC) + (AD + BD)
-
-  lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {X₁}) ∘ σ⊗ ≈ δᵣ⇒ 
+  lap-coh-1-sq2-help : (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗ ≈ δᵣ⇒ {X = X₁} {X₂} {Y₁} 
   lap-coh-1-sq2-help =
         ∘-resp-≈ʳ laplazaII ○
         sym-assoc ○
@@ -89,7 +70,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   lap-coh-1-sq2-half : ∀ {A B X₁} → (σ⊗ ⊕₁ σ⊗) ∘ (δₗ⇒ {A} {B} {X₁}) ≈ δᵣ⇒ ∘ σ⊗
   lap-coh-1-sq2-half = begin
     (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒                ≈⟨ introʳ S×.commutative ⟩
-    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ (σ⊗ ∘ σ⊗)  ≈⟨ sym-assoc ○ assoc ⟩∘⟨refl ⟩
+    ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒) ∘ (σ⊗ ∘ σ⊗)  ≈⟨ pullˡ assoc ⟩
     ((σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ∘ σ⊗) ∘ σ⊗    ≈⟨ lap-coh-1-sq2-help ⟩∘⟨refl ⟩
     δᵣ⇒ ∘ σ⊗ ∎
  
@@ -101,9 +82,9 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   swap1≈id : σ⊗ {1C} {1C} ≈ id
   swap1≈id = begin
     σ⊗             ≈⟨ introˡ M×.unitorˡ.isoˡ ⟩
-    (λ⇐ ∘ λ⇒) ∘ σ⊗ ≈⟨ assoc ⟩
-    λ⇐ ∘ λ⇒ ∘ σ⊗   ≈⟨ refl⟩∘⟨ braiding-coherence S×.braided ⟩
-    λ⇐ ∘ ρ⇒        ≈⟨ ∘-resp-≈ʳ (⟺ (Kelly's.coherence₃ M×)) ○ M×.unitorˡ.isoˡ ⟩
+    (λ⇐ ∘ λ⇒) ∘ σ⊗ ≈⟨ pullʳ (braiding-coherence S×.braided) ⟩
+    λ⇐ ∘ ρ⇒        ≈˘⟨ refl⟩∘⟨ Kelly's.coherence₃ M× ⟩
+    λ⇐ ∘ λ⇒        ≈⟨ M×.unitorˡ.isoˡ ⟩
     id ∎
 
   lap-coh-1-sq3 : (σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C}) ⊕₁ σ⊗ {1C} {1C} ⊕₁ σ⊗ {1C} {1C} ≈ id
@@ -124,22 +105,18 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
     (⊕α⇒ ∘ ((⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id)) ∘ ⊕α⇐) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
       ≈⟨ assoc ○ refl⟩∘⟨ (assoc ○ assoc ○ refl⟩∘⟨ assoc) ⟩
     ⊕α⇒ ∘ (⊕α⇐ ⊕₁ id) ∘ ((id ⊕₁ σ⊕) ⊕₁ id) ∘ (⊕α⇒ ⊕₁ id) ∘ ⊕α⇐ ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒
-      ≈⟨ refl⟩∘⟨ laplazaIX ⟩ 
-    ⊕α⇒ ∘ ⊕α⇐ ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
-      ≈⟨ sym-assoc ⟩ 
+      ≈⟨ pushʳ laplazaIX ⟩
     (⊕α⇒ ∘ ⊕α⇐) ∘ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
       ≈⟨ elimˡ S⊎.braided.associator.isoʳ  ⟩ 
     (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
   
    -- Glue squares 1, 2, and 4:
 
-  lap-coh-1-sq124 : (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (δₗ⇒ {X₁} {X₂} {A ⊕₀ B})
+  lap-coh-1-sq124 : (σ⊗ {X₁} {X₂} ⊕₁ σ⊗ {X₁} {Y₂}) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗ ≈ (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒
   lap-coh-1-sq124 = begin
-    (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗
-      ≈⟨ pullˡ (Equiv.sym lap-coh-1-sq2) ○ assoc ⟩ 
-    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗) ∘ δᵣ⇒ ∘ σ⊗
-      ≈⟨ refl⟩∘⟨ lap-coh-1-sq1 ⟩ 
-    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒ ∎
+    (σ⊗ ⊕₁ σ⊗) ⊕₁ (σ⊗ ⊕₁ σ⊗) ∘ δₗ⇒ ⊕₁ δₗ⇒ ∘ δᵣ⇒ ∘ σ⊗   ≈⟨ pullˡ (⟺ lap-coh-1-sq2) ⟩ 
+    ((δᵣ⇒ ⊕₁ δᵣ⇒) ∘ (σ⊗ ⊕₁ σ⊗)) ∘ δᵣ⇒ ∘ σ⊗             ≈⟨ pullʳ lap-coh-1-sq1 ⟩ 
+    (δᵣ⇒ ⊕₁ δᵣ⇒) ∘ δₗ⇒                                    ∎
 
   -- Glue all squares
 
@@ -149,12 +126,11 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Mat-SWAP : Mat {2C} ∘ SWAP ≈ Midswap ∘ Mat
   Mat-SWAP = begin
     ((λ⇒ ⊕₁ λ⇒) ∘ δᵣ⇒) ∘ SWAP                                  ≈⟨ laplazaXXIII ⟩⊕⟨ laplazaXXIII ⟩∘⟨refl ⟩∘⟨refl ⟩
-    (((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒ ) ⊕₁ ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δᵣ⇒) ∘ SWAP  ≈⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩∘⟨refl ⟩
-    (((λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ ( δₗ⇒ ⊕₁ δₗ⇒)) ∘ δᵣ⇒) ∘ SWAP ≈⟨ assoc ○ assoc ⟩
-    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP     ≈⟨ refl⟩∘⟨ lap-coh-1 ⟩
-    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ pullˡ (⟺ swapInner-natural) ○ assoc ⟩
-    Midswap ∘ (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ refl⟩∘⟨ sym-assoc ⟩
-    Midswap ∘ ((λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒)) ∘ δᵣ⇒ ≈˘⟨ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩
+    (((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒ ) ⊕₁ ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δᵣ⇒) ∘ SWAP   ≈⟨ M⊎.⊗.homomorphism ⟩∘⟨refl ⟩∘⟨refl ⟩
+    (((λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ ( δₗ⇒ ⊕₁ δₗ⇒)) ∘ δᵣ⇒) ∘ SWAP ≈⟨ assoc² ⟩
+    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒ ∘ SWAP      ≈⟨ refl⟩∘⟨ lap-coh-1 ⟩
+    (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ Midswap ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ extendʳ (⟺ swapInner-natural) ⟩
+    Midswap ∘ (λ⇒ ⊕₁ λ⇒) ⊕₁ (λ⇒ ⊕₁ λ⇒) ∘ (δₗ⇒ ⊕₁ δₗ⇒) ∘ δᵣ⇒   ≈⟨ refl⟩∘⟨ pullˡ (⟺ M⊎.⊗.homomorphism) ⟩
     Midswap ∘ (((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ⊕₁ ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒)) ∘ δᵣ⇒ ≈˘⟨ refl⟩∘⟨ laplazaXXIII ⟩⊕⟨ laplazaXXIII ⟩∘⟨refl ⟩
     Midswap ∘ λ⇒ ⊕₁ λ⇒ ∘ δᵣ⇒ ∎
 
@@ -162,7 +138,7 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   Midswap≡MSwapM⁻¹ : Midswap ≈ Mat ∘ SWAP ∘ Mat⁻¹
   Midswap≡MSwapM⁻¹ = begin
     Midswap                 ≈⟨ insertʳ Mat-invʳ ⟩
-    (Midswap ∘ Mat) ∘ Mat⁻¹ ≈⟨ pushˡ (Equiv.sym Mat-SWAP) ⟩
+    (Midswap ∘ Mat) ∘ Mat⁻¹ ≈⟨ pushˡ (⟺ Mat-SWAP) ⟩
     Mat ∘ SWAP ∘ Mat⁻¹      ∎
     
   -- (3)
