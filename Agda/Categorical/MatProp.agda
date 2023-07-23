@@ -14,7 +14,6 @@ module Categorical.MatProp {o ℓ e} {C : Category o ℓ e}
   {S× : Symmetric M×} {R : RigCategory C S⊎ S×} (SR : SqrtRig R) where
 
   open import Data.Product using (_,_)
-  -- open import Level using (Level)
 
   open import Categories.Category.Monoidal.Braided.Properties using (braiding-coherence)
   open import Categories.Category.Monoidal.Interchange.Braided (Symmetric.braided S⊎)
