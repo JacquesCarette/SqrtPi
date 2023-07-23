@@ -13,12 +13,10 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
 
   open import Data.Nat using (ℕ; zero; suc; _+_)
   open import Data.Product using (_,_)
-  open import Level using (Level)
 
   -- the following are only used in this file, so don't factor out
   import Categories.Category.Monoidal.Braided.Properties as BraidProp
   
-  open import Categories.Functor.Bifunctor using (module Bifunctor)
   import Categories.Morphism.Reasoning as MR
   
   open MR 𝒞
@@ -49,7 +47,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     ω ^ 4 ∘ ω ^ 2 ∎
 
   -i≡i◎-𝟙 : -i ≈ i ∘ -𝟙
-  -i≡i◎-𝟙 = pullˡ Equiv.refl
+  -i≡i◎-𝟙 = sym-assoc
 
   -i◎i≡𝟙 : -i ∘ i ≈ 𝟙
   -i◎i≡𝟙 = begin
@@ -94,9 +92,9 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   left-right-● : {A B : Obj} {s : Scalar} {f : A ⇒ B} → s ● f ≈ ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐
   left-right-● {s = s} {f} = begin
     λ⇒ ∘ s ⊗₁ f ∘ λ⇐                ≈˘⟨ inv-braiding-coherence ⟩∘⟨ refl⟩∘⟨ ⟺ (switch-tofromˡ σ braiding-coherence-inv) ⟩
-    (ρ⇒ ∘ σ⇐) ∘ s ⊗₁ f ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ sym-assoc ○ assoc ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ σ⇐) ∘ s ⊗₁ f ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ pullˡ assoc ⟩
     (ρ⇒ ∘ σ⇐ ∘ s ⊗₁ f) ∘ (σ⇒ ∘ ρ⇐) ≈⟨ (refl⟩∘⟨ S×.braiding.⇐.commute (f , s)) ⟩∘⟨refl ⟩
-    (ρ⇒ ∘ f ⊗₁ s ∘ σ⇐) ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ sym-assoc ○ assoc²' ⟩∘⟨refl ⟩
+    (ρ⇒ ∘ f ⊗₁ s ∘ σ⇐) ∘ (σ⇒ ∘ ρ⇐)  ≈⟨ pullˡ assoc²' ⟩
     (ρ⇒ ∘ f ⊗₁ s ∘ σ⇐ ∘ σ⇒) ∘ ρ⇐    ≈⟨ (refl⟩∘⟨ elimʳ (S×.braiding.iso.isoˡ _)) ⟩∘⟨refl ⟩
     (ρ⇒ ∘ f ⊗₁ s) ∘ ρ⇐               ≈⟨ assoc ⟩
     ρ⇒ ∘ f ⊗₁ s ∘ ρ⇐                 ∎
@@ -171,26 +169,25 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
     λ⇒ ∘ (λ⇒ ∘ α⇒) ∘ (s ⊗₁ t) ⊗₁ f ∘ (α⇐ ∘ λ⇐) ∘ λ⇐  ≈⟨ refl⟩∘⟨ Kelly's.coherence₁ M× ⟩∘⟨ refl⟩∘⟨ Kelly's.coherence-inv₁ M× ⟩∘⟨refl ⟩
     λ⇒ ∘ λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id ∘ λ⇐    ≈˘⟨ refl⟩∘⟨ assoc²' ⟩
     λ⇒ ∘ (λ⇒ ⊗₁ id ∘ (s ⊗₁ t) ⊗₁ f ∘ λ⇐ ⊗₁ id) ∘ λ⇐  ≈˘⟨ refl⟩∘⟨ insert-mid⊗ʳ ⟩∘⟨refl ⟩
-    λ⇒ ∘ (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f ∘ λ⇐                 ≈⟨ Equiv.refl ⟩
+    λ⇒ ∘ (λ⇒ ∘ s ⊗₁ t ∘ λ⇐) ⊗₁ f ∘ λ⇐                 ≡⟨⟩
     λ⇒ ∘ (s ● t) ⊗₁ f ∘ λ⇐                             ≈⟨ refl⟩∘⟨ (scalar-●≈∘ ⟩⊗⟨refl) ⟩∘⟨refl ⟩
     λ⇒ ∘ (s ∘ t) ⊗₁ f ∘ λ⇐                             ∎
 
--- (a ∘ (b ∘ c)) ∘ d -> a ∘ b ∘ c ∘ d
+  -- (a ∘ (b ∘ c)) ∘ d -> a ∘ b ∘ c ∘ d
   -- useful lemmas to get to PXP
   laplazaXXIII-rhs-inv : {A B : Obj} → (λ⇒ {X = A} ⊕₁ λ⇒ {X = B} ∘ δₗ⇒) ∘ δₗ⇐ ∘ λ⇐ ⊕₁ λ⇐ ≈ id
   laplazaXXIII-rhs-inv = begin
     (λ⇒ ⊕₁ λ⇒ ∘ δₗ⇒) ∘ δₗ⇐ ∘ λ⇐ ⊕₁ λ⇐ ≈⟨ cancelInner dl.isoʳ ⟩
-    -- the next bit is quite polymorphic so hard to abstract out; later
-    λ⇒ ⊕₁ λ⇒ ∘ λ⇐ ⊕₁ λ⇐     ≈˘⟨ M⊎.⊗.homomorphism ⟩
-    (λ⇒ ∘ λ⇐) ⊕₁ (λ⇒ ∘ λ⇐)  ≈⟨ M×.unitorˡ.isoʳ ⟩⊕⟨ M×.unitorˡ.isoʳ ⟩
-    id ⊕₁ id                 ≈⟨ M⊎.⊗.identity ⟩
-    id                       ∎
+    λ⇒ ⊕₁ λ⇒ ∘ λ⇐ ⊕₁ λ⇐              ≈˘⟨ M⊎.⊗.homomorphism ⟩
+    (λ⇒ ∘ λ⇐) ⊕₁ (λ⇒ ∘ λ⇐)           ≈⟨ M×.unitorˡ.isoʳ ⟩⊕⟨ M×.unitorˡ.isoʳ ⟩
+    id ⊕₁ id                          ≈⟨ M⊎.⊗.identity ⟩
+    id                                ∎
 
   -- inverse laplazaXXIII
   laplazaXXIII⁻¹ : {A B : Obj} → λ⇐ {X = A ⊕₀ B} ≈ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)
   laplazaXXIII⁻¹ = begin
     λ⇐                                          ≈⟨ insertʳ laplazaXXIII-rhs-inv ⟩
-    (λ⇐ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ (refl⟩∘⟨ Equiv.sym laplazaXXIII) ⟩∘⟨refl ⟩
+    (λ⇐ ∘ (λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈˘⟨ (refl⟩∘⟨ laplazaXXIII) ⟩∘⟨refl ⟩
     (λ⇐ ∘ λ⇒) ∘  δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)               ≈⟨ elimˡ M×.unitorˡ.isoˡ ⟩
     δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐)                            ∎
  
@@ -199,10 +196,10 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   ●-distrib-⊕ : {A B C D : Obj} {s : Scalar} {f : A ⇒ B} {g : C ⇒ D} →
     s ● (f ⊕₁ g) ≈ (s ● f) ⊕₁ (s ● g)
   ●-distrib-⊕ {s = s} {f} {g} = begin
-    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                                      ≈⟨ laplazaXXIII ⟩∘⟨ refl⟩∘⟨ laplazaXXIII⁻¹ ⟩
+    λ⇒ ∘ s ⊗₁ (f ⊕₁ g) ∘ λ⇐                                       ≈⟨ laplazaXXIII ⟩∘⟨ refl⟩∘⟨ laplazaXXIII⁻¹ ⟩
     ((λ⇒ ⊕₁ λ⇒) ∘ δₗ⇒) ∘  s ⊗₁ (f ⊕₁ g) ∘ (δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐))     ≈⟨ center dl-commute ⟩
     (λ⇒ ⊕₁ λ⇒) ∘ ((s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ δₗ⇒) ∘ δₗ⇐ ∘ (λ⇐ ⊕₁ λ⇐) ≈⟨ refl⟩∘⟨ cancelInner dl.isoʳ ⟩
-    (λ⇒ ⊕₁ λ⇒) ∘ (s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ (λ⇐ ⊕₁ λ⇐)               ≈˘⟨ M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩
+    (λ⇒ ⊕₁ λ⇒) ∘ (s ⊗₁ f) ⊕₁ (s ⊗₁ g) ∘ (λ⇐ ⊕₁ λ⇐)              ≈˘⟨ M⊎.⊗.homomorphism ○ refl⟩∘⟨ M⊎.⊗.homomorphism ⟩
     (λ⇒ ∘ s ⊗₁ f ∘ λ⇐) ⊕₁ (λ⇒ ∘ s ⊗₁ g ∘ λ⇐)                     ∎
 
   -- (vii)
@@ -219,7 +216,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   -- often we want the symmetric version
   ●-assocʳ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
     (s ● g) ∘ f ≈ s ● (g ∘ f)
-  ●-assocʳ = Equiv.sym ●-assocˡ
+  ●-assocʳ = ⟺ ●-assocˡ
   
   -- (viii)
   ●-over-∘ : {A B C : Obj} {s : Scalar} {f : A ⇒ B} {g : B ⇒ C} →
@@ -269,7 +266,7 @@ module Categorical.Scalars {o ℓ e} {𝒞 : Category o ℓ e} {M⊎ M× : Monoi
   extract-scalar2 : {s t : Scalar} {B C D : Obj} {g : B ⇒ C} {h : C ⇒ D} →
     s ● (h ∘ (t ● g)) ≈ (s ∘ t) ● (h ∘ g)
   extract-scalar2 {s = s} {t} {g = g} {h} = begin
-    s ● (h ∘ (t ● g))   ≈⟨ ●-congʳ (⟺ ●-over-∘) ⟩
+    s ● (h ∘ (t ● g))   ≈˘⟨ ●-congʳ ●-over-∘ ⟩
     s ● (t ● (h ∘ g))   ≈⟨ push-scalar-left ⟩
     (s ∘ t) ● (h ∘ g)   ∎
     
