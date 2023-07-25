@@ -31,7 +31,7 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   P : Scalar → C [ 2C , 2C ]
   P s = id ⊕₁ s
 
-  -- Note: S was already defined in SqrtRig
+  -- Note: S was already defined in SqrtRig as (essentially) P i
   Z T H : C [ 2C , 2C ]
   Z = P -𝟙
   T = P ω
@@ -53,14 +53,24 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   nCtrl : {A : Obj} (m : Endo A) → 2C ⊗₀ A ⇒ 2C ⊗₀ A
   nCtrl m = Mat⁻¹ ∘ (m ⊕₁ id) ∘ Mat
 
-  SWAP CX CZ : 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C
+  -- don't artificially restrict the types
+  SWAP : {A B : Obj} → A ⊗₀ B ⇒ B ⊗₀ A
   SWAP = σ⊗
+  
+  CX CZ : 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C
   CX = Ctrl X
   CZ = Ctrl Z
 
-  CCX :  2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
+  CCX : 2C ⊗₀ 2C ⊗₀ 2C ⇒ 2C ⊗₀ 2C ⊗₀ 2C
   CCX = Ctrl CX
 
+  -- we could, at times, but more general:
+  CX′ : {A : Obj} → 2C ⊗₀ (A ⊕₀ A) ⇒ 2C ⊗₀ (A ⊕₀ A)
+  CX′ = Ctrl σ⊕
+
+  P′ : {A B : Obj} → Endo B → C [ A ⊕₀ B , A ⊕₀ B ]
+  P′ f = id ⊕₁ f
+  
   ------------------------------------------------------------------------
   -- Some properties of the above that are implicitly used in the
   -- proofs of the properties (below).
@@ -104,8 +114,8 @@ module Categorical.Gates {o ℓ e} {C : Category o ℓ e}
   P-inv {s = s} {t} ts≈id  = begin
     (id ⊕₁ t) ∘ (id ⊕₁ s) ≈˘⟨ S⊎.⊗.homomorphism ⟩
     (id ∘ id) ⊕₁ (t ∘ s)  ≈⟨ identity² ⟩⊕⟨ ts≈id ⟩
-    id ⊕₁ id                  ≈⟨ S⊎.⊗.identity ⟩
-    id                         ∎
+    id ⊕₁ id              ≈⟨ S⊎.⊗.identity ⟩
+    id                    ∎
 
   -- (v)
   -- useful lemma for P-comm
