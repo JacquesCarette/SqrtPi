@@ -52,8 +52,8 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   idl◎r   : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → c ⟷₂ (id⟷ ◎ c)
   idr◎l   : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → (c ◎ id⟷) ⟷₂ c
   idr◎r   : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → c ⟷₂ (c ◎ id⟷)
-  linv◎l  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → (c ◎ !⟷ c) ⟷₂ id⟷
-  linv◎r  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → id⟷ ⟷₂ (c ◎ !⟷ c)
+  linv◎l  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → (c ◎ (!⟷ c)) ⟷₂ id⟷
+  linv◎r  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → id⟷ ⟷₂ (c ◎ (!⟷ c))
   rinv◎l  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → (!⟷ c ◎ c) ⟷₂ id⟷
   rinv◎r  : {t₁ t₂ : U} {c : t₁ ⟷ t₂} → id⟷ ⟷₂ (!⟷ c ◎ c)
   unite₊l⟷₂l : {t₁ t₂ : U} {c₁ : O ⟷ O} {c₂ : t₁ ⟷ t₂} →
@@ -213,7 +213,8 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   V²l : V ◎ V ⟷₂ swap₊
   V²r : swap₊ ⟷₂ V ◎ V
   -- and E3, in its "fully expanded form"
-  -- (will go here)
+  VSVl : V ◎ (id⟷ ⊕ (ω ◎ ω)) ◎ V ⟷₂ (uniti⋆l) ◎ (ω ◎ ω) ⊗ ((id⟷ ⊕ (ω ◎ ω)) ◎ V ◎ (id⟷ ⊕ (ω ◎ ω))) ◎ unite⋆l
+  VSVr : (uniti⋆l) ◎ (ω ◎ ω) ⊗ ((id⟷ ⊕ (ω ◎ ω)) ◎ V ◎ (id⟷ ⊕ (ω ◎ ω))) ◎ unite⋆l ⟷₂ V ◎ (id⟷ ⊕ (ω ◎ ω)) ◎ V
   
 -------------------------------------------------------------------------------------
 -- This is invertible too
@@ -303,6 +304,8 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
 !⟷₂ ω⁸r = ω⁸l
 !⟷₂ V²l = V²r
 !⟷₂ V²r = V²l
+!⟷₂ VSVl = VSVr
+!⟷₂ VSVr = VSVl
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
